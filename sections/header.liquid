@@ -243,6 +243,20 @@
       color: rgb(var(--header-accent-color));
       margin-bottom: 20px;
     }
+    /* Column-major flow: alphabetical reads top-to-bottom, then left-to-right.
+       Override the parent's grid layout with CSS multi-column. row-gap: 0
+       neutralises the grid row gap that was previously stretching the rows. */
+    .cc-header .mega-nav--collections .child-nav {
+      display: block;
+      column-count: 4;
+      column-gap: 40px;
+      row-gap: 0;
+    }
+    .cc-header .mega-nav--collections .child-nav > li {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+    }
     /* Serif collection names with hairline divider under each */
     .cc-header .mega-nav--collections .child-nav__item {
       display: block;
@@ -255,7 +269,7 @@
       line-height: 1.4;
       padding-top: 10px;
       padding-bottom: 10px;
-      border-bottom: 1px solid rgba(var(--text-color), 0.10);
+      border-bottom: 1px solid rgba(var(--text-color), 0.15);
     }
     .cc-header .mega-nav--collections .child-nav__item:hover {
       color: rgb(var(--header-accent-color));

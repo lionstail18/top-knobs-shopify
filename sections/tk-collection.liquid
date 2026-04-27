@@ -331,7 +331,10 @@
     align-self: center; margin-left: 4px;
   }
 
-  .tk-coll__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  /* Responsive product grid: cards target ~240–280px wide.
+     Wide viewports auto-flow to 4–5 columns; the media queries below
+     force tighter counts on narrow viewports. */
+  .tk-coll__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px; }
 
   .tk-coll__pagination { display: flex; justify-content: center; gap: 8px; padding: 48px 0 24px; flex-wrap: wrap; }
   .tk-coll__page-btn {
