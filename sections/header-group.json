@@ -1,11 +1,32 @@
 /*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
+ * Top Knobs — Header Group with Mega Menu (PATCHED)
+ * Replaces: sections/header-group.json
  *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
+ * WHAT THIS DOES:
+ * Adds 4 mega menu blocks to the header section: "Knobs", "Pulls",
+ * "Bath & Cabinet Hardware", and "By Finish". Each block matches a
+ * top-level menu item by title (Canopy mega-menu convention) and renders
+ * its child links as a multi-column grid with collection images.
+ *
+ * REQUIRED IN SHOPIFY ADMIN → NAVIGATION:
+ * Your "main-menu" navigation menu must have top-level items with these
+ * exact titles (case-insensitive):
+ *   • Knobs
+ *   • Pulls
+ *   • Bath & Cabinet Hardware  (or just "Bath" or "Cabinet Hardware")
+ *   • By Finish                (or "Finishes")
+ * Each must have child links (collections). The mega menu auto-renders
+ * those children as columns. If a top-level item is missing children,
+ * it just won't show a flyout.
+ *
+ * AFTER COMMITTING THIS FILE:
+ * Shopify auto-syncs to the live theme. Hard-refresh the storefront
+ * (Cmd+Shift+R). Hover any of the 4 menu items to see the mega menu.
+ *
+ * CUSTOMIZING IN ADMIN:
+ * Customize → Header section → block list. You'll see the 4 blocks. You
+ * can add promo images, edit the title-match, toggle collection images
+ * on/off, change badges, etc. — all without touching code.
  */
 {
   "type": "header",
@@ -14,65 +35,20 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "msg-1": {
-          "type": "message",
-          "settings": {
-            "text": "✦ Authorized Top Knobs Dealer"
-          }
-        },
-        "msg-2": {
-          "type": "message",
-          "settings": {
-            "text": "✦ Free Shipping on Orders $99+"
-          }
-        },
-        "msg-3": {
-          "type": "message",
-          "settings": {
-            "text": "✦ Lowest Prices Online — Guaranteed"
-          }
-        }
+        "msg-1": { "type": "message", "settings": { "text": "✦ Authorized Top Knobs Dealer" } },
+        "msg-2": { "type": "message", "settings": { "text": "✦ Free Shipping on Orders $99+" } },
+        "msg-3": { "type": "message", "settings": { "text": "✦ Lowest Prices Online — Guaranteed" } }
       },
-      "block_order": [
-        "msg-1",
-        "msg-2",
-        "msg-3"
-      ],
-      "settings": {
-        "bg_color": "#0d1526",
-        "text_color": "#f6f7fa",
-        "rotate_delay": 5
-      }
+      "block_order": ["msg-1", "msg-2", "msg-3"],
+      "settings": { "bg_color": "#0d1526", "text_color": "#f6f7fa", "rotate_delay": 5 }
     },
     "announcement": {
       "type": "announcement",
-      "blocks": {
-        "announcement_DMRVwr": {
-          "type": "announcement",
-          "disabled": true,
-          "settings": {
-            "text": "<p><strong>Welcome to our store</strong> <a href=\"#\">Learn more&gt;</a></p>"
-          }
-        },
-        "announcement_zJbRti": {
-          "type": "announcement",
-          "disabled": true,
-          "settings": {
-            "text": "<p><strong>Free domestic shipping</strong> <a href=\"#\" title=\"DELIVERY\">Learn more &gt;</a></p>"
-          }
-        }
-      },
-      "block_order": [
-        "announcement_DMRVwr",
-        "announcement_zJbRti"
-      ],
+      "blocks": {},
+      "block_order": [],
       "disabled": true,
       "settings": {
         "announcement_homepage_only": false,
-        "link1": "",
-        "link1_label": "",
-        "link2": "",
-        "link2_label": "",
         "enable_country_selector": true,
         "enable_language_selector": true,
         "bg_color": "#1a237e",
@@ -83,10 +59,53 @@
     },
     "header": {
       "type": "header",
+      "blocks": {
+        "mega-knobs": {
+          "type": "columns",
+          "settings": {
+            "title": "Knobs",
+            "collection_images": "standard",
+            "collection_use_product_image": true,
+            "show_underline": false,
+            "promo_position": "right"
+          }
+        },
+        "mega-pulls": {
+          "type": "columns",
+          "settings": {
+            "title": "Pulls",
+            "collection_images": "standard",
+            "collection_use_product_image": true,
+            "show_underline": false,
+            "promo_position": "right"
+          }
+        },
+        "mega-bath": {
+          "type": "columns",
+          "settings": {
+            "title": "Bath & Cabinet Hardware, Bath, Cabinet Hardware, Bath Hardware",
+            "collection_images": "standard",
+            "collection_use_product_image": true,
+            "show_underline": false,
+            "promo_position": "bottom"
+          }
+        },
+        "mega-finish": {
+          "type": "columns",
+          "settings": {
+            "title": "By Finish, Finishes, Finish",
+            "collection_images": "standard",
+            "collection_use_product_image": false,
+            "show_underline": false,
+            "promo_position": "bottom"
+          }
+        }
+      },
+      "block_order": ["mega-knobs", "mega-pulls", "mega-bath", "mega-finish"],
       "settings": {
         "mobile_menu_position": "burger-left",
         "enable_sticky": true,
-        "hide_menu": true,
+        "hide_menu": false,
         "logo_text": "",
         "logo_text_font": "nunito_sans_n7",
         "logo_type_scale": "2",
@@ -99,7 +118,7 @@
         "menu": "main-menu",
         "menu_center": true,
         "link_toggle": "mobile",
-        "repeat_links": false,
+        "repeat_links": true,
         "menu_featured_link": "Sale",
         "enable_customer_account_component": false,
         "customer_account_menu": "customer-account-main-menu",
@@ -120,9 +139,5 @@
       }
     }
   },
-  "order": [
-    "announcement-bar",
-    "announcement",
-    "header"
-  ]
+  "order": ["announcement-bar", "announcement", "header"]
 }
