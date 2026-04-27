@@ -1,67 +1,16 @@
 /*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
+ * Footer group — points at the custom Top Knobs footer (sections/tk-footer.liquid).
+ * The Shopify admin theme editor may rewrite this file. If the editor adds back
+ * the default footer blocks (text / link_list / newsletter), reset by changing
+ * "type" back to "tk-footer" and clearing the blocks.
  */
 {
   "type": "footer",
   "name": "Footer Group",
   "sections": {
     "footer": {
-      "type": "footer",
-      "blocks": {
-        "text": {
-          "type": "text",
-          "settings": {
-            "image": "",
-            "image_width": 140,
-            "enable_follow_on_shop": false,
-            "show_social": true,
-            "text_align": "text-start"
-          }
-        },
-        "link_list_T9gzWt": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Canopy",
-            "menu": "footer"
-          }
-        },
-        "link-list-1": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Discover",
-            "menu": "footer"
-          }
-        },
-        "newsletter": {
-          "type": "newsletter",
-          "settings": {
-            "heading": "Newsletter",
-            "text": "<p>Sign up for exclusive offers, original stories, events and more.<\/p>",
-            "collapse_mobile": true
-          }
-        }
-      },
-      "block_order": [
-        "text",
-        "link_list_T9gzWt",
-        "link-list-1",
-        "newsletter"
-      ],
-      "settings": {
-        "show_back_to_top": true,
-        "show_payment_icons": true,
-        "show_powered_by": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "bg_color": "#1a237e",
-        "text_color": "#ffffff"
-      }
+      "type": "tk-footer",
+      "settings": {}
     }
   },
   "order": [

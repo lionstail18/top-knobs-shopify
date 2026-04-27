@@ -1,0 +1,304 @@
+{%- comment -%}
+  Top Knobs — Custom Footer (tk-footer.liquid)
+
+  Replaces the default Canopy/Dawn footer. Branded with deep-navy
+  background, gold accents, three-column layout (Brand / Shop / Help)
+  plus a bottom strip with copyright, payment icons, and utility links.
+
+  Several Help-column links currently point to "#" because the underlying
+  pages aren't built yet. Search this file for "TODO:" to find each one
+  and update the href once the page exists.
+
+  Pages still to be created (and the link to update once they are):
+    • /pages/contact          — Contact Us
+    • /pages/shipping         — Shipping & Delivery
+    • /pages/returns          — Returns & Exchanges
+    • /pages/price-match      — Price Match Guarantee
+    • /pages/trade            — Trade Program
+    • /pages/faq              — FAQ
+    • /pages/privacy          — Privacy
+    • /pages/terms            — Terms
+    • /pages/accessibility    — Accessibility
+
+  Social icon URLs come from theme settings (Theme → Settings → Social media).
+  If an icon doesn't appear, that setting is blank — fill it in admin.
+
+  Payment icons are pulled from shop.enabled_payment_types — they reflect
+  whatever you've actually enabled in Settings → Payments.
+{%- endcomment -%}
+
+<footer class="tk-footer" role="contentinfo">
+  <div class="tk-footer__inner">
+
+    <div class="tk-footer__cols">
+
+      <!-- ── Brand column ───────────────────────────────────────── -->
+      <div class="tk-footer__col tk-footer__col--brand">
+        <a href="{{ routes.root_url }}" class="tk-footer__brand-link" aria-label="{{ shop.name | escape }} — Home">
+          <span class="tk-wordmark tk-wordmark--footer">
+            <span class="tk-wordmark__row1">
+              <span class="tk-wordmark__brand">TOP KNOBS</span>
+              <span class="tk-wordmark__outlet">HARDWARE OUTLET</span>
+            </span>
+            <span class="tk-wordmark__sub">AUTHORIZED DEALER · LOWEST PRICES ONLINE</span>
+          </span>
+        </a>
+        <p class="tk-footer__tagline">
+          Save up to 25% off MSRP on the complete Top Knobs catalog.
+          Free shipping on orders over $99. Lifetime warranty on every piece.
+        </p>
+        <div class="tk-footer__social" aria-label="Social media">
+          {%- if settings.social_facebook_link != blank -%}
+            <a href="{{ settings.social_facebook_link }}" aria-label="Facebook" class="tk-footer__social-link" rel="noopener" target="_blank">
+              {%- render 'icon-facebook' -%}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_instagram_link != blank -%}
+            <a href="{{ settings.social_instagram_link }}" aria-label="Instagram" class="tk-footer__social-link" rel="noopener" target="_blank">
+              {%- render 'icon-instagram' -%}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}
+            <a href="{{ settings.social_pinterest_link }}" aria-label="Pinterest" class="tk-footer__social-link" rel="noopener" target="_blank">
+              {%- render 'icon-pinterest' -%}
+            </a>
+          {%- endif -%}
+          {%- if settings.social_twitter_link != blank -%}
+            <a href="{{ settings.social_twitter_link }}" aria-label="X (Twitter)" class="tk-footer__social-link" rel="noopener" target="_blank">
+              {%- render 'icon-twitter' -%}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- ── Shop column ────────────────────────────────────────── -->
+      <div class="tk-footer__col">
+        <h3 class="tk-footer__heading">Shop</h3>
+        <ul class="tk-footer__links">
+          <li><a href="/collections/all">All Products</a></li>
+          <li><a href="/collections/whats-new">What's New</a></li>
+          <li><a href="/collections/knobs">Knobs</a></li>
+          <li><a href="/collections/pulls">Pulls</a></li>
+          <li><a href="/collections/appliance-pulls">Appliance Pulls</a></li>
+          <li><a href="/collections/bath">Bath Hardware</a></li>
+          <li><a href="/collections/backplates">Backplates</a></li>
+          <li><a href="/collections/all?filter.p.tag=sample">Order a Sample</a></li>
+        </ul>
+      </div>
+
+      <!-- ── Help column ────────────────────────────────────────── -->
+      <div class="tk-footer__col">
+        <h3 class="tk-footer__heading">Help</h3>
+        <ul class="tk-footer__links">
+          <li><a href="#">Contact Us</a></li>{%- comment -%}TODO: /pages/contact{%- endcomment -%}
+          <li><a href="#">Shipping &amp; Delivery</a></li>{%- comment -%}TODO: /pages/shipping{%- endcomment -%}
+          <li><a href="#">Returns &amp; Exchanges</a></li>{%- comment -%}TODO: /pages/returns{%- endcomment -%}
+          <li><a href="#">Price Match Guarantee</a></li>{%- comment -%}TODO: /pages/price-match{%- endcomment -%}
+          <li><a href="#">Trade Program</a></li>{%- comment -%}TODO: /pages/trade{%- endcomment -%}
+          <li><a href="#">FAQ</a></li>{%- comment -%}TODO: /pages/faq{%- endcomment -%}
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ── Bottom strip ─────────────────────────────────────────── -->
+    <div class="tk-footer__bottom">
+      <p class="tk-footer__copy">
+        © {{ 'now' | date: '%Y' }} Top Knobs Hardware Outlet · Authorized Top Knobs Dealer
+      </p>
+      <div class="tk-footer__payments" aria-label="Accepted payment methods">
+        {%- for type in shop.enabled_payment_types -%}
+          {{- type | payment_type_svg_tag: class: 'tk-footer__pay-icon' -}}
+        {%- endfor -%}
+      </div>
+      <div class="tk-footer__legal">
+        <a href="#">Privacy</a>{%- comment -%}TODO: /pages/privacy{%- endcomment -%}
+        <span aria-hidden="true">·</span>
+        <a href="#">Terms</a>{%- comment -%}TODO: /pages/terms{%- endcomment -%}
+        <span aria-hidden="true">·</span>
+        <a href="#">Accessibility</a>{%- comment -%}TODO: /pages/accessibility{%- endcomment -%}
+      </div>
+    </div>
+
+    <!-- ── Trademark disclaimer ─────────────────────────────────── -->
+    <p class="tk-footer__disclaimer">
+      Top Knobs® and the collection names referenced on this site are trademarks of Top Knobs USA.
+      TopKnobsHardware.net is an independent authorized reseller and is not operated by Top Knobs USA.
+    </p>
+
+  </div>
+</footer>
+
+{%- style -%}
+  .tk-footer {
+    background: #0d1526;
+    color: #e8e3d8;
+    padding: 64px 0 24px;
+    font-family: 'Jost', sans-serif;
+  }
+  .tk-footer__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .tk-footer__cols {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+  }
+  .tk-footer__col--brand { max-width: 380px; }
+  .tk-footer__brand-link {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Wordmark — light variant for the dark footer */
+  .tk-wordmark--footer { display: block; line-height: 1; }
+  .tk-wordmark--footer .tk-wordmark__row1 {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .tk-wordmark--footer .tk-wordmark__brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #f6f7fa;
+    line-height: 1;
+  }
+  .tk-wordmark--footer .tk-wordmark__outlet {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: #c2a058;
+    text-transform: uppercase;
+  }
+  .tk-wordmark--footer .tk-wordmark__sub {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: rgba(232,227,216,0.55);
+    margin-top: 3px;
+  }
+
+  .tk-footer__tagline {
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(232,227,216,0.78);
+    margin: 20px 0 24px;
+    max-width: 340px;
+  }
+  .tk-footer__social { display: flex; gap: 12px; }
+  .tk-footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #e8e3d8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .tk-footer__social-link:hover { color: #c2a058; }
+  .tk-footer__social-link svg { width: 18px; height: 18px; }
+
+  .tk-footer__heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #c2a058;
+    margin: 0 0 18px;
+    letter-spacing: 0.02em;
+  }
+  .tk-footer__links { list-style: none; padding: 0; margin: 0; }
+  .tk-footer__links li { margin-bottom: 10px; }
+  .tk-footer__links a {
+    font-size: 13px;
+    color: #e8e3d8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .tk-footer__links a:hover { color: #c2a058; }
+
+  .tk-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 0 16px;
+  }
+  .tk-footer__copy {
+    font-size: 12px;
+    color: rgba(232,227,216,0.65);
+    margin: 0;
+  }
+  .tk-footer__payments {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tk-footer__payments svg {
+    width: 36px;
+    height: 24px;
+    display: block;
+  }
+  .tk-footer__legal {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .tk-footer__legal a {
+    color: rgba(232,227,216,0.65);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .tk-footer__legal a:hover { color: #c2a058; }
+  .tk-footer__legal span { color: rgba(232,227,216,0.30); }
+
+  .tk-footer__disclaimer {
+    font-size: 11px;
+    line-height: 1.7;
+    color: rgba(232,227,216,0.45);
+    max-width: 820px;
+    margin: 8px 0 0;
+  }
+
+  @media (max-width: 900px) {
+    .tk-footer { padding: 48px 0 24px; }
+    .tk-footer__inner { padding: 0 24px; }
+    .tk-footer__cols {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      padding-bottom: 36px;
+    }
+    .tk-footer__col--brand {
+      grid-column: 1 / -1;
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .tk-footer__cols { grid-template-columns: 1fr; }
+    .tk-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Top Knobs Footer",
+  "tag": "footer",
+  "class": "tk-footer-section",
+  "settings": []
+}
+{% endschema %}
