@@ -1,32 +1,21 @@
 /*
- * Top Knobs — Header Group with Mega Menu (PATCHED)
+ * Top Knobs — Header Group with Mega Menu (PATCHED v2)
  * Replaces: sections/header-group.json
  *
- * WHAT THIS DOES:
- * Adds 4 mega menu blocks to the header section: "Knobs", "Pulls",
- * "Bath & Cabinet Hardware", and "By Finish". Each block matches a
- * top-level menu item by title (Canopy mega-menu convention) and renders
- * its child links as a multi-column grid with collection images.
+ * STRUCTURE (matches prototype):
+ *   • Products  →  shape-based subcategories (5 columns: Knobs, Pulls, Appliance, Bath, Backplates)
+ *   • Collections  →  all named Top Knobs collections (multi-column grid)
+ *   • Finishes  →  finish swatches with colored dots
  *
- * REQUIRED IN SHOPIFY ADMIN → NAVIGATION:
- * Your "main-menu" navigation menu must have top-level items with these
- * exact titles (case-insensitive):
- *   • Knobs
- *   • Pulls
- *   • Bath & Cabinet Hardware  (or just "Bath" or "Cabinet Hardware")
- *   • By Finish                (or "Finishes")
- * Each must have child links (collections). The mega menu auto-renders
- * those children as columns. If a top-level item is missing children,
- * it just won't show a flyout.
+ * REQUIRES IN SHOPIFY ADMIN → NAVIGATION:
+ * Your "main-menu" must have top-level items titled exactly:
+ *   "Products"   (with Knobs / Pulls / Appliance Pulls / Bath Accessories / Backplates as children, each with shape children)
+ *   "Collections" (with collection links as direct children)
+ *   "Finishes"   (with finish links as direct children)
+ * Use the SIDEKICK-PROMPT.md to set this up automatically.
  *
- * AFTER COMMITTING THIS FILE:
- * Shopify auto-syncs to the live theme. Hard-refresh the storefront
- * (Cmd+Shift+R). Hover any of the 4 menu items to see the mega menu.
- *
- * CUSTOMIZING IN ADMIN:
- * Customize → Header section → block list. You'll see the 4 blocks. You
- * can add promo images, edit the title-match, toggle collection images
- * on/off, change badges, etc. — all without touching code.
+ * AFTER COMMITTING:
+ * Shopify auto-syncs. Hard-refresh the storefront. Hover each item to see the mega menu.
  */
 {
   "type": "header",
@@ -60,48 +49,38 @@
     "header": {
       "type": "header",
       "blocks": {
-        "mega-knobs": {
+        "mega-products": {
           "type": "columns",
           "settings": {
-            "title": "Knobs",
-            "collection_images": "standard",
-            "collection_use_product_image": true,
-            "show_underline": false,
+            "title": "Products",
+            "collection_images": "none",
+            "collection_use_product_image": false,
+            "show_underline": true,
             "promo_position": "right"
           }
         },
-        "mega-pulls": {
+        "mega-collections": {
           "type": "columns",
           "settings": {
-            "title": "Pulls",
-            "collection_images": "standard",
+            "title": "Collections",
+            "collection_images": "small",
             "collection_use_product_image": true,
             "show_underline": false,
             "promo_position": "right"
-          }
-        },
-        "mega-bath": {
-          "type": "columns",
-          "settings": {
-            "title": "Bath & Cabinet Hardware, Bath, Cabinet Hardware, Bath Hardware",
-            "collection_images": "standard",
-            "collection_use_product_image": true,
-            "show_underline": false,
-            "promo_position": "bottom"
           }
         },
         "mega-finish": {
           "type": "columns",
           "settings": {
-            "title": "By Finish, Finishes, Finish",
-            "collection_images": "standard",
+            "title": "Finishes, By Finish, Finish",
+            "collection_images": "swatch",
             "collection_use_product_image": false,
             "show_underline": false,
             "promo_position": "bottom"
           }
         }
       },
-      "block_order": ["mega-knobs", "mega-pulls", "mega-bath", "mega-finish"],
+      "block_order": ["mega-products", "mega-collections", "mega-finish"],
       "settings": {
         "mobile_menu_position": "burger-left",
         "enable_sticky": true,
@@ -119,7 +98,7 @@
         "menu_center": true,
         "link_toggle": "mobile",
         "repeat_links": true,
-        "menu_featured_link": "Sale",
+        "menu_featured_link": "What's New",
         "enable_customer_account_component": false,
         "customer_account_menu": "customer-account-main-menu",
         "cta_show": false,
