@@ -63,8 +63,8 @@
           "type": "columns",
           "settings": {
             "title": "Collections",
-            "collection_images": "small",
-            "collection_use_product_image": true,
+            "collection_images": "none",
+            "collection_use_product_image": false,
             "show_underline": false,
             "promo_position": "right"
           }
