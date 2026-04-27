@@ -3,12 +3,18 @@
     <div class="tk-pcard__media">
       {%- if product.featured_image != blank -%}
         {{- product.featured_image | image_url: width: 600 | image_tag:
-            loading: 'lazy',
-            class: 'tk-pcard__img',
+            loading: 'lazy', class: 'tk-pcard__img',
             alt: product.featured_image.alt | default: product.title | escape -}}
       {%- else -%}
         <div class="tk-pcard__img tk-pcard__img--placeholder"></div>
       {%- endif -%}
+
+      {%- comment -%} Sale badge if compare_at > price {%- endcomment -%}
+      {%- if product.compare_at_price > product.price -%}
+        {%- assign pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
+        <span class="tk-pcard__sale-badge">Save {{ pct }}%</span>
+      {%- endif -%}
+
       <div class="tk-pcard__quick-add" data-variant-id="{{ product.first_available_variant.id }}">
         <span>Quick Add to Cart</span>
       </div>
@@ -21,26 +27,65 @@
       <p class="tk-pcard__name">
         {{- product.title | escape -}}
         {%- assign size_meta = product.metafields.tk.size -%}
-        {%- if size_meta != blank -%} &mdash; {{ size_meta }}{%- endif -%}
+        {%- if size_meta != blank and size_meta != 0 and size_meta != '0' -%} &mdash; {{ size_meta }}{%- endif -%}
       </p>
       {%- if product.variants.first.sku != blank -%}
         <p class="tk-pcard__sku">SKU: {{ product.variants.first.sku }}</p>
       {%- endif -%}
       <div class="tk-pcard__bottom">
-        <span class="tk-pcard__price">{{ product.price | money }}</span>
+        <div class="tk-pcard__price-wrap">
+          <span class="tk-pcard__price">{{ product.price | money }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="tk-pcard__price-was">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
         <div class="tk-pcard__finishes">
-          {%- assign finish_colors = product.metafields.tk.finish_colors.value -%}
-          {%- if finish_colors != blank -%}
-            {%- for color in finish_colors limit: 4 -%}
-              <span class="tk-pcard__dot" style="background: {{ color }};"></span>
+          {%- comment -%} Use option_with_values to find the Finish/Color option, then render swatches {%- endcomment -%}
+          {%- assign finish_option = blank -%}
+          {%- for opt in product.options_with_values -%}
+            {%- assign opt_lower = opt.name | downcase -%}
+            {%- if opt_lower contains 'finish' or opt_lower contains 'color' or opt_lower contains 'colour' -%}
+              {%- assign finish_option = opt -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if finish_option != blank -%}
+            {%- for value in finish_option.values limit: 4 -%}
+              {%- render 'tk-finish-swatch', finish_name: value, size: 14, extra_class: 'tk-pcard__dot' -%}
             {%- endfor -%}
-          {%- else -%}
-            {%- for variant in product.variants limit: 4 -%}
-              <span class="tk-pcard__dot" title="{{ variant.option1 | escape }}"></span>
-            {%- endfor -%}
+            {%- if finish_option.values.size > 4 -%}
+              <span class="tk-pcard__more">+{{ finish_option.values.size | minus: 4 }}</span>
+            {%- endif -%}
           {%- endif -%}
         </div>
       </div>
     </div>
   </a>
 </div>
+
+{%- comment -%}
+  Card-specific styles (only loaded when card is on the page).
+  Most styles assumed to live in base.css already; this is just the new additions for sale badge + price-was.
+{%- endcomment -%}
+{%- unless tk_pcard_styles_loaded -%}
+  {%- assign tk_pcard_styles_loaded = true -%}
+  <style>
+    .tk-pcard__media { position: relative; }
+    .tk-pcard__sale-badge {
+      position: absolute; top: 10px; left: 10px; z-index: 2;
+      background: oklch(50% 0.13 145); color: #fff;
+      font-family: var(--tk-font-body); font-size: 10px;
+      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 8px;
+    }
+    .tk-pcard__price-wrap { display: flex; align-items: baseline; gap: 8px; }
+    .tk-pcard__price-was {
+      font-family: var(--tk-font-body); font-size: 12px;
+      color: var(--color-text2); text-decoration: line-through;
+    }
+    .tk-pcard__more {
+      font-family: var(--tk-font-body); font-size: 10px;
+      color: var(--color-text2); margin-left: 4px;
+    }
+  </style>
+{%- endunless -%}

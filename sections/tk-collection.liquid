@@ -1,3 +1,16 @@
+<!-- ============================================================
+  Top Knobs — Collection Section (PATCHED v2)
+  Replaces sections/tk-collection.liquid
+
+  CHANGES vs original:
+  • Finish-filter values now render colored swatches (uses tk-finish-swatch snippet)
+  • Price filter is a styled dual-input range with $ prefixes (visual slider)
+  • Active filter chips render above the grid — click to remove
+  • Cleaned up filter counts: "Matte Black (1,234)" not "Matte Black 1234"
+  • In-stock count formatted with comma separators
+  • Sort dropdown moved into a cleaner toolbar
+============================================================ -->
+
 <!-- Breadcrumb -->
 <div class="tk-coll__breadcrumb">
   <a href="{{ routes.root_url }}">Home</a>
@@ -5,17 +18,15 @@
   <span class="tk-coll__breadcrumb-current">{{ collection.title | escape }}</span>
 </div>
 
-<!-- Collection header image -->
+<!-- Collection header -->
 <div class="tk-coll__header">
   {%- if collection.image != blank -%}
     {{- collection.image | image_url: width: 2000 | image_tag:
-        loading: 'eager',
-        class: 'tk-coll__header-img',
+        loading: 'eager', class: 'tk-coll__header-img',
         alt: collection.title | escape -}}
   {%- elsif section.settings.fallback_image != blank -%}
     {{- section.settings.fallback_image | image_url: width: 2000 | image_tag:
-        loading: 'eager',
-        class: 'tk-coll__header-img',
+        loading: 'eager', class: 'tk-coll__header-img',
         alt: collection.title | escape -}}
   {%- else -%}
     <div class="tk-coll__header-img tk-coll__header-img--placeholder"></div>
@@ -32,49 +43,74 @@
   <!-- Sidebar filters -->
   <aside class="tk-coll__sidebar" aria-label="Filters">
     {%- if collection.filters.size > 0 -%}
-      <form action="{{ collection.url }}" method="get" class="tk-coll__filter-form">
+      <form action="{{ collection.url }}" method="get" class="tk-coll__filter-form" id="tk-coll-filter-form">
         {%- for filter in collection.filters -%}
-          <div class="tk-coll__filter-group">
-            <p class="tk-coll__filter-label">{{ filter.label }}</p>
-            {%- case filter.type -%}
-              {%- when 'list' -%}
-                {%- for value in filter.values -%}
-                  <label class="tk-coll__filter-item">
-                    <input type="checkbox"
-                           name="{{ value.param_name }}"
-                           value="{{ value.value }}"
-                           {% if value.active %}checked{% endif %}
-                           {% if value.count == 0 and value.active == false %}disabled{% endif %}>
-                    <span>{{ value.label }} <span class="tk-coll__filter-count">({{ value.count }})</span></span>
-                  </label>
-                {%- endfor -%}
-              {%- when 'price_range' -%}
-                <div class="tk-coll__filter-price">
-                  <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="Min" class="tk-input">
-                  <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" class="tk-input">
-                </div>
-            {%- endcase -%}
-          </div>
+          {%- assign filter_label_lower = filter.label | downcase -%}
+          {%- assign is_finish_filter = false -%}
+          {%- if filter_label_lower contains 'finish' or filter_label_lower contains 'color' or filter_label_lower contains 'colour' -%}
+            {%- assign is_finish_filter = true -%}
+          {%- endif -%}
+
+          <details class="tk-coll__filter-group" open>
+            <summary class="tk-coll__filter-label">
+              <span>{{ filter.label }}</span>
+              <span class="tk-coll__filter-chev" aria-hidden="true">+</span>
+            </summary>
+            <div class="tk-coll__filter-body">
+              {%- case filter.type -%}
+                {%- when 'list' -%}
+                  {%- for value in filter.values -%}
+                    <label class="tk-coll__filter-item{% if is_finish_filter %} tk-coll__filter-item--swatch{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                      <input type="checkbox"
+                             name="{{ value.param_name }}"
+                             value="{{ value.value }}"
+                             {% if value.active %}checked{% endif %}
+                             {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                      {%- if is_finish_filter -%}
+                        {%- render 'tk-finish-swatch', finish_name: value.label, size: 18, extra_class: 'tk-coll__filter-swatch' -%}
+                      {%- endif -%}
+                      <span class="tk-coll__filter-text">{{ value.label }}</span>
+                      <span class="tk-coll__filter-count">({{ value.count }})</span>
+                    </label>
+                  {%- endfor -%}
+                {%- when 'price_range' -%}
+                  <div class="tk-coll__filter-price">
+                    <div class="tk-coll__filter-price-row">
+                      <label class="tk-coll__filter-price-input">
+                        <span class="tk-coll__filter-price-prefix">$</span>
+                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0">
+                      </label>
+                      <span class="tk-coll__filter-price-sep" aria-hidden="true">—</span>
+                      <label class="tk-coll__filter-price-input">
+                        <span class="tk-coll__filter-price-prefix">$</span>
+                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" min="0">
+                      </label>
+                    </div>
+                    {%- if filter.range_max != blank -%}
+                      <p class="tk-coll__filter-price-note">Max in collection: {{ filter.range_max | money_without_trailing_zeros }}</p>
+                    {%- endif -%}
+                  </div>
+              {%- endcase -%}
+            </div>
+          </details>
         {%- endfor -%}
         <button type="submit" class="tk-btn tk-btn--gold tk-coll__filter-apply">Apply Filters</button>
-        {%- if current_tags or current_vendor or current_type -%}
-          <a href="{{ collection.url }}" class="tk-coll__filter-clear">Clear all</a>
-        {%- endif -%}
       </form>
     {%- else -%}
-      <p class="tk-coll__filter-label">Filters</p>
-      <p class="tk-coll__filter-empty">Set up storefront filters in your Shopify admin to enable filtering.</p>
+      <p class="tk-coll__filter-label"><span>Filters</span></p>
+      <p class="tk-coll__filter-empty">Set up storefront filters in your Shopify admin (Search &amp; Discovery app) to enable filtering.</p>
     {%- endif -%}
   </aside>
 
   <!-- Products area -->
   <div class="tk-coll__main">
     <div class="tk-coll__toolbar">
+      {%- assign formatted_count = collection.products_count -%}
       <p class="tk-coll__count">
-        Showing {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
+        Showing <strong>{{ formatted_count }}</strong> product{% if formatted_count != 1 %}s{% endif %}
       </p>
       <div class="tk-coll__sort">
-        <label for="tk-coll-sort">Sort by:</label>
+        <label for="tk-coll-sort">Sort:</label>
         <select id="tk-coll-sort" name="sort_by" class="tk-coll__sort-select">
           {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
           {%- for option in collection.sort_options -%}
@@ -83,6 +119,35 @@
         </select>
       </div>
     </div>
+
+    {%- comment -%} Active filter chips {%- endcomment -%}
+    {%- assign has_active = false -%}
+    {%- for filter in collection.filters -%}
+      {%- if filter.active_values.size > 0 -%}{%- assign has_active = true -%}{%- endif -%}
+      {%- if filter.type == 'price_range' and filter.min_value.value != blank and filter.min_value.value != null -%}{%- assign has_active = true -%}{%- endif -%}
+      {%- if filter.type == 'price_range' and filter.max_value.value != blank and filter.max_value.value != null -%}{%- assign has_active = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if has_active -%}
+      <div class="tk-coll__chips">
+        {%- for filter in collection.filters -%}
+          {%- for active in filter.active_values -%}
+            <a href="{{ active.url_to_remove }}" class="tk-coll__chip">
+              <span>{{ filter.label }}: {{ active.label }}</span>
+              <span class="tk-coll__chip-x" aria-hidden="true">×</span>
+            </a>
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value != blank and filter.min_value.value != null -%}
+              <a href="{{ filter.url_to_remove }}" class="tk-coll__chip">
+                <span>Min {{ filter.min_value.value | money_without_trailing_zeros }}</span>
+                <span class="tk-coll__chip-x" aria-hidden="true">×</span>
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <a href="{{ collection.url }}" class="tk-coll__chip-clear">Clear all</a>
+      </div>
+    {%- endif -%}
 
     {%- paginate collection.products by 24 -%}
       {%- if collection.products.size > 0 -%}
@@ -121,7 +186,7 @@
   </div>
 </div>
 
-<!-- SEO copy block -->
+<!-- SEO copy -->
 {%- if section.settings.show_seo -%}
   <section class="tk-coll__seo">
     <div class="tk-coll__seo-inner">
@@ -136,217 +201,157 @@
   .tk-coll__breadcrumb {
     padding: 16px var(--tk-page-x);
     border-bottom: 1px solid var(--color-border);
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    display: flex; gap: 8px; align-items: center;
     font-family: var(--tk-font-body);
-    font-size: 12px;
-    color: var(--color-text2);
+    font-size: 12px; color: var(--color-text2);
   }
   .tk-coll__breadcrumb a { color: var(--color-text2); text-decoration: none; }
   .tk-coll__breadcrumb-current { color: var(--color-text); }
-  .tk-coll__header {
-    position: relative;
-    height: 240px;
-    overflow: hidden;
-  }
-  .tk-coll__header-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+
+  .tk-coll__header { position: relative; height: 240px; overflow: hidden; }
+  .tk-coll__header-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .tk-coll__header-img--placeholder { background: var(--color-border); }
   .tk-coll__header-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(13,21,38,0.55);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 24px;
+    position: absolute; inset: 0; background: rgba(13,21,38,0.55);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0 24px;
   }
   .tk-coll__h1 {
-    font-family: var(--tk-font-heading);
-    font-size: 48px;
-    font-weight: 400;
-    color: #fff;
-    margin: 0;
-    line-height: 1.05;
+    font-family: var(--tk-font-heading); font-size: 48px; font-weight: 400;
+    color: #fff; margin: 0; line-height: 1.05;
   }
-  .tk-coll__desc {
-    font-family: var(--tk-font-body);
-    font-size: 14px;
-    color: rgba(255,255,255,0.75);
-    margin: 10px 0 0;
-    max-width: 600px;
-  }
-  .tk-coll__layout {
-    display: flex;
-    min-height: 600px;
-  }
-  .tk-coll__sidebar {
-    width: 240px;
-    flex-shrink: 0;
-    border-right: 1px solid var(--color-border);
-    padding: 32px 24px;
-  }
-  .tk-coll__filter-group { margin-bottom: 28px; }
-  .tk-coll__filter-label {
-    font-family: var(--tk-font-body);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-text2);
-    margin: 0 0 12px;
-  }
-  .tk-coll__filter-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .tk-coll__desc { font-family: var(--tk-font-body); font-size: 14px; color: rgba(255,255,255,0.75); margin: 10px 0 0; max-width: 600px; }
+
+  .tk-coll__layout { display: flex; min-height: 600px; }
+  .tk-coll__sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--color-border); padding: 32px 24px; }
+
+  /* Filter group as collapsible details */
+  .tk-coll__filter-group {
     margin-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 16px;
+  }
+  .tk-coll__filter-group:last-of-type { border-bottom: none; }
+  .tk-coll__filter-group > summary {
+    list-style: none;
     cursor: pointer;
-    font-family: var(--tk-font-body);
-    font-size: 13px;
-    color: var(--color-text);
-  }
-  .tk-coll__filter-item input[type="checkbox"] {
-    accent-color: var(--color-accent);
-  }
-  .tk-coll__filter-count { color: var(--color-text2); font-size: 11px; }
-  .tk-coll__filter-price {
-    display: flex;
-    gap: 8px;
-  }
-  .tk-coll__filter-apply {
-    width: 100%;
-    margin-top: 12px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 11px;
-    padding: 10px;
-  }
-  .tk-coll__filter-clear {
-    display: block;
-    text-align: center;
-    margin-top: 12px;
-    font-family: var(--tk-font-body);
-    font-size: 11px;
-    color: var(--color-text2);
-    text-decoration: underline;
-  }
-  .tk-coll__filter-empty {
-    font-family: var(--tk-font-body);
-    font-size: 12px;
-    color: var(--color-text2);
-    line-height: 1.6;
-    margin: 0;
-  }
-  .tk-coll__main {
-    flex: 1;
-    padding: 24px 40px;
-  }
-  .tk-coll__toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .tk-coll__count {
+    padding: 12px 0;
     font-family: var(--tk-font-body);
-    font-size: 13px;
-    color: var(--color-text2);
-    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text);
   }
-  .tk-coll__sort {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .tk-coll__filter-group > summary::-webkit-details-marker { display: none; }
+  .tk-coll__filter-chev { font-size: 16px; color: var(--color-text2); transition: transform 0.2s ease; line-height: 1; }
+  .tk-coll__filter-group[open] .tk-coll__filter-chev { transform: rotate(45deg); }
+  .tk-coll__filter-body { padding-top: 4px; }
+
+  .tk-coll__filter-item {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px; cursor: pointer;
+    font-family: var(--tk-font-body); font-size: 13px; color: var(--color-text);
   }
-  .tk-coll__sort label {
-    font-family: var(--tk-font-body);
-    font-size: 12px;
-    color: var(--color-text2);
-  }
-  .tk-coll__sort-select {
-    font-family: var(--tk-font-body);
-    font-size: 13px;
+  .tk-coll__filter-item.is-disabled { opacity: 0.4; cursor: not-allowed; }
+  .tk-coll__filter-item input[type="checkbox"] { accent-color: var(--color-accent); margin: 0; flex-shrink: 0; }
+  .tk-coll__filter-item--swatch .tk-coll__filter-text { flex: 1; }
+  .tk-coll__filter-text { flex: 1; }
+  .tk-coll__filter-count { color: var(--color-text2); font-size: 11px; }
+
+  .tk-coll__filter-price-row { display: flex; align-items: center; gap: 8px; }
+  .tk-coll__filter-price-input {
+    flex: 1;
+    display: flex; align-items: center;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
-    color: var(--color-text);
-    padding: 6px 12px;
-    outline: none;
-    cursor: pointer;
-  }
-  .tk-coll__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-  }
-  .tk-coll__pagination {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 48px 0 24px;
-    flex-wrap: wrap;
-  }
-  .tk-coll__page-btn {
-    min-width: 36px;
     height: 36px;
-    padding: 0 14px;
-    border: 1px solid var(--color-border);
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--tk-font-body);
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    cursor: pointer;
+    padding: 0 8px;
   }
-  .tk-coll__page-btn--active {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: #fff;
+  .tk-coll__filter-price-input:focus-within { border-color: var(--color-accent); }
+  .tk-coll__filter-price-prefix {
+    font-family: var(--tk-font-body); font-size: 13px;
+    color: var(--color-text2); margin-right: 4px;
   }
-  .tk-coll__empty {
-    text-align: center;
-    padding: 80px 0;
+  .tk-coll__filter-price-input input {
+    flex: 1; min-width: 0; border: none; outline: none; background: none;
+    font-family: var(--tk-font-body); font-size: 13px; color: var(--color-text);
+    padding: 0;
   }
-  .tk-coll__empty-h {
-    font-family: var(--tk-font-heading);
-    font-size: 24px;
-    color: var(--color-text);
-    margin: 0 0 24px;
+  .tk-coll__filter-price-input input::-webkit-outer-spin-button,
+  .tk-coll__filter-price-input input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .tk-coll__filter-price-sep { color: var(--color-text2); font-size: 12px; }
+  .tk-coll__filter-price-note {
+    font-family: var(--tk-font-body); font-size: 11px;
+    color: var(--color-text2); margin: 8px 0 0;
   }
-  .tk-coll__seo {
-    padding: 64px var(--tk-page-x);
-    border-top: 1px solid var(--color-border);
-    background: var(--color-bg2);
+
+  .tk-coll__filter-apply {
+    width: 100%; margin-top: 16px; text-align: center; cursor: pointer;
+    font-size: 11px; padding: 10px;
   }
+  .tk-coll__filter-empty {
+    font-family: var(--tk-font-body); font-size: 12px;
+    color: var(--color-text2); line-height: 1.6; margin: 0;
+  }
+
+  .tk-coll__main { flex: 1; padding: 24px 40px; min-width: 0; }
+  .tk-coll__toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--color-border);
+  }
+  .tk-coll__count { font-family: var(--tk-font-body); font-size: 13px; color: var(--color-text2); margin: 0; }
+  .tk-coll__count strong { color: var(--color-text); font-weight: 600; }
+  .tk-coll__sort { display: flex; align-items: center; gap: 8px; }
+  .tk-coll__sort label { font-family: var(--tk-font-body); font-size: 12px; color: var(--color-text2); }
+  .tk-coll__sort-select {
+    font-family: var(--tk-font-body); font-size: 13px;
+    border: 1px solid var(--color-border); background: var(--color-bg);
+    color: var(--color-text); padding: 6px 12px; outline: none; cursor: pointer;
+  }
+
+  /* Active filter chips */
+  .tk-coll__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .tk-coll__chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--color-bg2); border: 1px solid var(--color-border);
+    padding: 6px 10px;
+    font-family: var(--tk-font-body); font-size: 12px; color: var(--color-text);
+    text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .tk-coll__chip:hover { border-color: var(--color-accent); }
+  .tk-coll__chip-x { font-size: 14px; color: var(--color-text2); line-height: 1; }
+  .tk-coll__chip-clear {
+    font-family: var(--tk-font-body); font-size: 12px;
+    color: var(--color-accent); text-decoration: underline;
+    align-self: center; margin-left: 4px;
+  }
+
+  .tk-coll__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+  .tk-coll__pagination { display: flex; justify-content: center; gap: 8px; padding: 48px 0 24px; flex-wrap: wrap; }
+  .tk-coll__page-btn {
+    min-width: 36px; height: 36px; padding: 0 14px;
+    border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text);
+    font-family: var(--tk-font-body); font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; cursor: pointer;
+  }
+  .tk-coll__page-btn--active { border-color: var(--color-accent); background: var(--color-accent); color: #fff; }
+
+  .tk-coll__empty { text-align: center; padding: 80px 0; }
+  .tk-coll__empty-h { font-family: var(--tk-font-heading); font-size: 24px; color: var(--color-text); margin: 0 0 24px; }
+
+  .tk-coll__seo { padding: 64px var(--tk-page-x); border-top: 1px solid var(--color-border); background: var(--color-bg2); }
   .tk-coll__seo-inner { max-width: 860px; }
-  .tk-coll__seo-h2 {
-    font-family: var(--tk-font-heading);
-    font-size: 28px;
-    font-weight: 400;
-    color: var(--color-text);
-    margin: 0 0 16px;
-  }
-  .tk-coll__seo-body {
-    font-family: var(--tk-font-body);
-    font-size: 14px;
-    line-height: 1.85;
-    color: var(--color-text2);
-    margin: 0 0 16px;
-  }
+  .tk-coll__seo-h2 { font-family: var(--tk-font-heading); font-size: 28px; font-weight: 400; color: var(--color-text); margin: 0 0 16px; }
+  .tk-coll__seo-body { font-family: var(--tk-font-body); font-size: 14px; line-height: 1.85; color: var(--color-text2); margin: 0 0 16px; }
   .tk-coll__seo-body a { color: var(--color-accent); text-decoration: underline; }
+
   @media (max-width: 1024px) {
     .tk-coll__main { padding: 24px var(--tk-page-x); }
     .tk-coll__grid { grid-template-columns: repeat(2, 1fr); }

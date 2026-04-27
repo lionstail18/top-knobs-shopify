@@ -1,0 +1,65 @@
+/* ============================================================
+   Top Knobs — Finish swatch styles
+   Used by snippet 'tk-finish-swatch.liquid'.
+   Include this file once via theme.liquid:
+     {{ 'tk-finish-swatches.css' | asset_url | stylesheet_tag }}
+   ============================================================ */
+
+.tk-swatch {
+  --tk-swatch-size: 32px;
+  display: inline-block;
+  width: var(--tk-swatch-size);
+  height: var(--tk-swatch-size);
+  border-radius: 50%;
+  background: #d8d8d4; /* fallback */
+  border: 1px solid rgba(0,0,0,0.12);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -1px 2px rgba(0,0,0,0.15);
+  position: relative;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Light finishes need a stronger outline so they don't disappear on white bg */
+.tk-swatch[data-finish*="white"],
+.tk-swatch[data-finish*="porcelain"],
+.tk-swatch[data-finish*="crystal"],
+.tk-swatch[data-finish*="glass"],
+.tk-swatch[data-finish*="mother of pearl"] {
+  border-color: rgba(0,0,0,0.22);
+}
+
+/* Unknown finishes show an initial */
+.tk-swatch--unknown {
+  background: #e8e6e0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tk-swatch__initial {
+  font-family: var(--tk-font-body, system-ui), sans-serif;
+  font-size: calc(var(--tk-swatch-size) * 0.42);
+  font-weight: 600;
+  color: #6a6a64;
+  line-height: 1;
+}
+
+/* When used inside a swatch button on PDP, the wrapper handles the active ring */
+.tk-prod__swatch--active .tk-swatch {
+  outline: 2px solid var(--color-accent, #c2a058);
+  outline-offset: 2px;
+}
+
+/* When used as a small dot in a product card */
+.tk-pcard__dot.tk-swatch {
+  --tk-swatch-size: 14px;
+  border-width: 1px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
+  margin-right: 3px;
+}
+.tk-pcard__dot.tk-swatch .tk-swatch__initial { display: none; }
+
+/* When used in a filter list */
+.tk-coll__filter-swatch {
+  --tk-swatch-size: 18px;
+  margin-right: 8px;
+}

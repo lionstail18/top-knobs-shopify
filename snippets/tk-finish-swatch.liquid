@@ -1,0 +1,79 @@
+{%- comment -%}
+  Renders a finish swatch dot with the correct color.
+
+  Accepts:
+    finish_name: string — the finish name as written on the variant or value
+    size: optional CSS size (default 32px)
+    extra_class: optional extra class
+
+  Usage:
+    {% render 'tk-finish-swatch', finish_name: variant.option1 %}
+    {% render 'tk-finish-swatch', finish_name: 'Matte Black', size: 16, extra_class: 'tk-pcard__dot' %}
+{%- endcomment -%}
+
+{%- assign normalized = finish_name | downcase | strip | replace: '  ', ' ' -%}
+{%- assign size_val = size | default: 32 -%}
+
+{%- comment -%} Top Knobs finish → hex color map. Update finish names to match your storefront exactly. {%- endcomment -%}
+{%- case normalized -%}
+  {%- when 'matte black' -%}{%- assign hex = '#1a1a1a' -%}
+  {%- when 'flat black' -%}{%- assign hex = '#222222' -%}
+  {%- when 'tuscan bronze' -%}{%- assign hex = '#5a4633' -%}
+  {%- when 'honey bronze' -%}{%- assign hex = '#8b6f47' -%}
+  {%- when 'oil rubbed bronze' -%}{%- assign hex = '#3d2c1f' -%}
+  {%- when 'umbrio' -%}{%- assign hex = '#3a3027' -%}
+  {%- when 'german bronze' -%}{%- assign hex = '#4a3d31' -%}
+  {%- when 'antique bronze' -%}{%- assign hex = '#5e4a36' -%}
+  {%- when 'polished nickel' -%}{%- assign hex = '#c5c4bf' -%}
+  {%- when 'brushed satin nickel' -%}{%- assign hex = '#a9a9a3' -%}
+  {%- when 'satin nickel' -%}{%- assign hex = '#a9a9a3' -%}
+  {%- when 'pewter' -%}{%- assign hex = '#8e8e88' -%}
+  {%- when 'pewter antique' -%}{%- assign hex = '#7a7872' -%}
+  {%- when 'antique pewter' -%}{%- assign hex = '#7a7872' -%}
+  {%- when 'brushed pewter' -%}{%- assign hex = '#9a9892' -%}
+  {%- when 'brushed satin brass' -%}{%- assign hex = '#b89a5a' -%}
+  {%- when 'brushed brass' -%}{%- assign hex = '#b89a5a' -%}
+  {%- when 'satin brass' -%}{%- assign hex = '#c4a868' -%}
+  {%- when 'polished brass' -%}{%- assign hex = '#d4af37' -%}
+  {%- when 'unlacquered brass' -%}{%- assign hex = '#b89a5a' -%}
+  {%- when 'brushed gold' -%}{%- assign hex = '#cdb380' -%}
+  {%- when 'gold' -%}{%- assign hex = '#d4af37' -%}
+  {%- when 'rose gold' -%}{%- assign hex = '#b76e79' -%}
+  {%- when 'champagne bronze' -%}{%- assign hex = '#a8895c' -%}
+  {%- when 'polished chrome' -%}{%- assign hex = '#cccccc' -%}
+  {%- when 'chrome' -%}{%- assign hex = '#cccccc' -%}
+  {%- when 'brushed chrome' -%}{%- assign hex = '#b8b8b8' -%}
+  {%- when 'matte chrome' -%}{%- assign hex = '#a8a8a8' -%}
+  {%- when 'polished copper' -%}{%- assign hex = '#b87333' -%}
+  {%- when 'antique copper' -%}{%- assign hex = '#7e4427' -%}
+  {%- when 'brushed copper' -%}{%- assign hex = '#9a5e34' -%}
+  {%- when 'antique english' -%}{%- assign hex = '#4a3a2a' -%}
+  {%- when 'flat white' -%}{%- assign hex = '#f5f5f0' -%}
+  {%- when 'matte white' -%}{%- assign hex = '#f5f5f0' -%}
+  {%- when 'white' -%}{%- assign hex = '#ffffff' -%}
+  {%- when 'gunmetal' -%}{%- assign hex = '#2a3439' -%}
+  {%- when 'graphite' -%}{%- assign hex = '#383838' -%}
+  {%- when 'silver' -%}{%- assign hex = '#bcbcb6' -%}
+  {%- when 'mahogany bronze' -%}{%- assign hex = '#4a2c1d' -%}
+  {%- when 'cocoa bronze' -%}{%- assign hex = '#52382a' -%}
+  {%- when 'verde antique' -%}{%- assign hex = '#5b6e58' -%}
+  {%- when 'patina' -%}{%- assign hex = '#7a8a6b' -%}
+  {%- when 'crystal' -%}{%- assign hex = '#e8e8f0' -%}
+  {%- when 'glass' -%}{%- assign hex = '#e8e8f0' -%}
+  {%- when 'porcelain' -%}{%- assign hex = '#faf8f3' -%}
+  {%- when 'mother of pearl' -%}{%- assign hex = '#f4ecd8' -%}
+  {%- when 'horn' -%}{%- assign hex = '#d4b896' -%}
+  {%- when 'leather' -%}{%- assign hex = '#8b6b3d' -%}
+  {%- when 'wood' -%}{%- assign hex = '#a0826d' -%}
+  {%- else -%}{%- assign hex = '' -%}
+{%- endcase -%}
+
+<span class="tk-swatch{% if extra_class %} {{ extra_class }}{% endif %}{% if hex == '' %} tk-swatch--unknown{% endif %}"
+      title="{{ finish_name | escape }}"
+      style="--tk-swatch-size: {{ size_val }}px;{% if hex != '' %} background: {{ hex }};{% endif %}"
+      data-finish="{{ normalized | escape }}">
+  {%- if hex == '' -%}
+    {%- assign initial = finish_name | slice: 0, 1 | upcase -%}
+    <span class="tk-swatch__initial">{{ initial }}</span>
+  {%- endif -%}
+</span>
