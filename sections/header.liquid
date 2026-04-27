@@ -224,6 +224,49 @@
       border-top-color: rgb(var(--header-accent-color));
     }
   }
+
+  /* ── Collections mega-menu: serif list, gold overline, hairline dividers ── */
+  @media (min-width: 769px) {
+    .cc-header .mega-nav--collections > .container {
+      padding-top: 32px;
+      padding-bottom: 40px;
+    }
+    /* "BROWSE COLLECTIONS" overline label */
+    .cc-header .mega-nav--collections > .container::before {
+      content: "Browse Collections";
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgb(var(--header-accent-color));
+      margin-bottom: 20px;
+    }
+    /* Serif collection names with hairline divider under each */
+    .cc-header .mega-nav--collections .child-nav__item {
+      display: block;
+      width: 100%;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      line-height: 1.4;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(var(--text-color), 0.10);
+    }
+    .cc-header .mega-nav--collections .child-nav__item:hover {
+      color: rgb(var(--header-accent-color));
+    }
+    /* Belt-and-suspenders: hide thumbnails in the Collections panel even if
+       the JSON setting drifts back to "standard" or stale data slips through. */
+    .cc-header .mega-nav--collections .main-nav__collection-image,
+    .cc-header .mega-nav--collections .child-nav__item-collection-image {
+      display: none !important;
+    }
+  }
 {%- endstyle -%}
 
 <store-header class="header bg-theme-bg text-theme-text{% if section.settings.enable_sticky or search_is_minimised %} has-motion{% endif %}{% if search_is_minimised %} search-is-collapsed{% endif %}"
@@ -490,7 +533,7 @@
                         endif
                       endif
                     -%}
-                    <div class="main-nav__child{% if mega_nav %} mega-nav mega-nav--{{ mega_nav.type }}{% if has_grandchildren_menus == false %} mega-nav--no-grandchildren{% endif %}{% endif %} has-motion" id="nav-dropdown-{{ forloop.index }}">
+                    <div class="main-nav__child{% if mega_nav %} mega-nav mega-nav--{{ mega_nav.type }} mega-nav--{{ mega_nav.settings.title | split: ',' | first | strip | handleize }}{% if has_grandchildren_menus == false %} mega-nav--no-grandchildren{% endif %}{% endif %} has-motion" id="nav-dropdown-{{ forloop.index }}">
                       {% if mega_nav %}<div class="container{% if promo_count > 0 %} mega-nav--promos-{{ mega_nav.settings.promo_position }}{% endif %}">{% endif %}
                         <ul class="child-nav{% if child_nav_classes %} {{ child_nav_classes }}{% endif %}">
                           <li class="md:hidden">

@@ -72,7 +72,7 @@
         "mega-finish": {
           "type": "columns",
           "settings": {
-            "title": "Finishes, By Finish, Finish",
+            "title": "Finishes",
             "collection_images": "swatch",
             "collection_use_product_image": false,
             "show_underline": false,
