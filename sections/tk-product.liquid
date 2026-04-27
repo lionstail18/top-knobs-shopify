@@ -166,12 +166,12 @@
         <button type="submit" class="tk-prod__add-btn" id="tk-prod-add-btn">Add to Cart</button>
       </div>
 
-      {%- if section.settings.show_qty_discount -%}
-        <p class="tk-prod__qty-discount" id="tk-prod-qty-discount">
-          <span aria-hidden="true">★</span>
-          <span class="tk-prod__qty-discount-text">Buy {{ section.settings.qty_discount_threshold }}+ — Save {{ section.settings.qty_discount_pct }}% automatically at checkout</span>
-        </p>
-      {%- endif -%}
+      {%- comment -%}
+        Quantity-discount notice removed: Top Knobs Hardware Outlet does not offer
+        a buy-N+ discount. The schema setting + JS handler are left in place so this
+        block can be restored cheaply if pricing ever changes — just paste the
+        original <p class="tk-prod__qty-discount"> back in.
+      {%- endcomment -%}
 
       <a href="{{ routes.all_products_collection_url }}?filter.p.tag=sample" class="tk-btn tk-btn--ghost-dark tk-prod__sample-btn">
         Order a Sample — From $5
@@ -315,8 +315,21 @@
 
   .tk-prod__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 600px; }
   .tk-prod__gallery { padding: 40px 48px 40px var(--tk-page-x); }
-  .tk-prod__main-img { display: block; width: 100%; height: 440px; object-fit: cover; margin-bottom: 12px; }
-  .tk-prod__main-img--placeholder { background: var(--color-border); }
+  /* Main product image: square wrap with breathing room, contained image (not cropped).
+     max-width keeps the image from sprawling on wide viewports; aspect-ratio:1/1
+     gives a consistent square frame; object-fit:contain shows the whole product. */
+  .tk-prod__main-img-wrap {
+    background: #fff;
+    max-width: 560px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tk-prod__main-img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .tk-prod__main-img--placeholder { width: 100%; height: 100%; background: var(--color-border); }
   .tk-prod__thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .tk-prod__thumb { border: 2px solid transparent; background: none; padding: 0; cursor: pointer; }
   .tk-prod__thumb--active { border-color: var(--color-accent); }
