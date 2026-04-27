@@ -1,0 +1,185 @@
+<div class="tk-contact__header">
+  <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+  <h1 class="tk-contact__h1">{{ section.settings.heading | escape }}</h1>
+  <p class="tk-contact__intro">{{ section.settings.intro | escape }}</p>
+</div>
+
+<div class="tk-contact__body">
+  <!-- Info column -->
+  <div class="tk-contact__info">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'info_item' -%}
+        <div class="tk-contact__info-item" {{ block.shopify_attributes }}>
+          <p class="tk-contact__info-label">{{ block.settings.label | escape }}</p>
+          <p class="tk-contact__info-value">{{ block.settings.value | escape }}</p>
+          {%- if block.settings.sub != blank -%}
+            <p class="tk-contact__info-sub">{{ block.settings.sub | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <!-- Form column -->
+  <div class="tk-contact__form-wrap">
+    {%- form 'contact', id: 'tk-contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <div class="tk-contact__success">
+          <p class="tk-contact__success-head">Thank You</p>
+          <p class="tk-contact__success-sub">We'll respond within 1 business day.</p>
+        </div>
+      {%- else -%}
+        <div class="tk-contact__fields">
+          <div class="tk-contact__field">
+            <label class="tk-label" for="ContactFormName">Name</label>
+            <input id="ContactFormName" name="contact[name]" type="text" class="tk-input"
+                   placeholder="Your full name" value="{{ form.name }}" autocomplete="name">
+          </div>
+          <div class="tk-contact__field">
+            <label class="tk-label" for="ContactFormEmail">Email <span aria-hidden="true">*</span></label>
+            <input id="ContactFormEmail" name="contact[email]" type="email" class="tk-input"
+                   placeholder="your@email.com" value="{{ form.email }}" autocomplete="email" required>
+          </div>
+          <div class="tk-contact__field">
+            <label class="tk-label" for="ContactFormPhone">Phone</label>
+            <input id="ContactFormPhone" name="contact[phone]" type="tel" class="tk-input"
+                   placeholder="Optional" value="{{ form.phone }}" autocomplete="tel">
+          </div>
+          <div class="tk-contact__field">
+            <label class="tk-label" for="ContactFormOrderNum">Order # (if applicable)</label>
+            <input id="ContactFormOrderNum" name="contact[order_number]" type="text" class="tk-input"
+                   placeholder="Optional">
+          </div>
+          <div class="tk-contact__field">
+            <label class="tk-label" for="ContactFormMessage">Message <span aria-hidden="true">*</span></label>
+            <textarea id="ContactFormMessage" name="contact[body]" class="tk-input tk-contact__textarea"
+                      placeholder="How can we help you?" required>{{ form.body }}</textarea>
+          </div>
+          <button type="submit" class="tk-btn tk-btn--gold tk-contact__submit">
+            {{- section.settings.btn_label | escape -}}
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
+
+{%- style -%}
+  .tk-contact__header {
+    padding: 56px var(--tk-page-x) 0;
+    text-align: center;
+  }
+  .tk-contact__header .tk-eyebrow { margin: 0 0 10px; }
+  .tk-contact__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 48px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 8px;
+    line-height: 1.05;
+  }
+  .tk-contact__intro {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0 0 48px;
+    line-height: 1.6;
+  }
+  .tk-contact__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 var(--tk-page-x) 80px;
+  }
+  .tk-contact__info {
+    padding-right: 64px;
+    border-right: 1px solid var(--color-border);
+  }
+  .tk-contact__info-item { margin-bottom: 32px; }
+  .tk-contact__info-label {
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  .tk-contact__info-value {
+    font-family: var(--tk-font-heading);
+    font-size: 22px;
+    color: var(--color-text);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+  .tk-contact__info-sub {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-contact__form-wrap { padding-left: 64px; }
+  .tk-contact__fields { display: flex; flex-direction: column; gap: 16px; }
+  .tk-contact__field { display: flex; flex-direction: column; }
+  .tk-contact__textarea {
+    height: 110px;
+    resize: vertical;
+  }
+  .tk-contact__submit {
+    padding: 14px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .tk-contact__success {
+    text-align: center;
+    padding-top: 60px;
+  }
+  .tk-contact__success-head {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    color: var(--color-text);
+    margin: 0 0 12px;
+  }
+  .tk-contact__success-sub {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .tk-contact__body { grid-template-columns: 1fr; }
+    .tk-contact__info { padding-right: 0; border-right: none; border-bottom: 1px solid var(--color-border); padding-bottom: 40px; margin-bottom: 40px; }
+    .tk-contact__form-wrap { padding-left: 0; }
+    .tk-contact__h1 { font-size: 36px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "tag": "div",
+  "class": "tk-contact-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Get in Touch" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Contact Us" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "We're here to help with product selection, trade pricing, returns, and everything in between." },
+    { "type": "text", "id": "btn_label", "label": "Submit button label", "default": "Send Message" }
+  ],
+  "blocks": [
+    {
+      "type": "info_item",
+      "name": "Contact Info Item",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Phone" },
+        { "type": "text", "id": "value", "label": "Value", "default": "1-800-530-8245" },
+        { "type": "text", "id": "sub", "label": "Subtext", "default": "Mon–Fri 9am–5pm ET" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Contact Page" }
+  ]
+}
+{% endschema %}

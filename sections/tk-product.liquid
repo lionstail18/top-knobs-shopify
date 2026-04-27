@@ -1,0 +1,621 @@
+<!-- Breadcrumb -->
+<div class="tk-prod__breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  <span aria-hidden="true">/</span>
+  {%- if collection -%}
+    <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+    <span aria-hidden="true">/</span>
+  {%- elsif product.collections.first -%}
+    <a href="{{ product.collections.first.url }}">{{ product.collections.first.title | escape }}</a>
+    <span aria-hidden="true">/</span>
+  {%- endif -%}
+  <span class="tk-prod__breadcrumb-current">{{ product.title | escape }}</span>
+</div>
+
+<div class="tk-prod__layout">
+  <!-- Image gallery -->
+  <div class="tk-prod__gallery">
+    {%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+    <div class="tk-prod__main-img-wrap">
+      {%- if featured_media != blank -%}
+        {{- featured_media | image_url: width: 1200 | image_tag:
+            id: 'tk-prod-main-img',
+            class: 'tk-prod__main-img',
+            loading: 'eager',
+            alt: featured_media.alt | default: product.title | escape -}}
+      {%- else -%}
+        <div class="tk-prod__main-img tk-prod__main-img--placeholder"></div>
+      {%- endif -%}
+    </div>
+    {%- if product.media.size > 1 -%}
+      <div class="tk-prod__thumbs">
+        {%- for media in product.media limit: 8 -%}
+          <button type="button"
+                  class="tk-prod__thumb{% if media.id == featured_media.id %} tk-prod__thumb--active{% endif %}"
+                  data-img="{{ media | image_url: width: 1200 }}"
+                  aria-label="View image {{ forloop.index }}">
+            {{- media | image_url: width: 200 | image_tag:
+                class: 'tk-prod__thumb-img',
+                loading: 'lazy',
+                alt: media.alt | default: product.title | escape -}}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <!-- Info -->
+  <div class="tk-prod__info">
+    {%- if product.vendor != blank -%}
+      <a href="{{ product.vendor | url_for_vendor }}" class="tk-prod__collection-link">{{ product.vendor | escape }} Collection</a>
+    {%- endif -%}
+    <h1 class="tk-prod__h1">{{ product.title | escape }}</h1>
+    {%- assign size_meta = product.metafields.tk.size -%}
+    {%- if size_meta != blank -%}
+      <p class="tk-prod__size">Center-to-Center: {{ size_meta }}</p>
+    {%- endif -%}
+    {%- if product.selected_or_first_available_variant.sku != blank -%}
+      <p class="tk-prod__sku">SKU: {{ product.selected_or_first_available_variant.sku }}</p>
+    {%- endif -%}
+
+    {%- if product.selected_or_first_available_variant.available -%}
+      <div class="tk-prod__stock">
+        <span class="tk-prod__stock-dot" aria-hidden="true"></span>
+        <span>In Stock — Ships in 1–2 Business Days</span>
+      </div>
+    {%- else -%}
+      <div class="tk-prod__stock tk-prod__stock--oos">
+        <span>Currently Unavailable</span>
+      </div>
+    {%- endif -%}
+
+    <p class="tk-prod__price">
+      {{ product.selected_or_first_available_variant.price | money }}
+      <span class="tk-prod__price-tag">Lowest Price Online</span>
+    </p>
+
+    <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="tk-prod__form" id="tk-prod-form">
+      <!-- Variant picker (finishes) -->
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          <div class="tk-prod__option">
+            <p class="tk-prod__option-label">
+              {{ option.name }}: <strong id="tk-prod-option-{{ forloop.index }}">{{ option.selected_value }}</strong>
+            </p>
+            <div class="tk-prod__swatches" role="radiogroup" aria-label="{{ option.name }}">
+              {%- for value in option.values -%}
+                {%- assign is_active = false -%}
+                {%- if option.selected_value == value -%}{%- assign is_active = true -%}{%- endif -%}
+                <label class="tk-prod__swatch{% if is_active %} tk-prod__swatch--active{% endif %}"
+                       title="{{ value | escape }}">
+                  <input type="radio"
+                         name="options[{{ option.name | escape }}]"
+                         value="{{ value | escape }}"
+                         data-option-index="{{ forloop.parentloop.index0 }}"
+                         {% if is_active %}checked{% endif %}
+                         class="tk-prod__swatch-input">
+                  <span class="tk-prod__swatch-dot"
+                        style="background: {{ value | downcase | replace: ' ', '-' | prepend: '--swatch-' | append: ', var(--color-border)' | replace: '--swatch-', 'var(--swatch-' | append: ')' }};">
+                  </span>
+                  <span class="tk-prod__swatch-name">{{ value | escape }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      <select name="id" id="tk-prod-variant-id" class="tk-prod__variant-select" hidden>
+        {%- for variant in product.variants -%}
+          <option value="{{ variant.id }}"{% if variant == product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
+            {{ variant.title }} - {{ variant.price | money }}
+          </option>
+        {%- endfor -%}
+      </select>
+
+      <!-- Qty + Add -->
+      <div class="tk-prod__qty-row">
+        <div class="tk-prod__qty">
+          <button type="button" class="tk-prod__qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
+          <input type="number" name="quantity" value="1" min="1" class="tk-prod__qty-input" id="tk-prod-qty">
+          <button type="button" class="tk-prod__qty-btn" data-action="inc" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="submit" class="tk-prod__add-btn" id="tk-prod-add-btn">Add to Cart</button>
+      </div>
+      <a href="{{ routes.all_products_collection_url }}?filter.p.tag=sample" class="tk-btn tk-btn--ghost-dark tk-prod__sample-btn">
+        Order a Sample — From $5
+      </a>
+    </form>
+
+    <!-- Specs -->
+    {%- assign material = product.metafields.tk.material -%}
+    {%- assign mounting = product.metafields.tk.mounting -%}
+    {%- assign projection = product.metafields.tk.projection -%}
+    {%- assign warranty = product.metafields.tk.warranty | default: 'Lifetime Limited' -%}
+    {%- assign ships = product.metafields.tk.ships | default: '1–2 business days' -%}
+    <div class="tk-prod__specs">
+      {%- if material != blank -%}<div class="tk-prod__spec-row"><span>Material</span><span>{{ material }}</span></div>{%- endif -%}
+      {%- if mounting != blank -%}<div class="tk-prod__spec-row"><span>Mounting</span><span>{{ mounting }}</span></div>{%- endif -%}
+      {%- if projection != blank -%}<div class="tk-prod__spec-row"><span>Projection</span><span>{{ projection }}</span></div>{%- endif -%}
+      <div class="tk-prod__spec-row"><span>Warranty</span><span>{{ warranty }}</span></div>
+      <div class="tk-prod__spec-row"><span>Ships</span><span>{{ ships }}</span></div>
+    </div>
+
+    <!-- Authorized dealer badge -->
+    <div class="tk-prod__dealer-badge">
+      <span class="tk-prod__dealer-icon" aria-hidden="true">✦</span>
+      <div>
+        <p class="tk-prod__dealer-title">Authorized Top Knobs Dealer</p>
+        <p class="tk-prod__dealer-sub">100% authentic · Full warranty · Lowest price online</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reviews / SEO copy / Complete the Look -->
+{%- if section.settings.show_complete_look -%}
+  {%- assign related_collection = product.collections.first -%}
+  {%- if related_collection != blank and related_collection.products.size > 1 -%}
+    <section class="tk-prod__related">
+      <div class="tk-prod__related-head">
+        <p class="tk-eyebrow">From the {{ related_collection.title | escape }}</p>
+        <h2 class="tk-prod__related-h2">Complete the Look</h2>
+      </div>
+      <div class="tk-prod__related-grid">
+        {%- assign shown = 0 -%}
+        {%- for related in related_collection.products -%}
+          {%- if related.id != product.id and shown < 3 -%}
+            {%- render 'tk-product-card', product: related -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
+
+{%- if section.settings.show_seo -%}
+  <section class="tk-prod__seo">
+    <div class="tk-prod__seo-grid">
+      <div>
+        <h2 class="tk-prod__seo-h2">About the {{ product.vendor | default: 'Top Knobs' }} Collection</h2>
+        <p>Top Knobs combines refined design with exceptional craftsmanship. Each piece is constructed from solid zinc alloy and finished to the highest standards, ensuring lasting beauty in kitchens, baths, and living spaces of every style.</p>
+        <p>Available in premium finishes — from Matte Black and Polished Nickel to Honey Bronze and Brushed Gold — offering the versatility to complement any interior palette.</p>
+      </div>
+      <div>
+        <h2 class="tk-prod__seo-h2">Why Buy from TopKnobsHardware.net?</h2>
+        <p>As an authorized Top Knobs dealer, we offer the complete catalog at the lowest prices online — with a price-match guarantee, free shipping on orders over $99, and a lifetime limited warranty on every product. Every order is shipped from our warehouse within 1–2 business days.</p>
+        <p>Not sure which finish is right for your project? <a href="/pages/samples">Order a sample</a> and see it in your space before committing to a full order.</p>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- style -%}
+  .tk-prod__breadcrumb {
+    padding: 14px var(--tk-page-x);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+  }
+  .tk-prod__breadcrumb a { color: var(--color-text2); text-decoration: none; }
+  .tk-prod__breadcrumb-current { color: var(--color-text); }
+
+  .tk-prod__layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 600px;
+  }
+  .tk-prod__gallery {
+    padding: 40px 48px 40px var(--tk-page-x);
+  }
+  .tk-prod__main-img {
+    display: block;
+    width: 100%;
+    height: 440px;
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+  .tk-prod__main-img--placeholder { background: var(--color-border); }
+  .tk-prod__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .tk-prod__thumb {
+    border: 2px solid transparent;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .tk-prod__thumb--active { border-color: var(--color-accent); }
+  .tk-prod__thumb-img {
+    display: block;
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+  }
+  .tk-prod__info {
+    padding: 40px var(--tk-page-x) 40px 32px;
+    border-left: 1px solid var(--color-border);
+  }
+  .tk-prod__collection-link {
+    display: inline-block;
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    text-decoration: none;
+  }
+  .tk-prod__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 38px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 6px;
+    line-height: 1.1;
+  }
+  .tk-prod__size {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0 0 6px;
+  }
+  .tk-prod__sku {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+    margin: 0 0 12px;
+  }
+  .tk-prod__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: oklch(94% 0.05 145);
+    border: 1px solid oklch(80% 0.07 145);
+    padding: 4px 10px;
+    margin-bottom: 20px;
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: oklch(32% 0.1 145);
+    font-weight: 500;
+  }
+  .tk-prod__stock-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: oklch(55% 0.16 145);
+  }
+  .tk-prod__stock--oos {
+    background: var(--color-bg2);
+    border-color: var(--color-border);
+    color: var(--color-text2);
+  }
+  .tk-prod__price {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    color: var(--color-text);
+    margin: 0 0 24px;
+    line-height: 1;
+  }
+  .tk-prod__price-tag {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-accent);
+    margin-left: 6px;
+  }
+  .tk-prod__option { margin-bottom: 20px; }
+  .tk-prod__option-label {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text2);
+    margin: 0 0 12px;
+  }
+  .tk-prod__option-label strong { color: var(--color-text); font-weight: 600; }
+  .tk-prod__swatches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tk-prod__swatch {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tk-prod__swatch-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tk-prod__swatch-dot {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: 2px solid var(--color-border);
+    transition: outline-offset 0.15s ease;
+  }
+  .tk-prod__swatch--active .tk-prod__swatch-dot {
+    border-color: var(--color-accent);
+    outline: 1px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .tk-prod__swatch-name {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: var(--color-text);
+    display: none;
+  }
+  .tk-prod__qty-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .tk-prod__qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    height: 48px;
+  }
+  .tk-prod__qty-btn {
+    width: 36px;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--tk-font-body);
+    font-size: 18px;
+    color: var(--color-text);
+  }
+  .tk-prod__qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: none;
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .tk-prod__qty-input::-webkit-outer-spin-button,
+  .tk-prod__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .tk-prod__add-btn {
+    flex: 1;
+    height: 48px;
+    background: var(--color-accent);
+    border: none;
+    color: #fff;
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease, opacity 0.2s ease;
+  }
+  .tk-prod__add-btn:hover { opacity: 0.9; }
+  .tk-prod__add-btn.is-added { background: oklch(50% 0.13 145); }
+  .tk-prod__sample-btn {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 24px;
+  }
+  .tk-prod__specs {
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
+  .tk-prod__spec-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+  }
+  .tk-prod__spec-row span:first-child { color: var(--color-text2); font-weight: 500; }
+  .tk-prod__spec-row span:last-child { color: var(--color-text); }
+  .tk-prod__dealer-badge {
+    background: var(--color-bg2);
+    border: 1px solid var(--color-border);
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .tk-prod__dealer-icon {
+    font-size: 22px;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+  .tk-prod__dealer-title {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+  .tk-prod__dealer-sub {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-prod__related {
+    padding: 0 var(--tk-page-x) 56px;
+    background: var(--color-bg2);
+  }
+  .tk-prod__related-head {
+    padding: 48px 0 32px;
+  }
+  .tk-prod__related-head .tk-eyebrow { margin: 0 0 8px; }
+  .tk-prod__related-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .tk-prod__related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .tk-prod__seo {
+    padding: 56px var(--tk-page-x);
+    border-top: 1px solid var(--color-border);
+  }
+  .tk-prod__seo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .tk-prod__seo-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+  .tk-prod__seo p {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--color-text2);
+    margin: 0 0 14px;
+  }
+  .tk-prod__seo a { color: var(--color-accent); text-decoration: underline; }
+  @media (max-width: 1024px) {
+    .tk-prod__layout { grid-template-columns: 1fr; }
+    .tk-prod__info { border-left: none; border-top: 1px solid var(--color-border); padding: 40px var(--tk-page-x); }
+    .tk-prod__gallery { padding: 40px var(--tk-page-x); }
+    .tk-prod__related-grid { grid-template-columns: repeat(2, 1fr); }
+    .tk-prod__seo-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 600px) {
+    .tk-prod__related-grid { grid-template-columns: 1fr; }
+    .tk-prod__h1 { font-size: 30px; }
+    .tk-prod__price { font-size: 26px; }
+  }
+{%- endstyle -%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('tk-prod-form');
+    if (!form) return;
+
+    // Variant selection
+    var variantSelect = document.getElementById('tk-prod-variant-id');
+    var addBtn = document.getElementById('tk-prod-add-btn');
+    var optionInputs = form.querySelectorAll('.tk-prod__swatch-input');
+    var variants = {{ product.variants | json }};
+
+    function getSelectedOptions() {
+      var opts = [];
+      form.querySelectorAll('.tk-prod__swatch-input:checked').forEach(function (input) {
+        opts[parseInt(input.dataset.optionIndex, 10)] = input.value;
+      });
+      return opts;
+    }
+
+    function updateVariant() {
+      var selected = getSelectedOptions();
+      var match = variants.find(function (v) {
+        return v.options.every(function (opt, i) { return opt === selected[i]; });
+      });
+      if (match) {
+        variantSelect.value = match.id;
+        var priceEl = document.querySelector('.tk-prod__price');
+        if (priceEl) {
+          var priceText = (match.price / 100).toFixed(2);
+          priceEl.firstChild.textContent = '$' + priceText + ' ';
+        }
+        addBtn.disabled = !match.available;
+        addBtn.textContent = match.available ? 'Add to Cart' : 'Sold Out';
+      }
+    }
+
+    optionInputs.forEach(function (input) {
+      input.addEventListener('change', function () {
+        // Update active state
+        var optIndex = input.dataset.optionIndex;
+        form.querySelectorAll('.tk-prod__swatch-input[data-option-index="' + optIndex + '"]').forEach(function (i) {
+          i.closest('.tk-prod__swatch').classList.toggle('tk-prod__swatch--active', i.checked);
+        });
+        // Update label strong text
+        var label = document.getElementById('tk-prod-option-' + (parseInt(optIndex, 10) + 1));
+        if (label) label.textContent = input.value;
+        updateVariant();
+      });
+    });
+
+    // Qty controls
+    var qtyInput = document.getElementById('tk-prod-qty');
+    form.querySelectorAll('.tk-prod__qty-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var current = parseInt(qtyInput.value, 10) || 1;
+        qtyInput.value = btn.dataset.action === 'inc' ? current + 1 : Math.max(1, current - 1);
+      });
+    });
+
+    // Submit via fetch + open cart drawer
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: data,
+      })
+        .then(function (r) { return r.json(); })
+        .then(function () {
+          addBtn.classList.add('is-added');
+          addBtn.textContent = '✓ Added to Cart';
+          setTimeout(function () {
+            addBtn.classList.remove('is-added');
+            addBtn.textContent = 'Add to Cart';
+          }, 2000);
+          document.dispatchEvent(new CustomEvent('tk:cart:added'));
+        });
+    });
+
+    // Thumbnail switching
+    var mainImg = document.getElementById('tk-prod-main-img');
+    document.querySelectorAll('.tk-prod__thumb').forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        var src = thumb.dataset.img;
+        if (src && mainImg) mainImg.src = src;
+        document.querySelectorAll('.tk-prod__thumb').forEach(function (t) { t.classList.remove('tk-prod__thumb--active'); });
+        thumb.classList.add('tk-prod__thumb--active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "div",
+  "class": "tk-product-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_complete_look", "label": "Show 'Complete the Look' related products", "default": true },
+    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true }
+  ]
+}
+{% endschema %}

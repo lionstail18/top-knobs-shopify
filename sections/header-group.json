@@ -1,0 +1,128 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg-1": {
+          "type": "message",
+          "settings": {
+            "text": "✦ Authorized Top Knobs Dealer"
+          }
+        },
+        "msg-2": {
+          "type": "message",
+          "settings": {
+            "text": "✦ Free Shipping on Orders $99+"
+          }
+        },
+        "msg-3": {
+          "type": "message",
+          "settings": {
+            "text": "✦ Lowest Prices Online — Guaranteed"
+          }
+        }
+      },
+      "block_order": [
+        "msg-1",
+        "msg-2",
+        "msg-3"
+      ],
+      "settings": {
+        "bg_color": "#0d1526",
+        "text_color": "#f6f7fa",
+        "rotate_delay": 5
+      }
+    },
+    "announcement": {
+      "type": "announcement",
+      "blocks": {
+        "announcement_DMRVwr": {
+          "type": "announcement",
+          "disabled": true,
+          "settings": {
+            "text": "<p><strong>Welcome to our store</strong> <a href=\"#\">Learn more&gt;</a></p>"
+          }
+        },
+        "announcement_zJbRti": {
+          "type": "announcement",
+          "disabled": true,
+          "settings": {
+            "text": "<p><strong>Free domestic shipping</strong> <a href=\"#\" title=\"DELIVERY\">Learn more &gt;</a></p>"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_DMRVwr",
+        "announcement_zJbRti"
+      ],
+      "disabled": true,
+      "settings": {
+        "announcement_homepage_only": false,
+        "link1": "",
+        "link1_label": "",
+        "link2": "",
+        "link2_label": "",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "bg_color": "#1a237e",
+        "text_color": "#ffffff",
+        "text_type_scale": "small",
+        "read_time": 7
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "mobile_menu_position": "burger-left",
+        "enable_sticky": true,
+        "hide_menu": true,
+        "logo_text": "",
+        "logo_text_font": "nunito_sans_n7",
+        "logo_type_scale": "2",
+        "logo_width": 150,
+        "logo_h1": true,
+        "logo_position": "top-left",
+        "enable_search": true,
+        "minimise_search_mobile": false,
+        "minimise_search_desktop": false,
+        "menu": "main-menu",
+        "menu_center": true,
+        "link_toggle": "mobile",
+        "repeat_links": false,
+        "menu_featured_link": "Sale",
+        "enable_customer_account_component": false,
+        "customer_account_menu": "customer-account-main-menu",
+        "cta_show": false,
+        "cta_icon": "phone",
+        "cta_label": "Call us",
+        "cta_link": "",
+        "cta_border_color": "#ebebeb",
+        "cta_bg_color": "#ebebeb",
+        "cta_text_color": "#222222",
+        "bg_color": "#f6f7fa",
+        "text_color": "#0d1526",
+        "accent_color": "#c2a058",
+        "desktop_menu_bg_color": "#f6f7fa",
+        "desktop_menu_text_color": "#0d1526",
+        "mobile_menu_bg_color": "#f6f7fa",
+        "mobile_menu_text_color": "#0d1526"
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "announcement",
+    "header"
+  ]
+}

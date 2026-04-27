@@ -1,0 +1,388 @@
+<!-- Breadcrumb -->
+<div class="tk-coll__breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  <span aria-hidden="true">/</span>
+  <span class="tk-coll__breadcrumb-current">{{ collection.title | escape }}</span>
+</div>
+
+<!-- Collection header image -->
+<div class="tk-coll__header">
+  {%- if collection.image != blank -%}
+    {{- collection.image | image_url: width: 2000 | image_tag:
+        loading: 'eager',
+        class: 'tk-coll__header-img',
+        alt: collection.title | escape -}}
+  {%- elsif section.settings.fallback_image != blank -%}
+    {{- section.settings.fallback_image | image_url: width: 2000 | image_tag:
+        loading: 'eager',
+        class: 'tk-coll__header-img',
+        alt: collection.title | escape -}}
+  {%- else -%}
+    <div class="tk-coll__header-img tk-coll__header-img--placeholder"></div>
+  {%- endif -%}
+  <div class="tk-coll__header-overlay">
+    <h1 class="tk-coll__h1">{{ collection.title | escape }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="tk-coll__desc">{{ collection.description | strip_html | truncatewords: 20 }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+<div class="tk-coll__layout">
+  <!-- Sidebar filters -->
+  <aside class="tk-coll__sidebar" aria-label="Filters">
+    {%- if collection.filters.size > 0 -%}
+      <form action="{{ collection.url }}" method="get" class="tk-coll__filter-form">
+        {%- for filter in collection.filters -%}
+          <div class="tk-coll__filter-group">
+            <p class="tk-coll__filter-label">{{ filter.label }}</p>
+            {%- case filter.type -%}
+              {%- when 'list' -%}
+                {%- for value in filter.values -%}
+                  <label class="tk-coll__filter-item">
+                    <input type="checkbox"
+                           name="{{ value.param_name }}"
+                           value="{{ value.value }}"
+                           {% if value.active %}checked{% endif %}
+                           {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                    <span>{{ value.label }} <span class="tk-coll__filter-count">({{ value.count }})</span></span>
+                  </label>
+                {%- endfor -%}
+              {%- when 'price_range' -%}
+                <div class="tk-coll__filter-price">
+                  <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="Min" class="tk-input">
+                  <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" class="tk-input">
+                </div>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+        <button type="submit" class="tk-btn tk-btn--gold tk-coll__filter-apply">Apply Filters</button>
+        {%- if current_tags or current_vendor or current_type -%}
+          <a href="{{ collection.url }}" class="tk-coll__filter-clear">Clear all</a>
+        {%- endif -%}
+      </form>
+    {%- else -%}
+      <p class="tk-coll__filter-label">Filters</p>
+      <p class="tk-coll__filter-empty">Set up storefront filters in your Shopify admin to enable filtering.</p>
+    {%- endif -%}
+  </aside>
+
+  <!-- Products area -->
+  <div class="tk-coll__main">
+    <div class="tk-coll__toolbar">
+      <p class="tk-coll__count">
+        Showing {{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}
+      </p>
+      <div class="tk-coll__sort">
+        <label for="tk-coll-sort">Sort by:</label>
+        <select id="tk-coll-sort" name="sort_by" class="tk-coll__sort-select">
+          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name }}</option>
+          {%- endfor -%}
+        </select>
+      </div>
+    </div>
+
+    {%- paginate collection.products by 24 -%}
+      {%- if collection.products.size > 0 -%}
+        <div class="tk-coll__grid">
+          {%- for product in collection.products -%}
+            {%- render 'tk-product-card', product: product -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="tk-coll__pagination" role="navigation">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="tk-coll__page-btn">&larr; Previous</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="tk-coll__page-btn">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}
+                <span class="tk-coll__page-btn tk-coll__page-btn--active">{{ part.title }}</span>
+              {%- else -%}
+                <span class="tk-coll__page-btn">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="tk-coll__page-btn">Next &rarr;</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="tk-coll__empty">
+          <p class="tk-coll__empty-h">No products in this collection yet.</p>
+          <a href="{{ routes.all_products_collection_url }}" class="tk-btn tk-btn--gold">Browse All Products</a>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+<!-- SEO copy block -->
+{%- if section.settings.show_seo -%}
+  <section class="tk-coll__seo">
+    <div class="tk-coll__seo-inner">
+      <h2 class="tk-coll__seo-h2">About {{ collection.title }}</h2>
+      <p class="tk-coll__seo-body">Top Knobs is one of America's most respected cabinet hardware brands, offering an unmatched range of knobs, pulls, appliance handles, and bath accessories across more than 40 curated collections. Every piece is crafted from solid zinc alloy and plated to the highest standards, then backed by a lifetime limited warranty.</p>
+      <p class="tk-coll__seo-body">As an authorized Top Knobs dealer, TopKnobsHardware.net carries the complete {{ collection.title }} catalog at the lowest prices online — guaranteed. All orders ship within 1–2 business days. Free shipping on orders over $99. Not sure which finish is right for your space? Our <a href="/pages/samples">sample program</a> lets you try hardware in your home before committing to a full order.</p>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- style -%}
+  .tk-coll__breadcrumb {
+    padding: 16px var(--tk-page-x);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+  }
+  .tk-coll__breadcrumb a { color: var(--color-text2); text-decoration: none; }
+  .tk-coll__breadcrumb-current { color: var(--color-text); }
+  .tk-coll__header {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+  }
+  .tk-coll__header-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tk-coll__header-img--placeholder { background: var(--color-border); }
+  .tk-coll__header-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13,21,38,0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+  }
+  .tk-coll__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 48px;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+    line-height: 1.05;
+  }
+  .tk-coll__desc {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin: 10px 0 0;
+    max-width: 600px;
+  }
+  .tk-coll__layout {
+    display: flex;
+    min-height: 600px;
+  }
+  .tk-coll__sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--color-border);
+    padding: 32px 24px;
+  }
+  .tk-coll__filter-group { margin-bottom: 28px; }
+  .tk-coll__filter-label {
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text2);
+    margin: 0 0 12px;
+  }
+  .tk-coll__filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  .tk-coll__filter-item input[type="checkbox"] {
+    accent-color: var(--color-accent);
+  }
+  .tk-coll__filter-count { color: var(--color-text2); font-size: 11px; }
+  .tk-coll__filter-price {
+    display: flex;
+    gap: 8px;
+  }
+  .tk-coll__filter-apply {
+    width: 100%;
+    margin-top: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 10px;
+  }
+  .tk-coll__filter-clear {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: var(--color-text2);
+    text-decoration: underline;
+  }
+  .tk-coll__filter-empty {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .tk-coll__main {
+    flex: 1;
+    padding: 24px 40px;
+  }
+  .tk-coll__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .tk-coll__count {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-coll__sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tk-coll__sort label {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+  }
+  .tk-coll__sort-select {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    padding: 6px 12px;
+    outline: none;
+    cursor: pointer;
+  }
+  .tk-coll__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .tk-coll__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 0 24px;
+    flex-wrap: wrap;
+  }
+  .tk-coll__page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 14px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .tk-coll__page-btn--active {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .tk-coll__empty {
+    text-align: center;
+    padding: 80px 0;
+  }
+  .tk-coll__empty-h {
+    font-family: var(--tk-font-heading);
+    font-size: 24px;
+    color: var(--color-text);
+    margin: 0 0 24px;
+  }
+  .tk-coll__seo {
+    padding: 64px var(--tk-page-x);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg2);
+  }
+  .tk-coll__seo-inner { max-width: 860px; }
+  .tk-coll__seo-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .tk-coll__seo-body {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--color-text2);
+    margin: 0 0 16px;
+  }
+  .tk-coll__seo-body a { color: var(--color-accent); text-decoration: underline; }
+  @media (max-width: 1024px) {
+    .tk-coll__main { padding: 24px var(--tk-page-x); }
+    .tk-coll__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .tk-coll__layout { flex-direction: column; }
+    .tk-coll__sidebar { width: auto; border-right: none; border-bottom: 1px solid var(--color-border); }
+    .tk-coll__h1 { font-size: 32px; }
+  }
+  @media (max-width: 600px) {
+    .tk-coll__grid { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var sort = document.getElementById('tk-coll-sort');
+    if (sort) {
+      sort.addEventListener('change', function () {
+        var url = new URL(window.location.href);
+        url.searchParams.set('sort_by', sort.value);
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "div",
+  "class": "tk-collection-section",
+  "settings": [
+    { "type": "image_picker", "id": "fallback_image", "label": "Fallback header image (used when collection has no image)" },
+    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true }
+  ]
+}
+{% endschema %}

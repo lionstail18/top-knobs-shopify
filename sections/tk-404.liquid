@@ -1,0 +1,68 @@
+<div class="tk-404">
+  <p class="tk-404__num" aria-hidden="true">404</p>
+  <h1 class="tk-404__heading">Page Not Found</h1>
+  <p class="tk-404__sub">The page you're looking for doesn't exist or may have moved.</p>
+  <div class="tk-404__btns">
+    <a href="{{ routes.root_url }}" class="tk-btn tk-btn--gold">Back to Home</a>
+    <a href="{{ routes.all_products_collection_url }}" class="tk-btn tk-btn--ghost-dark">Shop All Products</a>
+    <a href="{{ routes.search_url }}" class="tk-btn tk-btn--ghost-dark">Search</a>
+  </div>
+</div>
+
+{%- style -%}
+  .tk-404 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px var(--tk-page-x) 120px;
+    text-align: center;
+    min-height: 60vh;
+  }
+  .tk-404__num {
+    font-family: var(--tk-font-heading);
+    font-size: 120px;
+    font-weight: 400;
+    color: var(--color-border);
+    line-height: 1;
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+  .tk-404__heading {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+    line-height: 1.1;
+  }
+  .tk-404__sub {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0 0 40px;
+  }
+  .tk-404__btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  @media (max-width: 480px) {
+    .tk-404__num { font-size: 80px; }
+    .tk-404__heading { font-size: 28px; }
+    .tk-404__btns { flex-direction: column; align-items: center; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "404 Page",
+  "tag": "div",
+  "class": "tk-404-section",
+  "settings": [],
+  "presets": [
+    { "name": "404 Page" }
+  ]
+}
+{% endschema %}

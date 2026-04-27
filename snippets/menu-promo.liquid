@@ -1,0 +1,46 @@
+{%- comment -%}
+  Parameters:
+  - promo_image {Object} - Image object for the promo.
+  - promo_content {String} - Content for the promo.
+  - promo_link_url {String} - The URL for the promo (optional).
+  - promo_text_alignment {String} - Classes for controlling text alignment (optional).
+  - promo_text_size {Number} - Font size, in pixels (optional).
+  - promo_text_width {Number} - Maximum width of text, as a percentage (optional).
+  - promo_custom_class {String} - Custom css class to add (optional).
+  Usage:
+  {% render 'menu-promo',
+    promo_image: block.settings.image,
+    promo_content: block.settings.content
+  %}
+{%- endcomment -%}
+
+{%- liquid
+  assign is_link = false
+  if promo_link_url != blank
+    unless promo_content contains "<a"
+      assign is_link = true
+    endunless
+  endif
+-%}
+{%- if is_link -%}
+  <a class="promo relative flex hover:grow-media overflow-hidden {{ promo_text_alignment }}{% if promo_custom_class %} {{ promo_custom_class }}{% endif %}" href="{{ promo_link_url }}">
+{%- else -%}
+  <div class="promo relative flex {{ promo_text_alignment }}{% if promo_custom_class %} {{ promo_custom_class }}{% endif %}">
+{%- endif -%}
+  {%- if promo_image -%}
+    <div class="media absolute top-0 left-0 w-full h-full">
+      {% render 'image', image: promo_image, src_width: 400, srcset_2x: true, class: 'img-fit' %}
+    </div>
+  {%- endif -%}
+  {%- if promo_content != blank -%}
+    <div class="promo__content relative" style="--font-size: {{ promo_text_size }}px; max-width: {{ promo_text_width }}%;">
+      <div class="rte rte--inherit-heading-color">
+        {{- promo_content -}}
+      </div>
+    </div>
+  {%- endif -%}
+{%- if is_link -%}
+  </a>
+{%- else -%}
+  </div>
+{%- endif -%}

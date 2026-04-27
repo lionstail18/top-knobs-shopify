@@ -1,0 +1,204 @@
+<!-- Hero 2-col -->
+<section class="tk-ad__hero">
+  <div class="tk-ad__hero-text">
+    <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h1 class="tk-ad__h1">{{ section.settings.heading }}</h1>
+    <p class="tk-ad__body1">{{ section.settings.body1 | escape }}</p>
+    <p class="tk-ad__body2">{{ section.settings.body2 | escape }}</p>
+    {%- if section.settings.btn_label != blank -%}
+      <a href="{{ section.settings.btn_url | default: routes.all_products_collection_url }}"
+         class="tk-btn tk-btn--gold">
+        {{- section.settings.btn_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+  <div class="tk-ad__hero-media">
+    {%- if section.settings.hero_image != blank -%}
+      {{- section.settings.hero_image | image_url: width: 900 | image_tag:
+          loading: 'eager',
+          class: 'tk-ad__hero-img',
+          alt: section.settings.heading | strip_html | escape -}}
+    {%- else -%}
+      <div class="tk-ad__hero-img tk-ad__hero-img--placeholder"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- Risk cards -->
+<section class="tk-ad__risks">
+  <div class="tk-ad__risks-head">
+    <h2 class="tk-ad__risks-h2">{{ section.settings.risks_heading | escape }}</h2>
+    <p class="tk-ad__risks-sub">{{ section.settings.risks_sub | escape }}</p>
+  </div>
+  {%- if section.blocks.size > 0 -%}
+    <div class="tk-ad__risks-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'risk' -%}
+          <div class="tk-ad__risk-card" {{ block.shopify_attributes }}>
+            <p class="tk-ad__risk-title">{{ block.settings.title | escape }}</p>
+            <p class="tk-ad__risk-desc">{{ block.settings.description | escape }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+<!-- Guarantee copy -->
+<section class="tk-ad__guarantee">
+  <h2 class="tk-ad__guarantee-h2">{{ section.settings.guarantee_heading | escape }}</h2>
+  <p class="tk-ad__guarantee-body">{{ section.settings.guarantee_body1 | escape }}</p>
+  <p class="tk-ad__guarantee-body">{{ section.settings.guarantee_body2 | escape }}</p>
+</section>
+
+{%- style -%}
+  .tk-ad__hero {
+    padding: 80px var(--tk-page-x);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .tk-ad__hero .tk-eyebrow { margin: 0 0 12px; }
+  .tk-ad__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 20px;
+    line-height: 1.05;
+  }
+  .tk-ad__body1,
+  .tk-ad__body2 {
+    font-family: var(--tk-font-body);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0 0 16px;
+  }
+  .tk-ad__body2 { margin-bottom: 32px; }
+  .tk-ad__hero-img {
+    display: block;
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+  .tk-ad__hero-img--placeholder {
+    background: var(--color-border);
+  }
+  .tk-ad__risks {
+    padding: 64px var(--tk-page-x) 80px;
+    background: var(--color-bg2);
+  }
+  .tk-ad__risks-head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .tk-ad__risks-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 12px;
+    line-height: 1.1;
+  }
+  .tk-ad__risks-sub {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+  .tk-ad__risks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
+  .tk-ad__risk-card {
+    background: var(--color-bg);
+    padding: 28px 22px;
+    border-top: 3px solid var(--color-border);
+  }
+  .tk-ad__risk-title {
+    font-family: var(--tk-font-heading);
+    font-size: 20px;
+    color: var(--color-text);
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+  .tk-ad__risk-desc {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-ad__guarantee {
+    padding: 72px 200px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-ad__guarantee-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 20px;
+    line-height: 1.1;
+  }
+  .tk-ad__guarantee-body {
+    font-family: var(--tk-font-body);
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--color-text2);
+    margin: 0 0 16px;
+  }
+  @media (max-width: 1024px) {
+    .tk-ad__guarantee { padding: 72px var(--tk-page-x); }
+  }
+  @media (max-width: 900px) {
+    .tk-ad__risks-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .tk-ad__hero { grid-template-columns: 1fr; gap: 40px; }
+    .tk-ad__h1 { font-size: 36px; }
+    .tk-ad__risks-grid { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Authorized Dealer",
+  "tag": "div",
+  "class": "tk-authorized-dealer-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop with Confidence" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Officially Authorized Top Knobs Dealer" },
+    { "type": "textarea", "id": "body1", "label": "Body paragraph 1", "default": "TopKnobsHardware.net is an officially authorized dealer for Top Knobs — one of America's most respected cabinet hardware brands. Our authorization means every product we sell is 100% authentic, fully warranted, and sourced directly from the manufacturer." },
+    { "type": "textarea", "id": "body2", "label": "Body paragraph 2", "default": "When you shop with us, you're not just getting the lowest price — you're getting the full protection of Top Knobs' lifetime limited warranty, the assurance of authentic products, and the support of a team that knows the catalog inside and out." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop the Full Collection" },
+    { "type": "url", "id": "btn_url", "label": "Button link" },
+    { "type": "text", "id": "risks_heading", "label": "Risks section heading", "default": "Why Authorized Dealers Matter" },
+    { "type": "textarea", "id": "risks_sub", "label": "Risks section subheading", "default": "Not all online sellers are authorized. Here's what you risk when buying Top Knobs from an unauthorized source." },
+    { "type": "text", "id": "guarantee_heading", "label": "Guarantee heading", "default": "Our Guarantee to You" },
+    { "type": "textarea", "id": "guarantee_body1", "label": "Guarantee body 1", "default": "As an authorized Top Knobs dealer, we stand behind every product we sell. Every order comes with the manufacturer's lifetime limited warranty, genuine Top Knobs packaging, and the peace of mind that comes from buying through an official channel." },
+    { "type": "textarea", "id": "guarantee_body2", "label": "Guarantee body 2", "default": "We also offer the lowest prices online — and we'll match any authorized dealer price. If you find the same product cheaper elsewhere from an authorized source, contact us and we'll beat it." }
+  ],
+  "blocks": [
+    {
+      "type": "risk",
+      "name": "Risk Card",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Grey Market Risk" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Unauthorized sellers may offer counterfeit or grey-market products that look identical but fail quality and finish standards." }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Authorized Dealer" }
+  ]
+}
+{% endschema %}

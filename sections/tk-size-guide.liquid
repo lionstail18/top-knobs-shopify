@@ -1,0 +1,287 @@
+<!-- Header -->
+<div class="tk-sg__header">
+  <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+  <h1 class="tk-sg__h1">{{ section.settings.heading | escape }}</h1>
+  <p class="tk-sg__intro">{{ section.settings.intro | escape }}</p>
+</div>
+
+<div class="tk-sg__content">
+
+  <!-- Measuring pulls -->
+  <section class="tk-sg__measuring">
+    <div class="tk-sg__measuring-text">
+      <h2 class="tk-sg__h2">{{ section.settings.pulls_heading | escape }}</h2>
+      <p class="tk-sg__body">{{ section.settings.pulls_body1 | escape }}</p>
+      <p class="tk-sg__body">{{ section.settings.pulls_body2 | escape }}</p>
+      <div class="tk-sg__pro-tip">
+        <p><strong>Pro tip:</strong> {{ section.settings.pulls_protip | escape }}</p>
+      </div>
+    </div>
+    <div class="tk-sg__measuring-media">
+      {%- if section.settings.pulls_image != blank -%}
+        {{- section.settings.pulls_image | image_url: width: 700 | image_tag:
+            loading: 'lazy',
+            class: 'tk-sg__img',
+            alt: section.settings.pulls_heading | escape -}}
+      {%- else -%}
+        <div class="tk-sg__img tk-sg__img--placeholder"></div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <!-- Pull size chart -->
+  <section class="tk-sg__table-section">
+    <h2 class="tk-sg__h2-sm">{{ section.settings.pull_chart_heading | escape }}</h2>
+    <table class="tk-sg__table">
+      <thead>
+        <tr>
+          <th>Center-to-Center</th>
+          <th>Recommended Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>3"</td><td>Small drawer fronts (under 12")</td></tr>
+        <tr><td>3 3/4"</td><td>Small to medium drawers (12"–18")</td></tr>
+        <tr><td>4"–5"</td><td>Medium drawers (18"–24")</td></tr>
+        <tr><td>5 1/16"–6 5/16"</td><td>Medium to large drawers (18"–30")</td></tr>
+        <tr><td>8"–10"</td><td>Large drawers (over 24")</td></tr>
+        <tr><td>12"–18"</td><td>Appliance pulls, large cabinet doors</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Knob sizing -->
+  <section class="tk-sg__knobs">
+    <div class="tk-sg__knobs-text">
+      <h2 class="tk-sg__h2">{{ section.settings.knobs_heading | escape }}</h2>
+      <p class="tk-sg__body">{{ section.settings.knobs_body | escape }}</p>
+      <table class="tk-sg__table">
+        <thead>
+          <tr>
+            <th>Diameter</th>
+            <th>Type</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>5/8"</td><td>Extra Small</td><td>Jewelry boxes, very small drawers</td></tr>
+          <tr><td>3/4"</td><td>Small</td><td>Small drawer fronts, delicate cabinetry</td></tr>
+          <tr><td>1"</td><td>Standard Small</td><td>Most cabinet doors and drawers</td></tr>
+          <tr><td>1 1/4"</td><td>Standard</td><td>Kitchen cabinets, bathroom vanities</td></tr>
+          <tr><td>1 1/2"</td><td>Standard Large</td><td>Kitchen cabinets, shaker doors</td></tr>
+          <tr><td>1 3/4"–2"</td><td>Large</td><td>Statement pieces, oversized doors</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tk-sg__knobs-media">
+      {%- if section.settings.knobs_image != blank -%}
+        {{- section.settings.knobs_image | image_url: width: 700 | image_tag:
+            loading: 'lazy',
+            class: 'tk-sg__img',
+            alt: section.settings.knobs_heading | escape -}}
+      {%- else -%}
+        <div class="tk-sg__img tk-sg__img--placeholder" style="height:360px;"></div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <!-- Backplates -->
+  <section class="tk-sg__backplates">
+    <h2 class="tk-sg__h2-sm">{{ section.settings.backplates_heading | escape }}</h2>
+    <div class="tk-sg__backplates-grid">
+      <div>
+        <p class="tk-sg__body">{{ section.settings.backplates_body1 | escape }}</p>
+        <p class="tk-sg__body">{{ section.settings.backplates_body2 | escape }}</p>
+      </div>
+      <div>
+        {%- if section.settings.backplates_btn_label != blank -%}
+          <a href="{{ section.settings.backplates_btn_url | default: routes.all_products_collection_url }}"
+             class="tk-btn tk-btn--gold" style="display:block;margin-bottom:12px;">
+            {{- section.settings.backplates_btn_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.contact_btn_label != blank -%}
+          <a href="{{ section.settings.contact_btn_url | default: '/pages/contact' }}"
+             class="tk-btn tk-btn--ghost-border" style="display:block;">
+            {{- section.settings.contact_btn_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO footer note -->
+  <p class="tk-sg__seo-note">{{ section.settings.seo_note | escape }}</p>
+
+</div>
+
+{%- style -%}
+  .tk-sg__header {
+    padding: 72px var(--tk-page-x) 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .tk-sg__header .tk-eyebrow { margin: 0 0 10px; }
+  .tk-sg__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+    line-height: 1.05;
+  }
+  .tk-sg__intro {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .tk-sg__content {
+    padding: 64px var(--tk-page-x) 80px;
+    background: var(--color-bg);
+  }
+  .tk-sg__measuring,
+  .tk-sg__knobs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 72px;
+    align-items: start;
+  }
+  .tk-sg__h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+    line-height: 1.1;
+  }
+  .tk-sg__h2-sm {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 24px;
+  }
+  .tk-sg__body {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0 0 20px;
+  }
+  .tk-sg__pro-tip {
+    background: var(--color-bg2);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: 16px 20px;
+  }
+  .tk-sg__pro-tip p {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.7;
+  }
+  .tk-sg__img {
+    display: block;
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+  }
+  .tk-sg__img--placeholder { background: var(--color-border); }
+  .tk-sg__table-section { margin-bottom: 72px; }
+  .tk-sg__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tk-sg__table thead tr {
+    background: var(--color-nav-bg);
+  }
+  .tk-sg__table th {
+    padding: 12px 20px;
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-nav-text);
+    text-align: left;
+    font-weight: 500;
+  }
+  .tk-sg__table tbody tr:nth-child(even) { background: var(--color-bg2); }
+  .tk-sg__table tbody tr:nth-child(odd)  { background: var(--color-bg); }
+  .tk-sg__table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text2);
+  }
+  .tk-sg__table td:first-child {
+    font-family: var(--tk-font-heading);
+    font-size: 18px;
+    color: var(--color-text);
+  }
+  .tk-sg__backplates {
+    margin-bottom: 64px;
+    background: var(--color-bg2);
+    border: 1px solid var(--color-border);
+    padding: 48px;
+  }
+  .tk-sg__backplates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .tk-sg__seo-note {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--color-text2);
+    max-width: 860px;
+  }
+  @media (max-width: 900px) {
+    .tk-sg__measuring,
+    .tk-sg__knobs,
+    .tk-sg__backplates-grid { grid-template-columns: 1fr; gap: 32px; }
+    .tk-sg__h1 { font-size: 36px; }
+    .tk-sg__h2 { font-size: 28px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Size Guide",
+  "tag": "div",
+  "class": "tk-size-guide-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Get the Right Fit" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Hardware Size Guide" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Choosing the right size hardware is essential for both function and aesthetics. Use this guide to find the perfect fit for your cabinets." },
+    { "type": "text", "id": "pulls_heading", "label": "Pulls section heading", "default": "Measuring for Pulls" },
+    { "type": "image_picker", "id": "pulls_image", "label": "Pulls diagram image" },
+    { "type": "textarea", "id": "pulls_body1", "label": "Pulls body 1", "default": "Cabinet pull sizing is described by the center-to-center (C-to-C) measurement — the distance between the centers of the two mounting holes. This is not the overall length of the pull." },
+    { "type": "textarea", "id": "pulls_body2", "label": "Pulls body 2", "default": "To measure: use a ruler or tape measure to find the distance between the centers of your existing screw holes. Match this measurement to a Top Knobs pull with the same C-to-C dimension." },
+    { "type": "textarea", "id": "pulls_protip", "label": "Pro tip text", "default": "If you're drilling new holes, choose your pull first and drill to match. Standard C-to-C sizes (3\", 3 3/4\", 5 1/16\") are easiest to source in the future." },
+    { "type": "text", "id": "pull_chart_heading", "label": "Pull chart heading", "default": "Pull Size Reference Chart" },
+    { "type": "text", "id": "knobs_heading", "label": "Knobs section heading", "default": "Knob Sizing" },
+    { "type": "image_picker", "id": "knobs_image", "label": "Knobs diagram image" },
+    { "type": "textarea", "id": "knobs_body", "label": "Knobs body", "default": "Knobs are measured by their diameter (the widest point of the knob). Unlike pulls, knobs mount on a single screw — so there's no C-to-C measurement. The most common kitchen and bath knob sizes are 1 1/4\" to 1 1/2\"." },
+    { "type": "text", "id": "backplates_heading", "label": "Backplates heading", "default": "Do You Need a Backplate?" },
+    { "type": "textarea", "id": "backplates_body1", "label": "Backplates body 1", "default": "Backplates serve two purposes: they protect your cabinet finish from wear around the hardware hole, and they add an extra layer of decorative detail." },
+    { "type": "textarea", "id": "backplates_body2", "label": "Backplates body 2", "default": "Top Knobs offers matching backplates for many collections. If you're replacing hardware with different hole spacing, a backplate can also cover the old holes." },
+    { "type": "text", "id": "backplates_btn_label", "label": "Backplates button label", "default": "Shop Backplates" },
+    { "type": "url", "id": "backplates_btn_url", "label": "Backplates button link" },
+    { "type": "text", "id": "contact_btn_label", "label": "Contact button label", "default": "Ask a Sizing Question" },
+    { "type": "url", "id": "contact_btn_url", "label": "Contact button link" },
+    { "type": "textarea", "id": "seo_note", "label": "SEO footer note", "default": "Still unsure? Our sample program is the best way to verify fit and finish before committing to a full order. Order 1–2 pieces, mount them on your cabinets, and see exactly how they look and feel in your space." }
+  ],
+  "presets": [
+    { "name": "Size Guide" }
+  ]
+}
+{% endschema %}

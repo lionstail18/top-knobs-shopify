@@ -1,0 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-samples",
+      "settings": {
+        "eyebrow": "Try Before You Buy",
+        "heading": "Our Sample Program",
+        "body": "Choosing cabinet hardware is an important decision. See how finishes look in your own space before committing to a full order. We'll refund your samples when you place your final order.",
+        "btn_label": "Browse & Order Samples",
+        "steps_heading": "How It Works",
+        "policy_heading": "Sample Refund Policy",
+        "policy_body": "Once you've found your perfect hardware, simply place your follow-up order and email us both order confirmation numbers. We'll refund the cost of up to 5 samples (the most expensive pieces you didn't choose), including shipping charges, up to 5% of your new order value. It's that easy."
+      },
+      "blocks": {
+        "s1": { "type": "step", "settings": { "title": "Browse & Select", "description": "Browse our full catalog and choose the hardware pieces you'd like to try in your home. We recommend sampling across 2–3 finishes." } },
+        "s2": { "type": "step", "settings": { "title": "Order Your Samples", "description": "Add samples to your cart and order them just like any product. Samples ship within 1–2 business days." } },
+        "s3": { "type": "step", "settings": { "title": "Try in Your Space", "description": "Live with the samples in your actual kitchen, bath, or closet. See how they look in your lighting with your cabinetry." } },
+        "s4": { "type": "step", "settings": { "title": "Get Refunded", "description": "Place your full order, and we'll refund the cost of the samples you didn't choose — up to 5% of your new order value." } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4"]
+    }
+  },
+  "order": ["main"]
+}

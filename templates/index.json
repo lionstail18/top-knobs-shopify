@@ -1,0 +1,306 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "height": 640,
+        "eyebrow": "Authorized Top Knobs Dealer",
+        "heading": "Elevate<br>Every Detail",
+        "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections — with free shipping and a lifetime warranty.",
+        "btn1_label": "Shop Now",
+        "btn2_label": "What's New"
+      }
+    },
+    "trust-bar": {
+      "type": "trust-bar",
+      "blocks": {
+        "item1": {
+          "type": "item",
+          "settings": {
+            "icon": "◇",
+            "title": "Lowest Price Guarantee",
+            "subtitle": "Beat any authorized dealer price"
+          }
+        },
+        "item2": {
+          "type": "item",
+          "settings": {
+            "icon": "◇",
+            "title": "Free Shipping $99+",
+            "subtitle": "On all orders over $99"
+          }
+        },
+        "item3": {
+          "type": "item",
+          "settings": {
+            "icon": "◇",
+            "title": "Sample Program",
+            "subtitle": "Try before you buy — we refund samples"
+          }
+        },
+        "item4": {
+          "type": "item",
+          "settings": {
+            "icon": "◇",
+            "title": "Lifetime Warranty",
+            "subtitle": "All Top Knobs products fully warranted"
+          }
+        },
+        "item5": {
+          "type": "item",
+          "settings": {
+            "icon": "◇",
+            "title": "Trade Pricing",
+            "subtitle": "Special pricing for design professionals"
+          }
+        }
+      },
+      "block_order": [
+        "item1",
+        "item2",
+        "item3",
+        "item4",
+        "item5"
+      ],
+      "settings": {}
+    },
+    "category-grid": {
+      "type": "category-grid",
+      "blocks": {
+        "cat1": {
+          "type": "item",
+          "settings": {
+            "title": "Knobs",
+            "count": "1,200+"
+          }
+        },
+        "cat2": {
+          "type": "item",
+          "settings": {
+            "title": "Pulls & Handles",
+            "count": "2,400+"
+          }
+        },
+        "cat3": {
+          "type": "item",
+          "settings": {
+            "title": "Appliance Pulls",
+            "count": "300+"
+          }
+        },
+        "cat4": {
+          "type": "item",
+          "settings": {
+            "title": "Bath Accessories",
+            "count": "400+"
+          }
+        },
+        "cat5": {
+          "type": "item",
+          "settings": {
+            "title": "Hooks",
+            "count": "150+"
+          }
+        }
+      },
+      "block_order": [
+        "cat1",
+        "cat2",
+        "cat3",
+        "cat4",
+        "cat5"
+      ],
+      "settings": {
+        "eyebrow": "Explore Our Range",
+        "heading": "Shop by Category"
+      }
+    },
+    "featured-collections": {
+      "type": "featured-collections",
+      "blocks": {
+        "col1": {
+          "type": "item",
+          "settings": {
+            "title": "The Pemberton Collection",
+            "description": "Modern elegance meets timeless form. Clean architectural lines in premium finishes.",
+            "badge": "NEW"
+          }
+        },
+        "col2": {
+          "type": "item",
+          "settings": {
+            "title": "The Serene Collection",
+            "description": "Inspired by nature's calm — organic silhouettes in honey bronze and brushed nickel.",
+            "badge": "BESTSELLER"
+          }
+        },
+        "col3": {
+          "type": "item",
+          "settings": {
+            "title": "The CHAREAU® Collection",
+            "description": "French-inspired artistry with refined proportions for the discerning interior.",
+            "badge": ""
+          }
+        },
+        "col4": {
+          "type": "item",
+          "settings": {
+            "title": "The Garrison Collection",
+            "description": "Classic craftsmanship reimagined. A versatile collection for traditional and transitional spaces.",
+            "badge": "POPULAR"
+          }
+        },
+        "col5": {
+          "type": "item",
+          "settings": {
+            "title": "The Crystal Collection",
+            "description": "Shimmer and shine — faceted crystal knobs and pulls that catch the light beautifully.",
+            "badge": ""
+          }
+        },
+        "col6": {
+          "type": "item",
+          "settings": {
+            "title": "The Edwardian Collection",
+            "description": "Heritage detailing, enduring appeal. Timeless pieces for distinguished interiors.",
+            "badge": ""
+          }
+        }
+      },
+      "block_order": [
+        "col1",
+        "col2",
+        "col3",
+        "col4",
+        "col5",
+        "col6"
+      ],
+      "settings": {
+        "eyebrow": "Curated for You",
+        "heading": "Featured Collections",
+        "btn_label": "View All 40+ Collections"
+      }
+    },
+    "finish-browser": {
+      "type": "finish-browser",
+      "blocks": {
+        "fin1": {
+          "type": "finish",
+          "settings": {
+            "color": "#C8C0B0",
+            "name": "Polished Nickel"
+          }
+        },
+        "fin2": {
+          "type": "finish",
+          "settings": {
+            "color": "#A09890",
+            "name": "Brushed Nickel"
+          }
+        },
+        "fin3": {
+          "type": "finish",
+          "settings": {
+            "color": "#2A2826",
+            "name": "Matte Black"
+          }
+        },
+        "fin4": {
+          "type": "finish",
+          "settings": {
+            "color": "#8C6C2E",
+            "name": "Honey Bronze"
+          }
+        },
+        "fin5": {
+          "type": "finish",
+          "settings": {
+            "color": "#3D2A18",
+            "name": "Oil Rubbed Bronze"
+          }
+        },
+        "fin6": {
+          "type": "finish",
+          "settings": {
+            "color": "#C2A058",
+            "name": "Brushed Gold"
+          }
+        },
+        "fin7": {
+          "type": "finish",
+          "settings": {
+            "color": "#8A9090",
+            "name": "Stainless Steel"
+          }
+        },
+        "fin8": {
+          "type": "finish",
+          "settings": {
+            "color": "#D8D8DA",
+            "name": "Polished Chrome"
+          }
+        }
+      },
+      "block_order": [
+        "fin1",
+        "fin2",
+        "fin3",
+        "fin4",
+        "fin5",
+        "fin6",
+        "fin7",
+        "fin8"
+      ],
+      "settings": {
+        "eyebrow": "Find Your Perfect Match",
+        "heading": "Browse by Finish"
+      }
+    },
+    "product-grid": {
+      "type": "product-grid",
+      "settings": {
+        "eyebrow": "Most Loved",
+        "heading": "Bestsellers",
+        "btn_label": "View All",
+        "product_limit": 3
+      }
+    },
+    "sample-cta": {
+      "type": "sample-cta",
+      "settings": {
+        "eyebrow": "Before You Commit",
+        "heading": "Try Before<br>You Buy",
+        "body": "Unsure which finish is right for your space? Order samples and see them in your home. We'll refund the cost of samples you don't choose toward your final order.",
+        "btn_label": "Learn About Our Sample Program"
+      }
+    },
+    "trade-cta": {
+      "type": "trade-cta",
+      "settings": {
+        "eyebrow": "For Design Professionals",
+        "heading": "Trade Pricing Available",
+        "body": "Interior designers, architects, and contractors qualify for exclusive trade pricing and dedicated support.",
+        "btn_label": "Apply for Trade Account"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust-bar",
+    "category-grid",
+    "featured-collections",
+    "finish-browser",
+    "product-grid",
+    "sample-cta",
+    "trade-cta"
+  ]
+}

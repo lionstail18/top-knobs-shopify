@@ -1,0 +1,208 @@
+<div class="tk-faq">
+  <div class="tk-faq__header">
+    <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h1 class="tk-faq__h1">{{ section.settings.heading | escape }}</h1>
+    <p class="tk-faq__intro">{{ section.settings.intro }}</p>
+  </div>
+
+  <div class="tk-faq__body">
+    {%- assign current_section = blank -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'section' -%}
+        {%- if current_section != blank -%}</div>{%- endif -%}
+        <div class="tk-faq__group" {{ block.shopify_attributes }}>
+          <p class="tk-faq__group-label">{{ block.settings.title | escape }}</p>
+        {%- assign current_section = block.settings.title -%}
+      {%- elsif block.type == 'item' -%}
+        <details class="tk-faq__item" {{ block.shopify_attributes }}>
+          <summary class="tk-faq__q">
+            <span>{{ block.settings.question | escape }}</span>
+            <span class="tk-faq__toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="tk-faq__a">
+            <p>{{ block.settings.answer | escape }}</p>
+          </div>
+        </details>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if current_section != blank -%}</div>{%- endif -%}
+
+    <!-- Still have questions CTA -->
+    {%- if section.settings.cta_heading != blank -%}
+      <div class="tk-faq__cta">
+        <h3 class="tk-faq__cta-heading">{{ section.settings.cta_heading | escape }}</h3>
+        <p class="tk-faq__cta-body">{{ section.settings.cta_body | escape }}</p>
+        <div class="tk-faq__cta-btns">
+          {%- if section.settings.cta_btn1_label != blank -%}
+            <a href="{{ section.settings.cta_btn1_url | default: routes.root_url }}"
+               class="tk-btn tk-btn--gold">
+              {{- section.settings.cta_btn1_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.cta_btn2_label != blank -%}
+            <a href="{{ section.settings.cta_btn2_url | default: 'tel:' }}"
+               class="tk-btn tk-btn--ghost-border">
+              {{- section.settings.cta_btn2_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .tk-faq {
+    background: var(--color-bg);
+  }
+  .tk-faq__header {
+    padding: 72px var(--tk-page-x) 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-faq__header .tk-eyebrow { margin: 0 0 10px; }
+  .tk-faq__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+    line-height: 1.05;
+  }
+  .tk-faq__intro {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .tk-faq__body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 64px 24px 100px;
+  }
+  .tk-faq__group {
+    margin-bottom: 56px;
+  }
+  .tk-faq__group-label {
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-accent);
+  }
+  .tk-faq__item {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-faq__q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .tk-faq__q::-webkit-details-marker { display: none; }
+  .tk-faq__q span:first-child {
+    font-family: var(--tk-font-heading);
+    font-size: 20px;
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+  .tk-faq__toggle {
+    font-family: var(--tk-font-body);
+    font-size: 20px;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+  details[open] .tk-faq__toggle {
+    transform: rotate(45deg);
+  }
+  .tk-faq__a {
+    padding: 0 0 20px;
+  }
+  .tk-faq__a p {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-faq__cta {
+    background: var(--color-bg2);
+    border: 1px solid var(--color-border);
+    padding: 36px 40px;
+    text-align: center;
+    margin-top: 56px;
+  }
+  .tk-faq__cta-heading {
+    font-family: var(--tk-font-heading);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 10px;
+  }
+  .tk-faq__cta-body {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text2);
+    margin: 0 0 20px;
+  }
+  .tk-faq__cta-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 768px) {
+    .tk-faq__h1 { font-size: 36px; }
+    .tk-faq__cta { padding: 24px 20px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "FAQ Page",
+  "tag": "div",
+  "class": "tk-faq-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Got Questions?" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently Asked Questions" },
+    { "type": "textarea", "id": "intro", "label": "Intro text", "default": "Everything you need to know about ordering, shipping, returns, and our products." },
+    { "type": "text", "id": "cta_heading", "label": "CTA heading", "default": "Still have questions?" },
+    { "type": "text", "id": "cta_body", "label": "CTA body", "default": "Our team is available Monday–Friday, 9am–5pm ET." },
+    { "type": "text", "id": "cta_btn1_label", "label": "CTA Button 1 label", "default": "Contact Us" },
+    { "type": "url", "id": "cta_btn1_url", "label": "CTA Button 1 link" },
+    { "type": "text", "id": "cta_btn2_label", "label": "CTA Button 2 label", "default": "1-800-530-8245" },
+    { "type": "url", "id": "cta_btn2_url", "label": "CTA Button 2 link" }
+  ],
+  "blocks": [
+    {
+      "type": "section",
+      "name": "Section Heading",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Section title", "default": "Ordering & Shipping" }
+      ]
+    },
+    {
+      "type": "item",
+      "name": "FAQ Item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How long does shipping take?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Most orders ship within 1–2 business days." }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "FAQ Page" }
+  ]
+}
+{% endschema %}

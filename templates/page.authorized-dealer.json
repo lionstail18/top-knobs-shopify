@@ -1,0 +1,36 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-authorized-dealer",
+      "settings": {
+        "eyebrow": "Shop with Confidence",
+        "heading": "Officially Authorized Top Knobs Dealer",
+        "body1": "TopKnobsHardware.net is an officially authorized dealer for Top Knobs — one of America's most respected cabinet hardware brands. Our authorization means every product we sell is 100% authentic, fully warranted, and sourced directly from the manufacturer.",
+        "body2": "When you shop with us, you're not just getting the lowest price — you're getting the full protection of Top Knobs' lifetime limited warranty, the assurance of authentic products, and the support of a team that knows the catalog inside and out.",
+        "btn_label": "Shop the Full Collection",
+        "risks_heading": "Why Authorized Dealers Matter",
+        "risks_sub": "Not all online sellers are authorized. Here's what you risk when buying Top Knobs from an unauthorized source.",
+        "guarantee_heading": "Our Guarantee to You",
+        "guarantee_body1": "As an authorized Top Knobs dealer, we stand behind every product we sell. Every order comes with the manufacturer's lifetime limited warranty, genuine Top Knobs packaging, and the peace of mind that comes from buying through an official channel.",
+        "guarantee_body2": "We also offer the lowest prices online — and we'll match any authorized dealer price. If you find the same product cheaper elsewhere from an authorized source, contact us and we'll beat it."
+      },
+      "blocks": {
+        "r1": { "type": "risk", "settings": { "title": "Grey Market Risk", "description": "Unauthorized sellers may offer counterfeit or grey-market products that look identical but fail quality and finish standards. You have no recourse if something goes wrong." } },
+        "r2": { "type": "risk", "settings": { "title": "No Warranty Coverage", "description": "Top Knobs' lifetime warranty is only valid for products purchased from authorized dealers. Grey-market purchases are not covered — leaving you with no support if a product fails." } },
+        "r3": { "type": "risk", "settings": { "title": "Discontinued Inventory", "description": "Some unauthorized sellers offload discontinued or returned merchandise. You may receive old stock in a finish that's no longer supported, making future reorders impossible." } },
+        "r4": { "type": "risk", "settings": { "title": "No Expert Support", "description": "Authorized dealers have direct relationships with Top Knobs and can answer questions about fit, finish, installation, and product availability that third-party sellers cannot." } }
+      },
+      "block_order": ["r1","r2","r3","r4"]
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,191 @@
+<!-- Hero 2-col -->
+<section class="tk-samples__hero">
+  <div class="tk-samples__hero-text">
+    <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h1 class="tk-samples__h1">{{ section.settings.heading | escape }}</h1>
+    <p class="tk-samples__body">{{ section.settings.body | escape }}</p>
+    {%- if section.settings.btn_label != blank -%}
+      <a href="{{ section.settings.btn_url | default: routes.all_products_collection_url }}"
+         class="tk-btn tk-btn--gold">
+        {{- section.settings.btn_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+  <div class="tk-samples__hero-media">
+    {%- if section.settings.image != blank -%}
+      {{- section.settings.image | image_url: width: 900 | image_tag:
+          loading: 'lazy',
+          class: 'tk-samples__hero-img',
+          alt: section.settings.heading | escape -}}
+    {%- else -%}
+      <div class="tk-samples__hero-img tk-samples__hero-img--placeholder"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="tk-samples__steps">
+  <div class="tk-samples__steps-head">
+    <h2 class="tk-samples__steps-h2">{{ section.settings.steps_heading | escape }}</h2>
+  </div>
+  {%- if section.blocks.size > 0 -%}
+    <div class="tk-samples__steps-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'step' -%}
+          <div class="tk-samples__step" {{ block.shopify_attributes }}>
+            <p class="tk-samples__step-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+            <p class="tk-samples__step-title">{{ block.settings.title | escape }}</p>
+            <p class="tk-samples__step-desc">{{ block.settings.description | escape }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+<!-- Fine print -->
+<section class="tk-samples__policy">
+  <h3 class="tk-samples__policy-h3">{{ section.settings.policy_heading | escape }}</h3>
+  <p class="tk-samples__policy-body">{{ section.settings.policy_body | escape }}</p>
+</section>
+
+{%- style -%}
+  .tk-samples__hero {
+    padding: 80px var(--tk-page-x);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .tk-samples__hero .tk-eyebrow { margin: 0 0 12px; }
+  .tk-samples__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 20px;
+    line-height: 1.05;
+  }
+  .tk-samples__body {
+    font-family: var(--tk-font-body);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0 0 32px;
+  }
+  .tk-samples__hero-img {
+    display: block;
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+  .tk-samples__hero-img--placeholder { background: var(--color-border); }
+  .tk-samples__steps {
+    padding: 64px var(--tk-page-x) 80px;
+    background: var(--color-bg2);
+  }
+  .tk-samples__steps-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .tk-samples__steps-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .tk-samples__steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .tk-samples__step-num {
+    font-family: var(--tk-font-heading);
+    font-size: 48px;
+    color: var(--color-accent);
+    margin: 0 0 16px;
+    line-height: 1;
+  }
+  .tk-samples__step-title {
+    font-family: var(--tk-font-heading);
+    font-size: 22px;
+    color: var(--color-text);
+    margin: 0 0 10px;
+    line-height: 1.2;
+  }
+  .tk-samples__step-desc {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-samples__policy {
+    padding: 48px 200px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .tk-samples__policy-h3 {
+    font-family: var(--tk-font-heading);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .tk-samples__policy-body {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  @media (max-width: 1024px) {
+    .tk-samples__policy { padding: 48px var(--tk-page-x); }
+  }
+  @media (max-width: 900px) {
+    .tk-samples__steps-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .tk-samples__hero { grid-template-columns: 1fr; gap: 40px; }
+    .tk-samples__h1 { font-size: 36px; }
+    .tk-samples__hero-media { order: -1; }
+  }
+  @media (max-width: 600px) {
+    .tk-samples__steps-grid { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Samples Page",
+  "tag": "div",
+  "class": "tk-samples-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Try Before You Buy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Sample Program" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Choosing cabinet hardware is an important decision. See how finishes look in your own space before committing to a full order. We'll refund your samples when you place your final order." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Browse & Order Samples" },
+    { "type": "url", "id": "btn_url", "label": "Button link" },
+    { "type": "text", "id": "steps_heading", "label": "Steps heading", "default": "How It Works" },
+    { "type": "text", "id": "policy_heading", "label": "Policy heading", "default": "Sample Refund Policy" },
+    { "type": "textarea", "id": "policy_body", "label": "Policy body", "default": "Once you've found your perfect hardware, simply place your follow-up order and email us both order confirmation numbers. We'll refund the cost of up to 5 samples (the most expensive pieces you didn't choose), including shipping charges, up to 5% of your new order value." }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Step title", "default": "Browse & Select" },
+        { "type": "textarea", "id": "description", "label": "Step description", "default": "Browse our full catalog and choose the hardware pieces you'd like to try in your home." }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Samples Page" }
+  ]
+}
+{% endschema %}

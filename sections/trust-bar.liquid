@@ -1,0 +1,103 @@
+{%- if section.blocks.size > 0 -%}
+<div class="tk-trust-bar">
+  <div class="tk-trust-bar__inner">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'item' -%}
+        <div class="tk-trust-bar__item" {{ block.shopify_attributes }}>
+          <span class="tk-trust-bar__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+          <span class="tk-trust-bar__title">{{ block.settings.title | escape }}</span>
+          {%- if block.settings.subtitle != blank -%}
+            <span class="tk-trust-bar__sub">{{ block.settings.subtitle | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+{%- style -%}
+  .tk-trust-bar {
+    background: var(--color-nav-bg);
+    padding: 28px var(--tk-page-x);
+  }
+  .tk-trust-bar__inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .tk-trust-bar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+  }
+  .tk-trust-bar__icon {
+    font-family: var(--tk-font-heading);
+    font-size: 22px;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+  .tk-trust-bar__title {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-nav-text);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .tk-trust-bar__sub {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: rgba(246,247,250,0.5);
+  }
+  @media (max-width: 768px) {
+    .tk-trust-bar { padding: 24px 24px; }
+    .tk-trust-bar__item { min-width: 120px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Trust Bar",
+  "tag": "div",
+  "class": "tk-trust-bar-section",
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon character",
+          "default": "◇"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Trust Item"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Bar"
+    }
+  ]
+}
+{% endschema %}

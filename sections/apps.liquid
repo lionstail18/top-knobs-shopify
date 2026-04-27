@@ -1,0 +1,42 @@
+<div class="section{% unless section.settings.show_space %} section--full-width{% endunless %}">
+  {%- unless section.settings.full_width -%}
+    <div class="container">
+  {%- endunless -%}
+    {%- for block in section.blocks -%}
+      {% render block %}
+    {%- endfor -%}
+  {%- unless section.settings.full_width -%}
+    </div>
+  {%- endunless -%}
+</div>
+
+{% schema %}
+{
+  "name": "Apps",
+  "class": "cc-apps",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Make section full width",
+      "default": false
+    },
+    {
+      "id": "show_space",
+      "type": "checkbox",
+      "label": "Show space above and below section",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apps"
+    }
+  ]
+}
+{% endschema %}

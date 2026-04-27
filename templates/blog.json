@@ -1,0 +1,22 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-blog",
+      "settings": {
+        "eyebrow": "From the Journal",
+        "heading": "Journal",
+        "intro": "Design guides, trend reports, and how-tos from our team and the wider Top Knobs community."
+      }
+    }
+  },
+  "order": ["main"]
+}

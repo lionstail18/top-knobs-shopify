@@ -1,0 +1,36 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-about",
+      "settings": {
+        "hero_eyebrow": "Our Story",
+        "hero_heading": "About Top Knobs<br>Hardware Outlet",
+        "story_lead": "TopKnobsHardware.net is your authorized online outlet for the complete Top Knobs collection — offering the lowest prices on the internet, backed by a lifetime warranty and world-class customer service.",
+        "story_body": "We believe that great hardware shouldn't cost a fortune. As an authorized Top Knobs dealer, we offer the full catalog of over 4,500 premium cabinet knobs, pulls, appliance pulls, and bath accessories at prices no one else can match. Whether you're renovating a single kitchen or outfitting an entire home, we're here to help you make it beautiful.",
+        "values_heading": "Why Choose Us",
+        "dealer_eyebrow": "Official Authorization",
+        "dealer_heading": "Authorized Top Knobs Dealer",
+        "dealer_body": "As an officially authorized Top Knobs dealer, every product we sell is 100% authentic, covered by the full manufacturer's lifetime warranty, and sourced directly from Top Knobs. You can shop with complete confidence.",
+        "dealer_btn1_label": "Shop the Collection",
+        "dealer_btn2_label": "Contact Us"
+      },
+      "blocks": {
+        "v1": { "type": "value", "settings": { "title": "Authorized Dealer", "description": "We are an authorized Top Knobs dealer, ensuring every product is 100% authentic and covered by the manufacturer's lifetime warranty." } },
+        "v2": { "type": "value", "settings": { "title": "Lowest Prices Online", "description": "Our price-match guarantee means you'll never pay more than you need to. We are committed to offering the best prices on every Top Knobs item." } },
+        "v3": { "type": "value", "settings": { "title": "Expert Guidance", "description": "Our knowledgeable team is available to help you find the perfect hardware for your project — from finish selection to sizing advice." } },
+        "v4": { "type": "value", "settings": { "title": "Lifetime Warranty", "description": "Every Top Knobs product comes with a lifetime limited warranty against manufacturing defects, giving you complete peace of mind." } }
+      },
+      "block_order": ["v1", "v2", "v3", "v4"]
+    }
+  },
+  "order": ["main"]
+}

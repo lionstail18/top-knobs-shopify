@@ -1,0 +1,15 @@
+.article__read-indicator {
+  z-index: 21;
+  height: 8px;
+  transform: translateY(calc(100% + 1px));
+  transition: transform 0.5s;
+  border: 0;
+  background-color: rgba(var(--text-color-og)/0.2);
+}
+.article__read-indicator::before {
+  height: 100%;
+  background-color: rgb(var(--link-color));
+}
+.article__read-indicator.is-visible {
+  transform: translateY(0);
+}

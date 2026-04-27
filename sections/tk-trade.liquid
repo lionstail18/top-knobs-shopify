@@ -1,0 +1,187 @@
+<section class="tk-trade">
+  <!-- Left: benefits -->
+  <div class="tk-trade__benefits">
+    <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h1 class="tk-trade__h1">{{ section.settings.heading | escape }}</h1>
+    <p class="tk-trade__body">{{ section.settings.body | escape }}</p>
+    <ul class="tk-trade__list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'benefit' -%}
+          <li class="tk-trade__list-item" {{ block.shopify_attributes }}>
+            <span class="tk-trade__bullet">✦</span>
+            <span>{{ block.settings.text | escape }}</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <!-- Right: application form -->
+  <div class="tk-trade__form-wrap">
+    {%- form 'contact', id: 'tk-trade-form' -%}
+      {%- if form.posted_successfully? -%}
+        <div class="tk-trade__success">
+          <p class="tk-trade__success-head">Application Received</p>
+          <p class="tk-trade__success-sub">We'll review your application and reach out within 1–2 business days.</p>
+        </div>
+      {%- else -%}
+        <h2 class="tk-trade__form-h2">{{ section.settings.form_heading | escape }}</h2>
+        <div class="tk-trade__fields">
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormName">Full Name</label>
+            <input id="TradeFormName" name="contact[name]" type="text" class="tk-input"
+                   value="{{ form.name }}" autocomplete="name">
+          </div>
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormCompany">Company Name</label>
+            <input id="TradeFormCompany" name="contact[company]" type="text" class="tk-input">
+          </div>
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormEmail">Email Address <span aria-hidden="true">*</span></label>
+            <input id="TradeFormEmail" name="contact[email]" type="email" class="tk-input"
+                   value="{{ form.email }}" autocomplete="email" required>
+          </div>
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormPhone">Phone Number</label>
+            <input id="TradeFormPhone" name="contact[phone]" type="tel" class="tk-input"
+                   autocomplete="tel">
+          </div>
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormLicense">License / Trade ID (if applicable)</label>
+            <input id="TradeFormLicense" name="contact[license]" type="text" class="tk-input">
+          </div>
+          <div class="tk-trade__field">
+            <label class="tk-label" for="TradeFormProfession">Profession Type</label>
+            <select id="TradeFormProfession" name="contact[profession]" class="tk-input">
+              <option value="">Select one</option>
+              <option>Interior Designer</option>
+              <option>Architect</option>
+              <option>Builder / Contractor</option>
+              <option>Kitchen & Bath Dealer</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button type="submit" class="tk-btn tk-btn--gold tk-trade__submit">
+            {{- section.settings.btn_label | escape -}}
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{%- style -%}
+  .tk-trade {
+    padding: 72px var(--tk-page-x);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    background: var(--color-bg);
+  }
+  .tk-trade .tk-eyebrow { margin: 0 0 12px; }
+  .tk-trade__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 20px;
+    line-height: 1.05;
+  }
+  .tk-trade__body {
+    font-family: var(--tk-font-body);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0 0 28px;
+  }
+  .tk-trade__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .tk-trade__list-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+  .tk-trade__bullet {
+    color: var(--color-accent);
+    font-family: var(--tk-font-heading);
+    font-size: 20px;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+  .tk-trade__form-wrap {
+    background: var(--color-bg2);
+    padding: 40px 36px;
+    border: 1px solid var(--color-border);
+  }
+  .tk-trade__form-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 24px;
+  }
+  .tk-trade__fields { display: flex; flex-direction: column; gap: 14px; }
+  .tk-trade__field { display: flex; flex-direction: column; }
+  .tk-trade__submit {
+    padding: 14px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .tk-trade__success {
+    text-align: center;
+    padding: 60px 0;
+  }
+  .tk-trade__success-head {
+    font-family: var(--tk-font-heading);
+    font-size: 36px;
+    color: var(--color-text);
+    margin: 0 0 16px;
+  }
+  .tk-trade__success-sub {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    .tk-trade { grid-template-columns: 1fr; gap: 40px; }
+    .tk-trade__h1 { font-size: 36px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Trade Page",
+  "tag": "div",
+  "class": "tk-trade-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "For Design Professionals" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Trade Pricing Program" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Interior designers, architects, builders, and contractors qualify for our exclusive trade program. Get the best possible pricing on the complete Top Knobs catalog, plus dedicated support for your projects." },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Apply for Trade Access" },
+    { "type": "text", "id": "btn_label", "label": "Submit button", "default": "Submit Application" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Benefit text", "default": "Exclusive trade pricing across all Top Knobs products" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Trade Page" }
+  ]
+}
+{% endschema %}

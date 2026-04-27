@@ -1,0 +1,279 @@
+<!-- Breadcrumb -->
+<div class="tk-article__breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  <span aria-hidden="true">/</span>
+  <a href="{{ blog.url }}">{{ blog.title }}</a>
+  <span aria-hidden="true">/</span>
+  <span class="tk-article__breadcrumb-current">{{ article.title | escape }}</span>
+</div>
+
+<article class="tk-article">
+  <header class="tk-article__head">
+    {%- if article.tags.size > 0 -%}
+      <p class="tk-article__category">{{ article.tags.first }}</p>
+    {%- endif -%}
+    <h1 class="tk-article__h1">{{ article.title | escape }}</h1>
+    <p class="tk-article__meta">
+      <span>{{ article.published_at | date: '%B %-d, %Y' }}</span>
+      {%- if article.author != blank -%}
+        <span aria-hidden="true">·</span>
+        <span>{{ article.author }}</span>
+      {%- endif -%}
+    </p>
+  </header>
+
+  {%- if article.image != blank -%}
+    <div class="tk-article__hero-img-wrap">
+      {{- article.image | image_url: width: 1600 | image_tag:
+          loading: 'eager',
+          class: 'tk-article__hero-img',
+          alt: article.title | escape -}}
+    </div>
+  {%- endif -%}
+
+  <div class="tk-article__body rte">
+    {{ article.content }}
+  </div>
+
+  {%- if article.tags.size > 0 -%}
+    <div class="tk-article__tags">
+      {%- for tag in article.tags -%}
+        <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="tk-article__tag">{{ tag }}</a>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if blog.next_article or blog.previous_article -%}
+    <nav class="tk-article__nav" aria-label="Article navigation">
+      {%- if blog.previous_article -%}
+        <a href="{{ blog.previous_article.url }}" class="tk-article__nav-link tk-article__nav-link--prev">
+          <span class="tk-article__nav-label">&larr; Previous</span>
+          <span class="tk-article__nav-title">{{ blog.previous_article.title | escape }}</span>
+        </a>
+      {%- else -%}<span></span>{%- endif -%}
+      {%- if blog.next_article -%}
+        <a href="{{ blog.next_article.url }}" class="tk-article__nav-link tk-article__nav-link--next">
+          <span class="tk-article__nav-label">Next &rarr;</span>
+          <span class="tk-article__nav-title">{{ blog.next_article.title | escape }}</span>
+        </a>
+      {%- else -%}<span></span>{%- endif -%}
+    </nav>
+  {%- endif -%}
+
+  {%- if article.comments_enabled? -%}
+    <section class="tk-article__comments">
+      <h2 class="tk-article__comments-h2">{{ article.comments_count }} {% if article.comments_count == 1 %}comment{% else %}comments{% endif %}</h2>
+      {%- for comment in article.comments -%}
+        <div class="tk-article__comment">
+          <p class="tk-article__comment-author">{{ comment.author }} <span class="tk-article__comment-date">· {{ comment.created_at | date: '%B %-d, %Y' }}</span></p>
+          <div class="tk-article__comment-body rte">{{ comment.content }}</div>
+        </div>
+      {%- endfor -%}
+
+      {%- form 'new_comment', article -%}
+        <div class="tk-article__comment-form">
+          <h3 class="tk-article__comment-h3">Leave a comment</h3>
+          <div class="tk-article__comment-fields">
+            <input class="tk-input" type="text" name="comment[author]" placeholder="Your name" required>
+            <input class="tk-input" type="email" name="comment[email]" placeholder="your@email.com" required>
+            <textarea class="tk-input tk-article__comment-textarea" name="comment[body]" placeholder="Your comment" required></textarea>
+            <button type="submit" class="tk-btn tk-btn--gold">Post Comment</button>
+          </div>
+        </div>
+      {%- endform -%}
+    </section>
+  {%- endif -%}
+</article>
+
+{%- style -%}
+  .tk-article__breadcrumb {
+    padding: 14px var(--tk-page-x);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+  }
+  .tk-article__breadcrumb a {
+    color: var(--color-text2);
+    text-decoration: none;
+  }
+  .tk-article__breadcrumb-current { color: var(--color-text); }
+  .tk-article {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 24px 100px;
+  }
+  .tk-article__head { margin-bottom: 32px; }
+  .tk-article__category {
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+  .tk-article__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 14px;
+    line-height: 1.1;
+  }
+  .tk-article__meta {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+    display: flex;
+    gap: 8px;
+    margin: 0;
+  }
+  .tk-article__hero-img-wrap { margin-bottom: 32px; }
+  .tk-article__hero-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .tk-article__body {
+    font-family: var(--tk-font-body);
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--color-text);
+  }
+  .tk-article__body p { margin: 0 0 1.2em; }
+  .tk-article__body h2,
+  .tk-article__body h3 {
+    font-family: var(--tk-font-heading);
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.2;
+    margin: 1.6em 0 0.6em;
+  }
+  .tk-article__body h2 { font-size: 30px; }
+  .tk-article__body h3 { font-size: 24px; }
+  .tk-article__body blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding: 12px 0 12px 24px;
+    margin: 1.5em 0;
+    font-family: var(--tk-font-heading);
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--color-text);
+    font-style: italic;
+  }
+  .tk-article__body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5em 0;
+  }
+  .tk-article__body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+  .tk-article__tags {
+    margin-top: 40px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tk-article__tag {
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .tk-article__nav {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .tk-article__nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .tk-article__nav-link--next { text-align: right; }
+  .tk-article__nav-label {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+  }
+  .tk-article__nav-title {
+    font-family: var(--tk-font-heading);
+    font-size: 16px;
+    color: var(--color-text);
+  }
+  .tk-article__comments { margin-top: 56px; }
+  .tk-article__comments-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0 0 24px;
+    color: var(--color-text);
+  }
+  .tk-article__comment {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-article__comment-author {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 8px;
+  }
+  .tk-article__comment-date { color: var(--color-text2); font-weight: 400; }
+  .tk-article__comment-body {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--color-text2);
+  }
+  .tk-article__comment-form { margin-top: 32px; }
+  .tk-article__comment-h3 {
+    font-family: var(--tk-font-heading);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+  .tk-article__comment-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tk-article__comment-textarea {
+    height: 120px;
+    resize: vertical;
+  }
+  @media (max-width: 600px) {
+    .tk-article__h1 { font-size: 32px; }
+    .tk-article__body { font-size: 15px; }
+    .tk-article__nav { grid-template-columns: 1fr; }
+    .tk-article__nav-link--next { text-align: left; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "div",
+  "class": "tk-article-section",
+  "settings": []
+}
+{% endschema %}

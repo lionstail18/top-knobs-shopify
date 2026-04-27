@@ -1,0 +1,122 @@
+{%- comment -%}
+  Parameters:
+  - product {Object} - Product object.
+  - option {Object} - Swatch product option object.
+  - value {Object} - Swatch product option value object.
+  - disable_interactivity {Boolean} - Disable swatch interactivity (optional, default is false).
+
+  Usage:
+  {%- render 'card-swatch', product: product, option: option, value: value -%}
+{%- endcomment -%}
+ 
+{%- liquid
+  if disable_interactivity != true
+    assign disable_interactivity = false
+  endif
+
+  assign swatch_size = settings.card_swatch_size | times: 2
+  if settings.image_quality == '0.75'
+    assign swatch_size = settings.card_swatch_size
+  endif
+
+  assign variant = value.variant
+  if settings.card_colors_style == 'variant-images' and variant.featured_media == blank
+    # value.variant may be nil - search for a variant that matches
+    assign swatch_option_key = 'option' | append: option.position
+    for v in product.variants
+      if v[swatch_option_key] == value.name and v.featured_media
+        assign variant = v
+        break
+      endif
+    endfor
+  endif
+
+  assign variant_image = false
+  if settings.card_colors_style == 'variant-images'
+    if variant.featured_media
+      assign variant_image = variant.featured_media
+    elsif value.product_url != blank and value.variant != blank
+      assign variant_image = value.variant.product.featured_media
+    elsif value.swatch.image
+      assign variant_image = value.swatch.image
+    endif
+  endif
+
+  assign swatch_image = false
+  if variant_image
+    assign swatch_image = variant_image
+  elsif settings.card_colors_style == 'native' and value.swatch.image
+    assign swatch_image = value.swatch.image
+  endif
+
+  assign swatch_color = false
+  if settings.card_colors_style != 'swatches' and value.swatch.color
+    unless settings.card_colors_style == 'variant-images' and swatch_image
+      assign swatch_color = value.swatch.color
+    endunless
+  endif
+
+  assign has_swatch = false
+  if settings.card_colors_style == 'swatches' and settings.swatch_option_name contains option.name
+    assign has_swatch = true
+  elsif settings.card_colors_style == 'variant-images' and settings.swatch_option_name contains option.name and swatch_image
+    assign has_swatch = true
+  elsif value.swatch
+    assign has_swatch = true
+  endif
+
+  assign is_interactive = false
+  unless disable_interactivity
+    assign card_image_ids = product.media | where: 'media_type', 'image' | map: 'id'
+    if variant.featured_media and card_image_ids contains variant.featured_media.id
+      assign is_interactive = true
+    endif
+  endunless
+-%}
+
+{%- if has_swatch -%}
+  {%- capture option_id %}{{ section.id }}-{{ product.id }}-{{ option.name | handle }}{% endcapture -%}
+  <input
+    type="radio"
+    class="opt-btn visually-hidden js-option"
+    name="{{ option_id }}-option"
+    id="{{ option_id }}-opt-{{ value.id }}"
+    value="{{ value | escape }}"
+    data-variant-id="{{ value.variant.id }}"
+    {% if is_interactive %} data-media-id="{{ variant.featured_media.id }}"{% endif %}
+    {% if value.selected %} checked{% endif %}
+    {% unless is_interactive %} disabled{% endunless %}>
+
+  <label
+    class="opt-label opt-label--swatch btn relative swatch-shape--{{ settings.card_swatch_shape }}{% if settings.card_swatch_shape != 'circle' %} swatch-shape--not-circle{% endif %}{% unless is_interactive %} pointer-events-none{% endunless %}"
+    for="{{ option_id }}-opt-{{ value.id }}"
+    data-swatch="{% if settings.card_colors_style == 'swatches' and settings.swatch_option_name contains option.name %}{{ value | replace: '"', '' | downcase }}{% endif %}"
+    {% if swatch_color %}
+      style="--swatch-color: rgb({{ swatch_color.rgb }});"
+    {%- endif -%}
+  >
+    <span class="visually-hidden">{{ value }}</span>
+
+    {%- if swatch_image -%}
+      {%- liquid
+        assign image_src = swatch_image.preview_image | image_url: width: swatch_size, height: swatch_size, crop: 'center'
+        assign image_width = swatch_size
+        assign image_height = swatch_size
+        if settings.card_swatch_shape == 'natural'
+          assign image_src = swatch_image.preview_image | image_url: width: swatch_size
+          assign image_height = swatch_size | divided_by: swatch_image.preview_image.aspect_ratio | round
+        else
+          assign image_class = 'img-fit'
+        endif
+        assign image_alt = swatch_image.preview_image.alt
+      -%}
+      <img
+        loading="lazy"
+        class="{{ image_class }}"
+        src="{{ image_src }}"
+        width="{{ image_width }}"
+        height="{{ image_height }}"
+        alt="{{ image_alt | escape }}">
+    {%- endif -%}
+  </label>
+{%- endif -%}

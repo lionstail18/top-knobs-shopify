@@ -1,0 +1,30 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-contact",
+      "settings": {
+        "eyebrow": "Get in Touch",
+        "heading": "Contact Us",
+        "intro": "We're here to help with product selection, trade pricing, returns, and everything in between.",
+        "btn_label": "Send Message"
+      },
+      "blocks": {
+        "i1": { "type": "info_item", "settings": { "label": "Phone", "value": "1-800-530-8245", "sub": "Mon–Fri 9am–5pm ET" } },
+        "i2": { "type": "info_item", "settings": { "label": "Email", "value": "help@topknobshardware.net", "sub": "Response within 1 business day" } },
+        "i3": { "type": "info_item", "settings": { "label": "Returns", "value": "30-Day Return Policy", "sub": "Easy return authorization online" } },
+        "i4": { "type": "info_item", "settings": { "label": "Shipping", "value": "Free on Orders $99+", "sub": "$7.95 flat rate otherwise" } }
+      },
+      "block_order": ["i1", "i2", "i3", "i4"]
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,52 @@
+{% comment %}
+  Displays a notification within the Theme Editor only.
+
+  Parameters:
+  - id {String} - The notification ID. Required.
+  - dismiss_days {Number} - The number of days the popup should hide for once closed. Optiona, defaults to 1.
+  - message {String/HTML} - The message to show.
+
+  Usage:
+  {%- render 'theme-notification', id: 'update-notification', message: message -%}
+{% endcomment %}
+
+{%- if request.design_mode -%}
+  <link rel="stylesheet" href="{{ 'modal.css' | asset_url }}">
+  <script src="{{ 'theme-notification.js' | asset_url }}" defer></script>
+
+  <style>
+    theme-notification {
+      backdrop-filter: blur(3px);
+    }
+
+    theme-notification .modal__window {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    theme-notification .modal__content {
+      padding-top: 50px;
+    }
+
+    theme-notification .modal__close-btn {
+      top: 4px;
+      right: 4px;
+    }
+  </style>
+
+  <theme-notification class="modal invisible fixed top-0 left-0 w-full h-full flex justify-start items-end" id="cc-{{ id }}" data-dismiss-days="{{ dismiss_days | default: 1 }}">
+    <div class="modal__window flex relative bg-theme-bg text-theme-text text-start has-motion"
+         role="dialog"
+         aria-labelledby="cc-{{ id }}-heading"
+         aria-modal="true"
+         tabindex="-1">
+      <button type="button" class="modal__close-btn absolute text-current js-close-modal">
+        {% render 'icon-close' %}
+        <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
+      </button>
+      <div class="flex-auto modal__content text-center">
+        {{ message }}
+      </div>
+    </div>
+  </theme-notification>
+{%- endif -%}

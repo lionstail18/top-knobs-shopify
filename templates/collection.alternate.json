@@ -1,0 +1,161 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_title": true,
+        "show_product_count": true,
+        "show_collection_description": true,
+        "collection_title_size": "h2",
+        "text_width": "wide",
+        "text_align": "text-center",
+        "text_position": "justify-center items-center",
+        "show_image": false,
+        "use_product_image": false,
+        "collection_image": "1.77",
+        "color_scheme": "default"
+      }
+    },
+    "collection-products": {
+      "type": "main-collection-products",
+      "blocks": {
+        "wide_promotion_cUqhD3": {
+          "type": "wide-promotion",
+          "settings": {
+            "position": "top",
+            "view": "grid_list",
+            "hide_on_filter": true,
+            "min_height": 150,
+            "link_url": "",
+            "content": "<h4>Promotion text<\/h4>",
+            "text_type_scale": "--h4-font-size",
+            "text_width": 400,
+            "text_alignment": "justify-center items-center text-center",
+            "button_label": "",
+            "button_style": "btn btn--primary",
+            "text_color": "#ffffff",
+            "tint_color": "#000000"
+          }
+        },
+        "image_promotion_kqxbRA": {
+          "type": "image-promotion",
+          "settings": {
+            "position": 1,
+            "view": "grid_list",
+            "hide_on_filter": true,
+            "min_height": 150,
+            "link_url": "",
+            "content": "<h5>Promotion text<\/h5>",
+            "text_type_scale": "1em",
+            "text_width": 400,
+            "text_alignment": "justify-center items-center text-center",
+            "button_label": "Optional Button",
+            "button_style": "link",
+            "text_color": "#ffffff",
+            "tint_color": "#000000"
+          }
+        },
+        "card_promotion_Pp43PE": {
+          "type": "card-promotion",
+          "settings": {
+            "position": 1,
+            "view": "grid_list",
+            "hide_on_filter": true,
+            "color_scheme": "1",
+            "image_ratio": "1",
+            "link_url": "",
+            "title": "Promotion title",
+            "content": "<p>Promotion text<\/p>",
+            "button_label": "Optional Button",
+            "button_style": "link",
+            "button_bottom_align": true
+          }
+        }
+      },
+      "block_order": [
+        "wide_promotion_cUqhD3",
+        "image_promotion_kqxbRA",
+        "card_promotion_Pp43PE"
+      ],
+      "settings": {
+        "products_per_page": 24,
+        "card_size_mobile": "small",
+        "card_size": "medium",
+        "show_layout_toggle": true,
+        "enable_filtering": true,
+        "filters_open_lg": false,
+        "stick_on_scroll": true,
+        "show_filter_counts": true,
+        "expand_filters": true,
+        "max_filter_options": 7,
+        "enable_sorting": true,
+        "sort_first": true
+      }
+    },
+    "rich_text_n4xYRU": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_wxdeW7": {
+          "type": "subheading",
+          "settings": {
+            "text": "Subheading"
+          }
+        },
+        "heading_pWNXxA": {
+          "type": "heading",
+          "settings": {
+            "heading": "Rich text headline",
+            "heading_size": "h2",
+            "heading_h1": false
+          }
+        },
+        "text_Uc8bpL": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share information about your store with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>",
+            "enlarge_text": false
+          }
+        },
+        "button_XweyFE": {
+          "type": "button",
+          "settings": {
+            "button_1_label": "Optional button",
+            "button_1_link": "",
+            "button_1_style": "btn--primary",
+            "button_2_label": "Optional button",
+            "button_2_link": "",
+            "button_2_style": "btn btn--primary"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_wxdeW7",
+        "heading_pWNXxA",
+        "text_Uc8bpL",
+        "button_XweyFE"
+      ],
+      "settings": {
+        "text_position": "justify-center",
+        "text_align": "text-center",
+        "mob_center_text": true,
+        "color_scheme": "none",
+        "full_width": true,
+        "prevent_animation": false
+      }
+    }
+  },
+  "order": [
+    "collection-banner",
+    "collection-products",
+    "rich_text_n4xYRU"
+  ]
+}

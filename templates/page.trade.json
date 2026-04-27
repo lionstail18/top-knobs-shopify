@@ -1,0 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-trade",
+      "settings": {
+        "eyebrow": "For Design Professionals",
+        "heading": "Trade Pricing Program",
+        "body": "Interior designers, architects, builders, and contractors qualify for our exclusive trade program. Get the best possible pricing on the complete Top Knobs catalog, plus dedicated support for your projects.",
+        "form_heading": "Apply for Trade Access",
+        "btn_label": "Submit Application"
+      },
+      "blocks": {
+        "b1": { "type": "benefit", "settings": { "text": "Exclusive trade pricing across all Top Knobs products" } },
+        "b2": { "type": "benefit", "settings": { "text": "Dedicated trade account manager" } },
+        "b3": { "type": "benefit", "settings": { "text": "Early access to new collections" } },
+        "b4": { "type": "benefit", "settings": { "text": "Sample program with higher refund limits" } },
+        "b5": { "type": "benefit", "settings": { "text": "Streamlined ordering for large-quantity projects" } },
+        "b6": { "type": "benefit", "settings": { "text": "Priority customer support" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
+    }
+  },
+  "order": ["main"]
+}

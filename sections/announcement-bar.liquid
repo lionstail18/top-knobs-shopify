@@ -1,0 +1,136 @@
+{%- if section.blocks.size > 0 -%}
+  {%- assign rotate_delay_ms = section.settings.rotate_delay | times: 1000 -%}
+
+  <style>
+    #announcement-bar-{{ section.id }} {
+      background-color: {{ section.settings.bg_color }};
+      color: {{ section.settings.text_color }};
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 9px 20px;
+      width: 100%;
+    }
+
+    #announcement-bar-{{ section.id }} .tk-ab__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    /* Mobile: hide all messages, show only active one */
+    @media (max-width: 767px) {
+      #announcement-bar-{{ section.id }} .tk-ab__msg {
+        display: none;
+      }
+      #announcement-bar-{{ section.id }} .tk-ab__msg.is-active {
+        display: block;
+      }
+    }
+
+    /* Fade-in animation for rotating messages */
+    @keyframes tk-ab-fade {
+      from { opacity: 0; transform: translateY(3px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #announcement-bar-{{ section.id }} .tk-ab__msg.is-active {
+      animation: tk-ab-fade 0.4s ease;
+    }
+  </style>
+
+  <div id="announcement-bar-{{ section.id }}"
+       class="tk-announcement-bar"
+       role="region"
+       aria-label="Site announcements">
+    <div class="tk-ab__inner">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'message' and block.settings.text != blank -%}
+          <span class="tk-ab__msg{% if forloop.first %} is-active{% endif %}"
+                {{ block.shopify_attributes }}>
+            {{- block.settings.text | escape -}}
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var bar = document.getElementById('announcement-bar-{{ section.id }}');
+      if (!bar) return;
+      var msgs = Array.prototype.slice.call(bar.querySelectorAll('.tk-ab__msg'));
+      if (msgs.length < 2) return;
+
+      var current = 0;
+
+      function isMobile() {
+        return window.innerWidth < 768;
+      }
+
+      function rotate() {
+        if (!isMobile()) return;
+        msgs[current].classList.remove('is-active');
+        current = (current + 1) % msgs.length;
+        msgs[current].classList.add('is-active');
+      }
+
+      setInterval(rotate, {{ rotate_delay_ms }});
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "tag": "div",
+  "class": "tk-announcement-bar-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#0D1526",
+      "info": "Deep Navy — matches the nav/header background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#F6F7FA"
+    },
+    {
+      "type": "range",
+      "id": "rotate_delay",
+      "label": "Mobile rotation interval",
+      "info": "How long each message shows on mobile before cycling to the next",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message text",
+          "default": "✦ Announcement"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,260 @@
+{%- comment -%}
+  Parameters:
+  - product {Array} - The product object (Required).
+  - section_id {String} The id of the section containing the quick order list
+  - show_subtotal {Boolean} - Set to true if the subtotal should show. Defaults to true.
+  - subtotal_stick {Boolean} - Set to true if the subtotal should stick on scroll (Required).
+  - subtotal_show_tax {Boolean} - Whether to show tax/shipping info inthe subtotal.
+  - show_sold_out {Boolean} - Whether to show sold out variants. Defaults to true.
+  - show_images {Boolean} - Whether to show product images. Defaults to true.
+  - show_full_variant_names {Boolean} - Whether to show longer variant names. Defaults to false.
+  - show_skus {Boolean} - Whether to show SKUs for variants . Defaults to false.
+
+  Usage:
+  {% render 'quick-order-list', product: product, section_id: section.id %}
+{%- endcomment -%}
+
+{%- liquid
+  if show_sold_out == nil
+    assign show_sold_out = true
+  endif
+
+  if show_images == nil
+    assign show_images = true
+  endif
+
+  unless show_full_variant_names == true
+    assign show_full_variant_names = false
+  endunless
+-%}
+
+<link rel="stylesheet" href="{{ 'cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+<script src="{{ 'quick-order-list.js' | asset_url }}" defer></script>
+
+<quick-order-list id="quick-order-list_{{ section_id }}" data-section="{{ section_id }}" data-product-id="{{ product.id }}">
+  <table class="cart-items w-full">
+    <thead class="visually-hidden">
+      <tr class="quick-order-list__head grid mb-6">
+        <th colspan="{% if show_images %}3{% else %}2{% endif %}"></th>
+        <th class="text-end">{{ 'cart.items.total' | t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%- for variant in product.variants -%}
+      {% if variant.available or show_sold_out %}
+        {%- liquid
+          assign cart_item = cart.items | where: 'id', variant.id | first
+
+          if variant.compare_at_price > variant.price
+            assign variant_price_reduced = true
+          else
+            assign variant_price_reduced = false
+          endif
+
+          if cart_item != blank
+            assign final_price = cart_item.final_line_price
+            assign compare_at_total_price = cart_item.variant.compare_at_price | times: cart_item.quantity
+            assign original_price = cart_item.original_line_price
+          else
+            assign final_price = variant.price
+            assign compare_at_total_price = variant.compare_at_price
+            assign original_price = variant.price
+          endif
+        -%}
+        <tr class="quick-order-item{% if show_images == false %} quick-order-item--no-images{% endif %} cart-item grid gap-x-6" id="qol-item-{{ cart_item.index | plus: 1 }}" data-product-id="{{ product.id }}" data-variant-id="{{ variant.id }}">
+          {% if show_images %}
+          <td class="cart-item__image">
+            <div class="block {% if settings.blend_product_images %} image-blend{% endif %}">
+              {%- assign image = variant.image | default: product.featured_media.preview_image -%}
+              {%- if image -%}
+                {%- capture sizes -%}
+                  {%- render 'sizes-attribute', min: '64px', sm: '128px', md: false, lg: false, xl: false, max: false -%}
+                {%- endcapture -%}
+                {{ image | image_url: width: 180 | image_tag: widths: '64, 128, 180', sizes: sizes, loading: 'lazy' }}
+              {%- endif -%}
+            </div>
+          </td>
+          {% endif %}
+          <td class="cart-item__details">
+            <div class="cart-item__title m-0 font-bold text-current js-item-name">
+              {%- unless variant.title contains 'Default Title' %}
+                {% if show_full_variant_names %}
+                  <ul>
+                    {% for option in product.options %}
+                      <li>
+                        <span class="qol__variant-label">{{ option }}:</span>
+                        <span class="qol__variant-value">{{ variant.options[forloop.index0] }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  {{- variant.title | escape -}}
+                {% endif %}
+              {% else -%}
+                {{- product.title | escape -}}
+              {% endunless -%}
+            </div>
+
+            <div class="cart-item__info">
+              {%- if show_skus and variant.sku != blank -%}
+                <p class="qol__sku">
+                  <span class="qol__label">{{ 'products.product.sku' | t }}</span>
+                  <span class="qol__value">{{ variant.sku }}</span>
+                </p>
+              {%- endif -%}
+
+              {%- if variant_price_reduced -%}
+                <dl class="m-0">
+                  <dt class="visually-hidden">
+                    {{- 'products.product.price.sale_price' | t -}}
+                  </dt>
+                  <dd class="price__current inline m-0 font-bold">
+                    {%- render 'price-as-money', price: variant.price, show_money_with_currency: false -%}
+                  </dd>
+                  <dt class="visually-hidden">
+                    {{- 'products.product.price.regular_price' | t -}}
+                  </dt>
+                  <dd class="inline m-0">
+                    <s class="price__was{% if settings.superscript_decimals %} price__was--supercents{% endif %}">{%- render 'price-as-money', price: variant.compare_at_price, show_money_with_currency: false -%}</s>
+                  </dd>
+                </dl>
+              {%- else -%}
+                <strong class="price__current">
+                  {%- render 'price-as-money', price: variant.price, show_money_with_currency: false -%}
+                </strong>
+              {%- endif -%}
+
+              {%- if variant.unit_price_measurement -%}
+                <div class="unit-price">
+                  <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                  <span class="unit-price__price">{%- render 'price-as-money', price: variant.unit_price, show_money_with_currency: false -%}</span>
+                  <span class="unit-price__separator">{{ 'products.product.price.unit_price_separator' | t }}</span>
+                  <span class="unit-price__unit">
+                      {%- if variant.unit_price_measurement.reference_value != 1 -%}
+                        {{- variant.unit_price_measurement.reference_value -}}
+                      {%- endif -%}
+                    {{ variant.unit_price_measurement.reference_unit }}
+                    </span>
+                </div>
+              {%- endif -%}
+
+              {%- if product.template_suffix contains 'preorder' -%}
+                <div class="mt-2">
+                    <span class="product-label product-label--preorder">
+                      {% if settings.preorder_label_icon != "none" %}
+                        {% render 'icon', icon: settings.preorder_label_icon, width: 14, height: 14 %}
+                      {% endif %}
+                      {{- 'products.product.preorder' | t -}}
+                    </span>
+                </div>
+              {%- endif -%}
+
+              {%- if variant.discounts.size > 0 -%}
+                <ul class="mt-3 mb-2 font-bold" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                  {%- for discount in variant.discounts -%}
+                    <li class="mt-2">
+                      <div class="discount text-sm inline-flex items-center">
+                        {% render 'icon-tags' %} {{- discount.title | escape_once -}}
+                      </div>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </td>
+          <td class="cart-item__qty">
+            {% if variant.available %}
+              <div class="flex items-center mt-4">
+                {% if cart_item != blank %}
+                  {% render 'quantity-input', is_cart: true, is_quick_order: true, variant_id: variant.id, item: cart_item, layout_style: 'combined' %}
+                {% else %}
+                  {% render 'quantity-input', is_quick_order: true, variant_id: variant.id, layout_style: 'combined' %}
+                {% endif %}
+                <a class="cart-item__remove btn btn--icon text-current tap-target js-remove-item" href="{{ variant.url_to_remove }}" data-index="{{ cart_item.index | plus: 1 }}" aria-label="{{- 'cart.items.remove' | t -}}"{% if settings.preload_links %} data-no-instant{% endif %}>
+                  {% render 'icon-trash' %}
+                </a>
+                <div class="cart-item__loader relative is-loading" hidden></div>
+              </div>
+            {% endif %}
+          </td>
+          <td class="cart-item__total price">
+            {% if variant.available %}
+              {% if cart_item != blank %}
+                <div class="text-theme-light text-sm mb-2 md:hidden">
+                  {{ 'cart.items.total' | t }}
+                </div>
+                {%- if variant_price_reduced -%}
+                  <dl class="m-0 flex md:block">
+                    <dt class="visually-hidden">
+                      {{- 'products.product.price.sale_price' | t -}}
+                    </dt>
+                    <dd class="price__current m-0 font-bold">
+                      {%- render 'price-as-money', price: final_price, show_money_with_currency: false -%}
+                    </dd>
+                    <dt class="visually-hidden">
+                      {{- 'products.product.price.regular_price' | t -}}
+                    </dt>
+                    <dd class="m-0">
+                      {%- if variant_price_reduced -%}
+                        <s class="price__was{% if settings.superscript_decimals %} price__was--supercents{% endif %}">
+                          {%- liquid
+                            render 'price-as-money', price: compare_at_total_price, show_money_with_currency: false
+                          -%}
+                        </s>
+                      {%- else -%}
+                        <s class="price__was{% if settings.superscript_decimals %} price__was--supercents{% endif %}">{%- render 'price-as-money', price: original_price, show_money_with_currency: false -%}</s>
+                      {%- endif -%}
+                    </dd>
+                  </dl>
+                {%- else -%}
+                  <strong class="price__current">
+                    {%- render 'price-as-money', price: original_price, show_money_with_currency: false -%}
+                  </strong>
+                {%- endif -%}
+              {%- endif -%}
+            {%- else -%}
+              <div class="pt-2">
+                {{ 'products.product.sold_out' | t }}
+              </div>
+            {%- endif -%}
+          </td>
+        </tr>
+      {%- endif -%}
+    {%- endfor -%}
+    </tbody>
+
+    {%- if show_subtotal != false -%}
+      <tfoot>
+        <tr class="quick-order-list__foot{% if subtotal_stick %} quick-order-list__foot--sticky{% endif %}">
+          {% # theme-check-disable %}
+          <td class="text-end">
+            <div class="font-bold h6-size">
+              {{ 'cart.items.total' | t }}:
+              {% assign subtotal = cart | line_items_for: product | sum: 'original_line_price' %}
+              {%- render 'price-as-money', price: subtotal, show_money_with_currency: true -%}
+            </div>
+
+            {%- if subtotal_show_tax -%}
+              <div class="product-policies text-sm rte">
+                {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                  {{- 'cart.general.taxes_included_shipping_at_checkout_html' | t: link: shop.shipping_policy.url -}}
+                {%- elsif cart.taxes_included -%}
+                  {{- 'cart.general.taxes_included_shipping_at_checkout' | t -}}
+                {%- elsif shop.shipping_policy.body != blank -%}
+                  {{- 'cart.general.taxes_and_shipping_at_checkout_html' | t: link: shop.shipping_policy.url -}}
+                {%- else -%}
+                  {{- 'cart.general.taxes_and_shipping_at_checkout' | t -}}
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </td>
+          {% # theme-check-enable %}
+        </tr>
+      </tfoot>
+    {%- endif -%}
+  </table>
+  <p class="visually-hidden" id="qol-line-item-status" role="status" aria-live="polite" aria-hidden="true">
+    {{- 'accessibility.loading' | t -}}
+  </p>
+</quick-order-list>

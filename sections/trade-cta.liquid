@@ -1,0 +1,98 @@
+<div class="tk-trade-cta">
+  <div class="tk-trade-cta__text">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="tk-eyebrow tk-trade-cta__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h3 class="tk-trade-cta__h3">{{ section.settings.heading | escape }}</h3>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <p class="tk-trade-cta__body">{{ section.settings.body | escape }}</p>
+    {%- endif -%}
+  </div>
+  {%- if section.settings.btn_label != blank -%}
+    <a href="{{ section.settings.btn_url | default: routes.all_products_collection_url }}"
+       class="tk-btn tk-btn--ghost-dark tk-trade-cta__btn">
+      {{- section.settings.btn_label | escape -}}
+    </a>
+  {%- endif -%}
+</div>
+
+{%- style -%}
+  .tk-trade-cta {
+    padding: 60px var(--tk-page-x);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .tk-trade-cta__eyebrow { margin: 0 0 8px; }
+  .tk-trade-cta__h3 {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.15;
+  }
+  .tk-trade-cta__body {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text2);
+    margin: 8px 0 0;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+  .tk-trade-cta__btn { flex-shrink: 0; }
+  @media (max-width: 768px) {
+    .tk-trade-cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .tk-trade-cta__h3 { font-size: 26px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Trade CTA",
+  "tag": "div",
+  "class": "tk-trade-cta-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "For Design Professionals"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trade Pricing Available"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "Interior designers, architects, and contractors qualify for exclusive trade pricing and dedicated support."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "Apply for Trade Account"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    { "name": "Trade CTA" }
+  ]
+}
+{% endschema %}

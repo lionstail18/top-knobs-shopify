@@ -1,0 +1,248 @@
+<!-- Hero -->
+<div class="tk-about__hero">
+  {%- if section.settings.hero_image != blank -%}
+    {{- section.settings.hero_image | image_url: width: 1800 | image_tag:
+        loading: 'eager',
+        class: 'tk-about__hero-img',
+        alt: '' -}}
+  {%- else -%}
+    <div class="tk-about__hero-img tk-about__hero-img--placeholder"></div>
+  {%- endif -%}
+  <div class="tk-about__hero-overlay">
+    <p class="tk-eyebrow tk-about__hero-eyebrow">{{ section.settings.hero_eyebrow | escape }}</p>
+    <h1 class="tk-about__hero-h1">{{ section.settings.hero_heading }}</h1>
+  </div>
+</div>
+
+<!-- Story -->
+<section class="tk-about__story">
+  <p class="tk-about__story-lead">{{ section.settings.story_lead | escape }}</p>
+  <p class="tk-about__story-body">{{ section.settings.story_body | escape }}</p>
+</section>
+
+<!-- Values -->
+<section class="tk-about__values">
+  <div class="tk-about__values-head">
+    <h2 class="tk-about__values-h2">{{ section.settings.values_heading | escape }}</h2>
+  </div>
+  {%- if section.blocks.size > 0 -%}
+    <div class="tk-about__values-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'value' -%}
+          <div class="tk-about__value-card" {{ block.shopify_attributes }}>
+            <p class="tk-about__value-title">{{ block.settings.title | escape }}</p>
+            <p class="tk-about__value-desc">{{ block.settings.description | escape }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+<!-- Authorized dealer section -->
+<section class="tk-about__dealer">
+  <div class="tk-about__dealer-text">
+    <p class="tk-eyebrow">{{ section.settings.dealer_eyebrow | escape }}</p>
+    <h2 class="tk-about__dealer-h2">{{ section.settings.dealer_heading | escape }}</h2>
+    <p class="tk-about__dealer-body">{{ section.settings.dealer_body | escape }}</p>
+    <div class="tk-about__dealer-btns">
+      {%- if section.settings.dealer_btn1_label != blank -%}
+        <a href="{{ section.settings.dealer_btn1_url | default: routes.all_products_collection_url }}"
+           class="tk-btn tk-btn--gold">
+          {{- section.settings.dealer_btn1_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.dealer_btn2_label != blank -%}
+        <a href="{{ section.settings.dealer_btn2_url | default: '/pages/contact' }}"
+           class="tk-btn tk-btn--ghost-border">
+          {{- section.settings.dealer_btn2_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="tk-about__dealer-media">
+    {%- if section.settings.dealer_image != blank -%}
+      {{- section.settings.dealer_image | image_url: width: 800 | image_tag:
+          loading: 'lazy',
+          class: 'tk-about__dealer-img',
+          alt: section.settings.dealer_heading | escape -}}
+    {%- else -%}
+      <div class="tk-about__dealer-img tk-about__dealer-img--placeholder"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- style -%}
+  .tk-about__hero {
+    position: relative;
+    height: 360px;
+    overflow: hidden;
+  }
+  .tk-about__hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tk-about__hero-img--placeholder { background: var(--color-border); }
+  .tk-about__hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13,21,38,0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--tk-page-x);
+    text-align: center;
+  }
+  .tk-about__hero-eyebrow { margin: 0 0 12px; }
+  .tk-about__hero-h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 56px;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+    line-height: 1.05;
+  }
+  .tk-about__story {
+    padding: 72px 200px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-about__story-lead {
+    font-family: var(--tk-font-heading);
+    font-size: 24px;
+    line-height: 1.65;
+    color: var(--color-text);
+    margin: 0 0 24px;
+  }
+  .tk-about__story-body {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-about__values {
+    padding: 0 var(--tk-page-x) 80px;
+    background: var(--color-bg2);
+  }
+  .tk-about__values-head {
+    padding: 56px 0 48px;
+    text-align: center;
+  }
+  .tk-about__values-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .tk-about__values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .tk-about__value-card {
+    background: var(--color-bg);
+    padding: 32px 24px;
+    border-top: 3px solid var(--color-accent);
+  }
+  .tk-about__value-title {
+    font-family: var(--tk-font-heading);
+    font-size: 22px;
+    color: var(--color-text);
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+  .tk-about__value-desc {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text2);
+    margin: 0;
+  }
+  .tk-about__dealer {
+    padding: 72px var(--tk-page-x);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .tk-about__dealer .tk-eyebrow { margin: 0 0 12px; }
+  .tk-about__dealer-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 20px;
+    line-height: 1.1;
+  }
+  .tk-about__dealer-body {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text2);
+    margin: 0 0 24px;
+  }
+  .tk-about__dealer-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .tk-about__dealer-img {
+    display: block;
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+  }
+  .tk-about__dealer-img--placeholder { background: var(--color-border); }
+  @media (max-width: 1024px) {
+    .tk-about__story { padding: 72px var(--tk-page-x); }
+  }
+  @media (max-width: 900px) {
+    .tk-about__values-grid { grid-template-columns: repeat(2, 1fr); }
+    .tk-about__dealer { grid-template-columns: 1fr; gap: 40px; }
+    .tk-about__hero-h1 { font-size: 40px; }
+  }
+  @media (max-width: 600px) {
+    .tk-about__values-grid { grid-template-columns: 1fr; }
+    .tk-about__hero-h1 { font-size: 32px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "About Page",
+  "tag": "div",
+  "class": "tk-about-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Hero eyebrow", "default": "Our Story" },
+    { "type": "textarea", "id": "hero_heading", "label": "Hero heading", "default": "About Top Knobs<br>Hardware Outlet" },
+    { "type": "textarea", "id": "story_lead", "label": "Story lead (Cormorant large)", "default": "TopKnobsHardware.net is your authorized online outlet for the complete Top Knobs collection — offering the lowest prices on the internet, backed by a lifetime warranty and world-class customer service." },
+    { "type": "textarea", "id": "story_body", "label": "Story body", "default": "We believe that great hardware shouldn't cost a fortune. As an authorized Top Knobs dealer, we offer the full catalog of over 4,500 premium cabinet knobs, pulls, appliance pulls, and bath accessories at prices no one else can match." },
+    { "type": "text", "id": "values_heading", "label": "Values heading", "default": "Why Choose Us" },
+    { "type": "image_picker", "id": "dealer_image", "label": "Dealer section image" },
+    { "type": "text", "id": "dealer_eyebrow", "label": "Dealer eyebrow", "default": "Official Authorization" },
+    { "type": "text", "id": "dealer_heading", "label": "Dealer heading", "default": "Authorized Top Knobs Dealer" },
+    { "type": "textarea", "id": "dealer_body", "label": "Dealer body", "default": "As an officially authorized Top Knobs dealer, every product we sell is 100% authentic, covered by the full manufacturer's lifetime warranty, and sourced directly from Top Knobs. You can shop with complete confidence." },
+    { "type": "text", "id": "dealer_btn1_label", "label": "Button 1 label", "default": "Shop the Collection" },
+    { "type": "url", "id": "dealer_btn1_url", "label": "Button 1 link" },
+    { "type": "text", "id": "dealer_btn2_label", "label": "Button 2 label", "default": "Contact Us" },
+    { "type": "url", "id": "dealer_btn2_url", "label": "Button 2 link" }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value Card",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Authorized Dealer" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "We are an authorized Top Knobs dealer, ensuring every product is 100% authentic and covered by the manufacturer's lifetime warranty." }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "About Page" }
+  ]
+}
+{% endschema %}

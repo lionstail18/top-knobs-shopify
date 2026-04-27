@@ -1,0 +1,191 @@
+<section class="tk-hero" style="position:relative;height:{{ section.settings.height }}px;overflow:hidden;">
+
+  {%- if section.settings.image != blank -%}
+    <div class="tk-hero__img" aria-hidden="true">
+      {{- section.settings.image | image_url: width: 2400 | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          class: 'tk-hero__bg-img',
+          alt: '' -}}
+    </div>
+  {%- else -%}
+    <div class="tk-hero__img tk-hero__img--placeholder" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="tk-hero__overlay" aria-hidden="true"></div>
+
+  <div class="tk-hero__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="tk-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="tk-hero__heading">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <p class="tk-hero__body">{{ section.settings.body | escape }}</p>
+    {%- endif -%}
+
+    <div class="tk-hero__btns">
+      {%- if section.settings.btn1_label != blank -%}
+        <a href="{{ section.settings.btn1_url | default: routes.all_products_collection_url }}"
+           class="tk-btn tk-btn--gold">
+          {{- section.settings.btn1_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.btn2_label != blank -%}
+        <a href="{{ section.settings.btn2_url | default: routes.all_products_collection_url }}"
+           class="tk-btn tk-btn--ghost-white">
+          {{- section.settings.btn2_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- style -%}
+  .tk-hero {
+    position: relative;
+    overflow: hidden;
+  }
+  .tk-hero__bg-img,
+  .tk-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .tk-hero__bg-img {
+    object-fit: cover;
+    object-position: center;
+  }
+  .tk-hero__img--placeholder {
+    background: var(--color-border);
+  }
+  .tk-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, rgba(13,21,38,0.7) 0%, rgba(13,21,38,0.2) 60%, transparent 100%);
+  }
+  .tk-hero__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 80px;
+  }
+  .tk-hero__eyebrow {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 16px;
+  }
+  .tk-hero__heading {
+    font-family: var(--tk-font-heading);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.05;
+    color: #fff;
+    margin: 0 0 20px;
+    max-width: 600px;
+  }
+  .tk-hero__body {
+    font-family: var(--tk-font-body);
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    margin: 0 0 32px;
+    max-width: 380px;
+  }
+  .tk-hero__btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 768px) {
+    .tk-hero__content {
+      padding: 0 24px;
+    }
+    .tk-hero__heading {
+      font-size: 40px;
+    }
+    .tk-hero__body {
+      font-size: 14px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "div",
+  "class": "tk-hero-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Authorized Top Knobs Dealer"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading (H1)",
+      "default": "Elevate<br>Every Detail"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body text",
+      "default": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections — with free shipping and a lifetime warranty."
+    },
+    {
+      "type": "text",
+      "id": "btn1_label",
+      "label": "Button 1 label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "btn1_url",
+      "label": "Button 1 link"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Button 2 label",
+      "default": "What's New"
+    },
+    {
+      "type": "url",
+      "id": "btn2_url",
+      "label": "Button 2 link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

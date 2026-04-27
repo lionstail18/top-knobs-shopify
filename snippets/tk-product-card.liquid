@@ -1,0 +1,46 @@
+<div class="tk-pcard">
+  <a class="tk-pcard__link" href="{{ product.url }}">
+    <div class="tk-pcard__media">
+      {%- if product.featured_image != blank -%}
+        {{- product.featured_image | image_url: width: 600 | image_tag:
+            loading: 'lazy',
+            class: 'tk-pcard__img',
+            alt: product.featured_image.alt | default: product.title | escape -}}
+      {%- else -%}
+        <div class="tk-pcard__img tk-pcard__img--placeholder"></div>
+      {%- endif -%}
+      <div class="tk-pcard__quick-add" data-variant-id="{{ product.first_available_variant.id }}">
+        <span>Quick Add to Cart</span>
+      </div>
+    </div>
+
+    <div class="tk-pcard__info">
+      {%- if product.vendor != blank -%}
+        <p class="tk-pcard__collection">{{ product.vendor | escape }}</p>
+      {%- endif -%}
+      <p class="tk-pcard__name">
+        {{- product.title | escape -}}
+        {%- assign size_meta = product.metafields.tk.size -%}
+        {%- if size_meta != blank -%} &mdash; {{ size_meta }}{%- endif -%}
+      </p>
+      {%- if product.variants.first.sku != blank -%}
+        <p class="tk-pcard__sku">SKU: {{ product.variants.first.sku }}</p>
+      {%- endif -%}
+      <div class="tk-pcard__bottom">
+        <span class="tk-pcard__price">{{ product.price | money }}</span>
+        <div class="tk-pcard__finishes">
+          {%- assign finish_colors = product.metafields.tk.finish_colors.value -%}
+          {%- if finish_colors != blank -%}
+            {%- for color in finish_colors limit: 4 -%}
+              <span class="tk-pcard__dot" style="background: {{ color }};"></span>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for variant in product.variants limit: 4 -%}
+              <span class="tk-pcard__dot" title="{{ variant.option1 | escape }}"></span>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </a>
+</div>

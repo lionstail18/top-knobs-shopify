@@ -1,0 +1,121 @@
+<div class="tk-ot__header">
+  <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+  <h1 class="tk-ot__h1">{{ section.settings.heading | escape }}</h1>
+  <p class="tk-ot__intro">{{ section.settings.intro | escape }}</p>
+</div>
+
+<div class="tk-ot__form-wrap">
+  <form class="tk-ot__form" action="{{ routes.root_url }}account/orders" method="post" novalidate>
+    <div class="tk-ot__field">
+      <label class="tk-label" for="tk-ot-order">Order Number</label>
+      <input
+        id="tk-ot-order"
+        name="order_number"
+        type="text"
+        class="tk-input"
+        placeholder="e.g. TKH-10482"
+        autocomplete="off">
+    </div>
+    <div class="tk-ot__field">
+      <label class="tk-label" for="tk-ot-email">Email Address</label>
+      <input
+        id="tk-ot-email"
+        name="email"
+        type="email"
+        class="tk-input"
+        placeholder="The email used at checkout"
+        autocomplete="email">
+    </div>
+    <button type="submit" class="tk-btn tk-btn--gold tk-ot__submit">
+      {{- section.settings.btn_label | escape -}}
+    </button>
+  </form>
+
+  <div class="tk-ot__note">
+    <p>{{ section.settings.help_note | escape }}
+      {%- if section.settings.contact_url != blank -%}
+        <a href="{{ section.settings.contact_url }}" class="tk-ot__link">
+          {{- section.settings.contact_label | default: 'contact us' | escape -}}
+        </a>.
+      {%- endif -%}
+    </p>
+  </div>
+</div>
+
+{%- style -%}
+  .tk-ot__header {
+    padding: 72px var(--tk-page-x) 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tk-ot__header .tk-eyebrow { margin: 0 0 10px; }
+  .tk-ot__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 52px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 16px;
+    line-height: 1.05;
+  }
+  .tk-ot__intro {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .tk-ot__form-wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 56px 24px 100px;
+  }
+  .tk-ot__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .tk-ot__field { display: flex; flex-direction: column; }
+  .tk-ot__submit {
+    padding: 14px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .tk-ot__note {
+    text-align: center;
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    color: var(--color-text2);
+    line-height: 1.6;
+  }
+  .tk-ot__note p { margin: 0; }
+  .tk-ot__link {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+  @media (max-width: 600px) {
+    .tk-ot__h1 { font-size: 36px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Order Tracking",
+  "tag": "div",
+  "class": "tk-order-tracking-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Where Is My Order?" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Track Your Order" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Enter your order number and email address to see real-time shipping updates." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Track Order" },
+    { "type": "textarea", "id": "help_note", "label": "Help note", "default": "Can't find your order? Please" },
+    { "type": "text", "id": "contact_label", "label": "Contact link label", "default": "contact us" },
+    { "type": "url", "id": "contact_url", "label": "Contact page link" }
+  ],
+  "presets": [
+    { "name": "Order Tracking" }
+  ]
+}
+{% endschema %}

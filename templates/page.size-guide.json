@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-size-guide",
+      "settings": {
+        "eyebrow": "Get the Right Fit",
+        "heading": "Hardware Size Guide",
+        "intro": "Choosing the right size hardware is essential for both function and aesthetics. Use this guide to find the perfect fit for your cabinets.",
+        "pulls_heading": "Measuring for Pulls",
+        "pulls_body1": "Cabinet pull sizing is described by the center-to-center (C-to-C) measurement — the distance between the centers of the two mounting holes. This is not the overall length of the pull.",
+        "pulls_body2": "To measure: use a ruler or tape measure to find the distance between the centers of your existing screw holes. Match this measurement to a Top Knobs pull with the same C-to-C dimension.",
+        "pulls_protip": "If you're drilling new holes, choose your pull first and drill to match. Standard C-to-C sizes (3\", 3 3/4\", 5 1/16\") are easiest to source in the future.",
+        "pull_chart_heading": "Pull Size Reference Chart",
+        "knobs_heading": "Knob Sizing",
+        "knobs_body": "Knobs are measured by their diameter (the widest point of the knob). Unlike pulls, knobs mount on a single screw — so there's no C-to-C measurement. The most common kitchen and bath knob sizes are 1 1/4\" to 1 1/2\".",
+        "backplates_heading": "Do You Need a Backplate?",
+        "backplates_body1": "Backplates serve two purposes: they protect your cabinet finish from wear around the hardware hole, and they add an extra layer of decorative detail. They're especially recommended for painted cabinets.",
+        "backplates_body2": "Top Knobs offers matching backplates for many collections. If you're replacing hardware with different hole spacing, a backplate can also cover the old holes.",
+        "backplates_btn_label": "Shop Backplates",
+        "contact_btn_label": "Ask a Sizing Question",
+        "seo_note": "Still unsure? Our sample program is the best way to verify fit and finish before committing to a full order. Order 1–2 pieces, mount them on your cabinets, and see exactly how they look and feel in your space. If you have specific sizing questions, our team is happy to help — contact us any time."
+      }
+    }
+  },
+  "order": ["main"]
+}

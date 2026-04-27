@@ -1,0 +1,41 @@
+{%- comment -%}
+  Parameters:
+  - product {Object} - Product object.
+  - option {Object} - The swatch option.
+  - section {Object} - The section.
+
+  Usage:
+  {%- render 'compare-swatches', product: product, option: option, section: section -%}
+{%- endcomment -%}
+{%- liquid
+  assign swatch_limit = 99
+-%}
+
+{%- if settings.card_colors_style == 'native' or settings.card_colors_style == 'swatches' or settings.card_colors_style == 'variant-images' -%}
+  {%- assign swatch_content = '' -%}
+  {%- for value in option.values -%}
+    {%- capture swatch_content -%}
+      {{- swatch_content -}}
+
+      {%- render 'card-swatch', product: product, option: option, value: value, disable_interactivity: true -%}
+
+      {% if forloop.index >= swatch_limit %}{% break %}{% endif %}
+    {%- endcapture -%}
+  {%- endfor -%}
+
+  {%- if swatch_content != blank -%}
+    <div class="card__swatches mt-2 mb-3 flex items-start relative">
+      {{ swatch_content }}
+
+      {%- if option.values.size > swatch_limit -%}
+        <span class="self-center text-end text-sm">+{{ option.values.size | minus: swatch_limit }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- elsif settings.card_colors_style == 'text' -%}
+  {%- if option.values.size == 1 -%}
+    <p class="mt-2">{{ 'sections.collection.colors_single' | t }}</p>
+  {%- else -%}
+    <p class="mt-2">{{ 'sections.collection.colors_count' | t: count: option.values.size }}</p>
+  {%- endif -%}
+{%- endif -%}

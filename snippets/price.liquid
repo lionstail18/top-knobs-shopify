@@ -1,0 +1,64 @@
+{%- comment -%}
+  Parameters:
+  - product {Object} - Product object.
+  - class {String} - CSS Class (optional)
+  - use_variant {Boolean} - Use variant price instead of general (optional, default is false).
+  - current_variant {Object} - Current variant, if use_variant is true.
+  - unit_price_above {Boolean} - Places the unit price above the regular price (optional, default is false).
+  - show_sale_color {Boolean} - If true the price color will be settings.sale_price_color (optional, default is false).
+
+  Usage:
+  {% render 'price', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = current_variant | default: product.variants | sort: 'price' | first
+
+  if use_variant
+    if current_variant == false
+      assign available = true
+    endif
+  else
+    assign use_variant = false
+    assign available = variant.available | default: false
+  endif
+
+  assign compare_at_price = variant.compare_at_price
+  assign price = variant.price | default: 1999
+-%}
+
+{%- capture unit_price -%}
+  {%- liquid
+    assign unit_price_money = variant.unit_price | money
+    capture unit_price_formatted
+      render 'price-as-money', price: variant.unit_price, show_money_with_currency: false
+    endcapture
+  -%}
+  <div class="unit-price relative"{% if variant.unit_price_measurement == nil %} hidden{% endif %}><span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span><span>{{ variant.unit_price | unit_price_with_measurement: variant.unit_price_measurement | replace: unit_price_money, unit_price_formatted }}</span></div>
+{%- endcapture -%}
+
+<div class="price{% if compare_at_price > price %} price--on-sale{% endif %}{% if show_sale_color %} price--sale-color{% endif %}{% if available == false %} price--sold-out{% endif -%}{% if class %} {{ class }}{% endif %}">
+  {%- if unit_price_above -%}
+    {{ unit_price }}
+  {%- endif -%}
+
+  <div class="price__default">
+    {%- if product.price_varies -%}
+      {%- if use_variant == false -%}
+        <span class="price__from">{{ 'products.product.from' | t }}</span>
+      {%- elsif use_variant and current_variant == false -%}
+        <span class="price__from">{{ 'products.product.from' | t }}</span>
+      {%- endif -%}
+    {%- endif %}
+    <span class="price__current">{%- render 'price-as-money', price: price -%}</span>
+    <s class="price__was{% if settings.superscript_decimals %} price__was--supercents{% endif %}">
+      {%- if compare_at_price and compare_at_price > price -%}
+        {%- render 'price-as-money', price: compare_at_price, show_money_with_currency: false -%}
+      {%- endif -%}
+    </s>
+  </div>
+
+  {%- if unit_price_above == blank -%}
+    {{ unit_price }}
+  {%- endif -%}
+</div>

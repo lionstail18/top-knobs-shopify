@@ -1,0 +1,357 @@
+{%- if section.index > 2 -%}
+  <link rel="stylesheet" href="{{ 'product.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- else -%}
+  {{ 'product.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- if settings.enable_quick_add -%}
+  <link rel="stylesheet" href="{{ 'quick-add.css' | asset_url }}" media="print" onload="this.media='all'">
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'variant-picker.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'custom-select.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- liquid
+  assign collection = section.settings.collection
+
+  assign carousel_desktop_small =     ' sm:auto-cols-3 md:auto-cols-4 lg:auto-cols-5 xl:auto-cols-6 small-cards-desktop'
+  assign carousel_desktop_medium =    ' sm:auto-cols-3 md:auto-cols-4 lg:auto-cols-5 small-cards-desktop'
+  assign carousel_desktop_large =     ' md:auto-cols-3 lg:auto-cols-4'
+
+  assign grid_desktop_small =         ' sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xxl:grid-cols-7 small-cards-desktop'
+  assign grid_desktop_medium =        ' sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 small-cards-desktop'
+  assign grid_desktop_large =         ' md:grid-cols-3 lg:grid-cols-4'
+
+  assign card_size = section.settings.card_size
+  if settings.dock_cart_drawer and settings.cart_type == 'drawer'
+    if card_size == 'small'
+      assign carousel_desktop_small =   ' sm:auto-cols-3 md:auto-cols-3 lg:auto-cols-4 xxl:auto-cols-5 small-cards-desktop'
+      assign grid_desktop_small =       ' sm:grid-cols-3 md:grid-cols-4 tab:grid-cols-5 dock:grid-cols-4 xl:grid-cols-5 xxl:grid-cols-6 small-cards-desktop'
+    elsif card_size == 'medium'
+      assign carousel_desktop_medium =   ' sm:auto-cols-3 md:auto-cols-4 xxl:auto-cols-5 small-cards-desktop'
+      assign grid_desktop_medium =       ' sm:grid-cols-3 md:grid-cols-4 xxl:grid-cols-5 small-cards-desktop'
+    elsif card_size == 'large'
+      assign carousel_desktop_large =   ' md:auto-cols-3 xxl:auto-cols-4'
+      assign grid_desktop_large =       ' md:grid-cols-3 xxl:grid-cols-4'
+    endif
+  endif
+
+  if section.settings.card_size_mobile == 'small' or section.settings.card_size_mobile == 'medium'
+    assign carousel_mobile_cols = 'grid-flow-col auto-cols-2 small-cards-mobile'
+    assign grid_mobile_cols = 'grid-cols-2 small-cards-mobile'
+    if section.settings.layout == 'carousel_on_mobile'
+      assign carousel_mobile_cols = carousel_mobile_cols | append: ' sm:grid-cols-2'
+    endif
+  else
+    assign carousel_mobile_cols = 'grid-flow-col auto-cols-1'
+    assign grid_mobile_cols = 'grid-cols-1'
+  endif
+
+  if section.settings.layout == 'carousel'
+    assign carousel = true
+
+    if card_size == 'small'
+      assign grid_classes = carousel_mobile_cols | append: carousel_desktop_small
+    elsif card_size == 'medium'
+      assign grid_classes = carousel_mobile_cols | append: carousel_desktop_medium
+    else
+      assign grid_classes = carousel_mobile_cols | append: carousel_desktop_large
+    endif
+  elsif section.settings.layout == 'carousel_on_mobile'
+    assign carousel = true
+
+    if card_size == 'small'
+      assign grid_classes = carousel_mobile_cols | append: grid_desktop_small
+    elsif card_size == 'medium'
+      assign grid_classes = carousel_mobile_cols | append: grid_desktop_medium
+    else
+      assign grid_classes = carousel_mobile_cols | append: grid_desktop_large
+    endif
+  else
+    assign carousel = false
+
+    if card_size == 'small'
+      assign grid_classes = grid_mobile_cols | append: grid_desktop_small
+    elsif card_size == 'medium'
+      assign grid_classes = grid_mobile_cols | append: grid_desktop_medium
+    else
+      assign grid_classes = grid_mobile_cols | append: grid_desktop_large
+    endif
+  endif
+
+  if settings.prod_card_image_ratio == 'shortest'
+    assign image_ratio = 0
+    for product in collection.products limit: section.settings.products_to_show
+      if product.featured_media.preview_image.aspect_ratio > image_ratio
+        assign image_ratio = product.featured_media.preview_image.aspect_ratio
+      endif
+    endfor
+  elsif settings.prod_card_image_ratio == 'tallest'
+    assign image_ratio = 99
+    for product in collection.products limit: section.settings.products_to_show
+      if product.featured_media.preview_image.aspect_ratio < image_ratio
+        assign image_ratio = product.featured_media.preview_image.aspect_ratio
+      endif
+    endfor
+  else
+    assign image_ratio = settings.prod_card_image_ratio
+  endif
+
+  assign color_scheme = section.settings.color_scheme
+  assign bg_color = false
+
+  if color_scheme == '1'
+    assign bg_color = settings.color_scheme_1_bg_grad | default: settings.color_scheme_1_bg
+  elsif color_scheme == '2'
+    assign bg_color = settings.color_scheme_2_bg_grad | default: settings.color_scheme_2_bg
+  elsif color_scheme == '3'
+    assign bg_color = settings.color_scheme_3_bg_grad | default: settings.color_scheme_3_bg
+  endif
+
+  if bg_color == settings.bg_color or bg_color == 'rgba(0,0,0,0)'
+    assign bg_color = false
+  endif
+-%}
+
+{%- unless section.settings.full_width -%}
+  <div class="container">
+{%- endunless -%}
+
+<div class="section relative{% unless bg_color == false %} section--padded{% if section.settings.full_width %} section--full-width{% endif %}{% endunless %}{% unless color_scheme == 'none' %} color-scheme color-scheme--{{ color_scheme }}{% endunless %}"
+style="--product-card-gap: {% if section.settings.card_contain and settings.card_contain_gapless %}0px{% else %}24px{% endif %};">
+  {%- if section.settings.title != blank or section.settings.show_view_all -%}
+    <div class="container">
+      <div class="section__header items-center flex{% if section.settings.heading_align == 'text-center' %} flex-col text-center{% elsif section.settings.heading_align == 'text-end' %} flex-row-reverse flex-wrap{% else %} flex-row flex-wrap{% endif %} gap-x-theme"{% if settings.animations_enabled != "disabled" %} data-cc-animate{% endif %}>
+        {%- if section.settings.title != blank -%}
+          <h2 class="h4 mb-0 flex-auto section__heading {{ section.settings.heading_align }}">
+            {{- section.settings.title | escape -}}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.show_view_all -%}
+          <a href="{{ collection.url }}" class="link">{{ 'sections.featured_collection.view_all' | t }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if carousel -%}
+    <carousel-slider class="carousel block" inactive{% if section.settings.layout == 'carousel_on_mobile' %} disable-desktop="true"{% endif %}>
+      <div class="container">
+        <div class="slider" id="slider-{{ section.id }}">
+  {%- endif -%}
+
+    <div class="container products-grid-container">
+      <ul class="{% if settings.card_contain_gapless and section.settings.card_contain %}gapless{% else %}gap-card{% endif %} {% if carousel %}slider__grid {% endif %}grid {{ grid_classes }}{% if section.settings.card_size_mobile == 'small' and section.settings.card_contain %} small__grid{% endif %}" role="list">
+        {%- for product in collection.products limit: section.settings.products_to_show -%}
+          <li {% if carousel %}class="slider__item"{% endif %}{% if settings.animations_enabled != "disabled" %}data-cc-animate="fade-in{% unless carousel %}-up{% endunless %}" data-cc-animate-delay="{{ forloop.index | times: 0.07 }}s"{% endif %}>
+            {% render 'product-card', product: product, collection: collection, image_ratio: image_ratio, card_size: card_size, card_contain: section.settings.card_contain %}
+          </li>
+        {%- else -%}
+          {%- for i in (1..section.settings.products_to_show) -%}
+            <li {% if carousel %}class="slider__item"{% endif %}{% if settings.animations_enabled != "disabled" %}data-cc-animate="fade-in{% unless carousel %}-up{% endunless %}" data-cc-animate-delay="{{ forloop.index | times: 0.07 }}s"{% endif %}>
+              {% render 'product-card', product: "", image_ratio: image_ratio, card_size: card_size, card_contain: section.settings.card_contain %}
+            </li>
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+
+  {%- if carousel -%}
+        </div>
+
+        {%- if settings.slider_show_arrows != 'never' -%}
+          <div class="slider-nav slide-nav--inline justify-between items-center absolute top-0 h-full {% if settings.slider_show_arrows == 'hover' %}slider-nav--show-on-hover no-hover-hidden {% endif %}hidden md:flex no-js-hidden">
+            <button type="button" class="slider-nav__btn tap-target tap-target--left btn has-ltr-icon" name="prev" aria-controls="slider-{{ section.id }}">
+              <span class="visually-hidden">{{ 'general.slider.previous' | t }}</span>
+              {% render 'icon-chevron-left' %}
+            </button>
+            <button type="button" class="slider-nav__btn tap-target tap-target--right btn has-ltr-icon" name="next" aria-controls="slider-{{ section.id }}">
+              <span class="visually-hidden">{{ 'general.slider.next' | t }}</span>
+              {% render 'icon-chevron-right' %}
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    </carousel-slider>
+  {%- endif -%}
+</div>
+
+{%- unless section.settings.full_width -%}
+</div>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "tag": "section",
+  "class": "cc-featured-collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "text-start",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-end",
+          "label": "Right"
+        }
+      ],
+      "default": "text-start"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show \"View all\" link",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        },
+        {
+          "value": "carousel_on_mobile",
+          "label": "Carousel on mobile"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "select",
+      "id": "card_size_mobile",
+      "label": "Product per row on mobile",
+      "options": [
+        {
+          "value": "large",
+          "label": "1"
+        },
+        {
+          "value": "small",
+          "label": "2"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "select",
+      "id": "card_size",
+      "label": "Product card size on large screens",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Maximum products to show",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "none",
+          "label": "Default"
+        },
+        {
+          "value": "1",
+          "label": "Scheme 1"
+        },
+        {
+          "value": "2",
+          "label": "Scheme 2"
+        },
+        {
+          "value": "3",
+          "label": "Scheme 3"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_contain",
+      "info": "This can be used to avoid card colors clashing with color scheme colors.",
+      "label": "Show as a contained card",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Make section background full width",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection",
+      "category": "Collections"
+    }
+  ],
+  "disabled_on": {
+    "templates": [
+      "password"
+    ],
+    "groups": [
+      "header",
+      "footer",
+      "aside"
+    ]
+  }
+}
+{% endschema %}

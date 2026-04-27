@@ -1,0 +1,256 @@
+{{ 'blog.css' | asset_url | stylesheet_tag }}
+{{ 'article.css' | asset_url | stylesheet_tag }}
+
+<article class="article js-article">
+  <div class="container">
+    {%- if section.settings.show_date -%}
+      <div class="text-theme-light reading-width mx-auto mb-5 {{ section.settings.heading_align }}">
+        {{ article.published_at | time_tag: format: 'date' }}
+      </div>
+    {%- endif -%}
+
+    <div class="article__title rte mb-6 md:mb-8 last:mb-0 reading-width mx-auto {{ section.settings.heading_align }}">
+      <h1 class="mb-0 {{ section.settings.heading_size }}">{{ article.title | escape }}</h1>
+    </div>
+
+    {%- if section.settings.show_author or section.settings.show_comment_count or section.settings.show_reading_time -%}
+      <p class="text-theme-light reading-width mx-auto pb-8 mb-0 {{ section.settings.heading_align }}">
+        {%- if section.settings.show_author -%}
+          {{ 'blogs.article.author' | t: author: article.author }}{%- if section.settings.show_reading_time or section.settings.show_comment_count and article.comments_enabled? -%}&nbsp;&nbsp;&bullet;&nbsp;&nbsp;{%- endif -%}
+        {%- endif -%}
+        {%- if section.settings.show_comment_count and article.comments_enabled? -%}
+          {{ 'blogs.article.comments' | t: count: article.comments_count }}{%- if section.settings.show_reading_time -%}&nbsp;&nbsp;&bullet;&nbsp;&nbsp;{%- endif -%}
+        {%- endif -%}
+        {%- if section.settings.show_reading_time -%}
+          {% assign read_time = article.content | strip_html | split: ' ' | size | times: 1.0 | divided_by: 240 | ceil %}
+          {{ 'blogs.article.reading_time' | t | replace: '[x]', read_time }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- if article.image and section.settings.featured_image_width != "none" -%}
+      <div class="article__image article__image--{{ section.settings.featured_image_width }} mb-5 pt-4 md:blog-mb-6 text-center last:mb-0 mx-auto{% if section.settings.featured_image_width == "page" %} md-down:-mx-gutter{% else %} reading-width article-width{% endif %}">
+        <div class="media relative text-center w-full">
+          {%- capture sizes -%}
+            {%- render 'sizes-attribute', min: 'page', sm: 'page', md: '800px', lg: false, xl: false, max: false -%}
+          {%- endcapture -%}
+          {% render 'image',
+            image: article.image,
+            widths: '800, 1200, 1600',
+            src_width: 1600,
+            src_placeholder: true,
+            lazy_load: false,
+            sizes: sizes
+          %}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="article__content reading-width rte article-content mt-12 mb-16 mx-auto">
+      {{ article.content }}
+    </div>
+
+    <div class="reading-width justify-between article-width flex flex-col md:pb-4 md:flex-row gap-8">
+      {%- if section.settings.show_tags -%}
+        {%- capture tag_markup -%}
+          <div class="blog-meta-half">
+            <p class="font-bold">{{ 'blogs.tags.label' | t }}:</p>
+
+            <div class="flex flex-wrap gap-2">
+              {%- for tag in article.tags -%}
+                <a href="{{ tag | link_to_tag: tag | split: 'href="' | last | split: '"' | first }}"
+                   class="text-current text-theme-light article__tag pt-1 pb-1 pl-3 pr-3 text-sm">
+                  {{ tag }}
+                </a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endcapture -%}
+        {% if tag_markup contains '</a>' %}{{ tag_markup }}{% endif %}
+      {%- endif -%}
+
+      {%- if section.settings.show_share_buttons -%}
+        <div class="blog-meta-half social-share">
+          <p class="font-bold">{{ 'general.social.share_heading' | t }}:</p>
+          {% render 'social-share', share_title: article.title, share_url: article.url, share_image: article.image %}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_pagination -%}
+      <div class="article__pagination flex justify-between font-bold border-top reading-width article-width mx-auto mt-12 lg:blog-mt-16">
+        <a class="pt-4 pb-4 shrink-0 js-pagination-link has-ltr-icon"{% if blog.previous_article %} href="{{ blog.previous_article }}" title="{{ blog.previous_article.title | escape }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+          {% render 'icon-chevron-left' %}<span>{{ 'blogs.article.previous_post' | t }}</span>
+        </a>
+        <a class="pt-4 pb-4 shrink-0 js-pagination-link has-ltr-icon"{% if blog.next_article %} href="{{ blog.next_article }}" title="{{ blog.next_article.title | escape }}"{% else %} role="link" aria-disabled="true"{% endif %}>
+          <span>{{ 'blogs.article.next_post' | t }}</span>{% render 'icon-chevron-right' %}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_read_indicator -%}
+      {{ 'article-read-indicator.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'article-read-indicator.js' | asset_url }}" defer="defer"></script>
+
+      <article-read-indicator class="article__read-indicator flex justify-between font-bold border-top pagination__bar fixed bottom-0 left-0 right-0-dock pl-4 pr-4">
+      </article-read-indicator>
+    {%- endif -%}
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll('.article__content table').forEach((table) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'scrollable-table';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
+</script>
+
+{% render 'structured-data-article', article: article %}
+
+{% schema %}
+{
+  "name": "Article",
+  "class": "cc-main-article section section--template",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Article header"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "text-start",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-end",
+          "label": "Right"
+        }
+      ],
+      "default": "text-center"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h6",
+          "label": "Extra extra small"
+        },
+        {
+          "value": "h5",
+          "label": "Extra small"
+        },
+        {
+          "value": "h4",
+          "label": "Small"
+        },
+        {
+          "value": "h3",
+          "label": "Medium"
+        },
+        {
+          "value": "h2",
+          "label": "Large"
+        },
+        {
+          "value": "h1",
+          "label": "Extra large"
+        },
+        {
+          "value": "h0",
+          "label": "Extra extra large"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_comment_count",
+      "label": "Show comment count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_time",
+      "label": "Show reading estimate",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show published date",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "featured_image_width",
+      "label": "Featured image",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "content",
+          "label": "Content width"
+        },
+        {
+          "value": "wider",
+          "label": "Content width - wider"
+        },
+        {
+          "value": "page",
+          "label": "Page width"
+        }
+      ],
+      "default": "page",
+      "info": "We recommend using a landscape shaped image for your featured image. [Learn more](https://cleancanvas.co.uk/support/canopy/templates/articles)"
+    },
+    {
+      "type": "header",
+      "content": "Article footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show tags",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "Show social share links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show next/previous links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_read_indicator",
+      "label": "Show reading progress bar",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

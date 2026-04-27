@@ -1,0 +1,193 @@
+.qty-input {
+  --padding: 10px;
+  --size: calc((var(--btn-border-width) + var(--padding)) * 2 + 1.4rem);
+}
+
+.qty-input__input {
+  width: var(--size);
+  margin: 0;
+  padding-top: var(--padding);
+  padding-bottom: var(--padding);
+  border: var(--btn-border-width) solid rgb(var(--btn-alt-text-color));
+  text-align: center;
+}
+
+.qty-input__btn {
+  position: relative;
+  z-index: 1;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: var(--btn-border-width) solid rgb(var(--btn-alt-text-color));
+  border-radius: var(--btn-border-radius, 0);
+  background-color: rgb(var(--input-bg-color));
+  color: rgb(var(--btn-alt-text-color));
+}
+
+.btn--minus::before, .btn--minus::after,
+.btn--plus::before,
+.btn--plus::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  width: 12px;
+  height: 2px;
+  transform: translate(50%, -50%);
+  background-color: currentColor;
+}
+.btn--minus::after,
+.btn--plus::after {
+  width: 2px;
+  height: 12px;
+}
+
+.btn--minus::after {
+  display: none;
+}
+
+.js .qty-input--combined {
+  border: var(--btn-border-width) solid rgb(var(--btn-alt-text-color));
+  border-radius: var(--btn-border-radius, 0);
+  background-color: rgb(var(--input-bg-color));
+}
+.js .qty-input--combined:focus-within {
+  border-color: rgba(var(--input-text-color)/0.6);
+  box-shadow: 0 0 0 1px rgba(var(--input-text-color)/0.6);
+}
+.js .qty-input--combined .qty-input__input,
+.js .qty-input--combined .qty-input__btn {
+  border: 0;
+  background: none;
+  color: rgb(var(--btn-alt-text-color));
+}
+.js .qty-input--combined .qty-input__input {
+  padding: var(--padding) 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.js .qty-input--combined .qty-input__btn {
+  width: calc(var(--padding) * 2 + 1.4rem);
+  height: calc(var(--padding) * 2 + 1.4rem);
+}
+
+.qty-input {
+  height: 100%;
+}
+
+.qty-input__input {
+  flex: 1 1 auto;
+  width: 3em;
+  height: 100%;
+  box-shadow: inset 0 var(--btn-border-width) 0 0 rgb(var(--btn-alt-text-color)), inset 0 calc(-1 * var(--btn-border-width)) 0 0 rgb(var(--btn-alt-text-color)) !important;
+}
+.no-js .qty-input__input {
+  width: 4em;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.js .qty-input--combined {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.qty-input--combined .btn--minus,
+[dir=rtl] .qty-input--combined .btn--plus {
+  border-radius: var(--btn-border-radius, 0) 0 0 var(--btn-border-radius, 0);
+}
+
+.qty-input--combined .btn--plus,
+[dir=rtl] .qty-input--combined .btn--minus {
+  border-radius: 0 var(--btn-border-radius, 0) var(--btn-border-radius, 0) 0;
+}
+
+.qty-input--combined .btn--minus::before {
+  right: calc(50% - var(--btn-border-width) / 2);
+}
+
+.qty-input--combined .btn--plus::before,
+.qty-input--combined .btn--plus::after {
+  right: calc(50% + var(--btn-border-width) / 2);
+}
+
+[dir=rtl] .qty-input--combined .btn--minus::before {
+  right: calc(50% + var(--btn-border-width) / 2);
+}
+
+[dir=rtl] .qty-input--combined .btn--plus::before,
+[dir=rtl] .qty-input--combined .btn--plus::after {
+  right: calc(50% - var(--btn-border-width) / 2);
+}
+
+.js .qty-input--combined:focus-within {
+  border-color: rgb(var(--btn-alt-text-color));
+  box-shadow: none;
+}
+
+.js .qty-input--secondary-btn .qty-input__input {
+  background-color: rgba(var(--btn-alt-bg-color)/var(--btn-alt-bg-alpha));
+}
+
+.qty-input--secondary-btn .qty-input {
+  --input-text-color: var(--btn-alt-text-color);
+  border-color: rgb(var(--btn-alt-text-color));
+}
+.qty-input--secondary-btn .qty-input:focus-within {
+  border-color: rgb(var(--btn-alt-text-color));
+  box-shadow: none;
+}
+
+quantity-input {
+  transition: opacity 0.4s;
+}
+
+quantity-input[aria-disabled=true] {
+  opacity: 0.4 !important;
+  pointer-events: none;
+}
+
+.qty-input__btn {
+  width: calc(var(--padding) * 2.5 + 1.4rem) !important;
+  height: 100% !important;
+  border-radius: 0;
+  background-color: rgb(var(--btn-alt-text-color)) !important;
+  color: rgb(var(--btn-alt-bg-color)) !important;
+}
+
+.qty-input__btn[disabled],
+.qty-input__btn[disabled]:hover {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.card--product quantity-input,
+.cart-item__qty quantity-input {
+  font-size: 16px;
+}
+.card--product quantity-input .qty-input,
+.cart-item__qty quantity-input .qty-input {
+  width: auto;
+}
+.card--product quantity-input .qty-input__btn,
+.cart-item__qty quantity-input .qty-input__btn {
+  height: var(--size) !important;
+}
+
+.card--product quantity-input .qty-input__btn,
+.card--product quantity-input .qty-input__input,
+.cart-item__qty quantity-input .qty-input__btn,
+.cart-item__qty quantity-input .qty-input__input {
+  min-height: calc(var(--padding) * 2 + var(--btn-border-width) * 2 + var(--body-font-size-px) * 1.1);
+}
+
+.card--product .qty-input--combined .qty-input__input,
+.cart-item__qty .qty-input--combined .qty-input__input {
+  padding: 5px 0;
+}
+
+.card--product .text-center quantity-input {
+  left: 50%;
+  transform: translateX(-50%);
+}

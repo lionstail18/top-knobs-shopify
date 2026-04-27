@@ -1,0 +1,123 @@
+<div class="tk-product-grid">
+  <div class="tk-product-grid__header">
+    <div>
+      <p class="tk-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="tk-product-grid__h2">{{ section.settings.heading | escape }}</h2>
+    </div>
+    {%- if section.settings.btn_label != blank -%}
+      <a href="{{ section.settings.btn_url | default: routes.all_products_collection_url }}"
+         class="tk-btn tk-btn--ghost-border tk-product-grid__view-all">
+        {{- section.settings.btn_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+
+  {%- assign grid_collection = collections[section.settings.collection] -%}
+  {%- if grid_collection != blank -%}
+    <div class="tk-product-grid__grid">
+      {%- assign product_limit = section.settings.product_limit | default: 3 -%}
+      {%- for product in grid_collection.products limit: product_limit -%}
+        {%- render 'tk-product-card', product: product -%}
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    <div class="tk-product-grid__grid">
+      {%- for product in collections.all.products limit: section.settings.product_limit -%}
+        {%- render 'tk-product-card', product: product -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- style -%}
+  .tk-product-grid {
+    background: var(--color-bg2);
+    padding-bottom: 80px;
+  }
+  .tk-product-grid__header {
+    padding: 56px var(--tk-page-x) 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .tk-product-grid__header .tk-eyebrow { margin: 0 0 10px; }
+  .tk-product-grid__h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.1;
+  }
+  .tk-product-grid__view-all {
+    flex-shrink: 0;
+    padding: 10px 24px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .tk-product-grid__grid {
+    padding: 0 var(--tk-page-x);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 900px) {
+    .tk-product-grid__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .tk-product-grid__grid { grid-template-columns: 1fr; }
+    .tk-product-grid__header { flex-direction: column; align-items: flex-start; }
+    .tk-product-grid__h2 { font-size: 32px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "tag": "div",
+  "class": "tk-product-grid-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Most Loved"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Bestsellers"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "View All"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Products to show",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 3
+    }
+  ],
+  "presets": [
+    { "name": "Product Grid" }
+  ]
+}
+{% endschema %}

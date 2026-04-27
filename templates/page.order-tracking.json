@@ -1,0 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-order-tracking",
+      "settings": {
+        "eyebrow": "Where Is My Order?",
+        "heading": "Track Your Order",
+        "intro": "Enter your order number and email address to see real-time shipping updates.",
+        "btn_label": "Track Order",
+        "help_note": "Can't find your order? Please",
+        "contact_label": "contact us"
+      }
+    }
+  },
+  "order": ["main"]
+}

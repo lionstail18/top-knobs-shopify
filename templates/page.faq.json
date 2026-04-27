@@ -1,0 +1,51 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "tk-faq",
+      "settings": {
+        "eyebrow": "Got Questions?",
+        "heading": "Frequently Asked Questions",
+        "intro": "Everything you need to know about ordering, shipping, returns, and our products. Can't find what you're looking for? Contact us.",
+        "cta_heading": "Still have questions?",
+        "cta_body": "Our team is available Monday–Friday, 9am–5pm ET.",
+        "cta_btn1_label": "Contact Us",
+        "cta_btn2_label": "1-800-530-8245"
+      },
+      "blocks": {
+        "sec1": { "type": "section", "settings": { "title": "Ordering & Shipping" } },
+        "q1": { "type": "item", "settings": { "question": "How long does shipping take?", "answer": "Most orders ship within 1–2 business days from our warehouse. Standard ground shipping typically delivers within 3–7 business days after shipping. Expedited options are available at checkout." } },
+        "q2": { "type": "item", "settings": { "question": "Do you offer free shipping?", "answer": "Yes — free standard shipping on all orders over $99. Orders under $99 ship for a flat $7.95 fee." } },
+        "q3": { "type": "item", "settings": { "question": "Can I track my order?", "answer": "Absolutely. Once your order ships, you'll receive a tracking number by email. You can also track your order on our Order Tracking page at any time." } },
+        "q4": { "type": "item", "settings": { "question": "Do you ship internationally?", "answer": "Currently we ship to the contiguous United States and Canada. For Canadian orders, please contact us for a shipping quote before ordering." } },
+        "q5": { "type": "item", "settings": { "question": "What if my order arrives damaged?", "answer": "Contact us within 5 business days of delivery with photos of the damage. We'll send a replacement immediately at no charge." } },
+        "sec2": { "type": "section", "settings": { "title": "Products & Authenticity" } },
+        "q6": { "type": "item", "settings": { "question": "Are you an authorized Top Knobs dealer?", "answer": "Yes. TopKnobsHardware.net is an officially authorized Top Knobs dealer. Every product we sell is 100% authentic, sourced directly from Top Knobs, and covered by the full manufacturer's lifetime limited warranty." } },
+        "q7": { "type": "item", "settings": { "question": "Are your products covered by warranty?", "answer": "Yes. All Top Knobs products come with a lifetime limited warranty against manufacturing defects in materials and workmanship. If a product fails under normal use, we'll replace it at no cost." } },
+        "q8": { "type": "item", "settings": { "question": "How do I know which size pull to order?", "answer": "Cabinet pull sizing refers to the center-to-center measurement — the distance between the two mounting holes. We recommend measuring your existing hardware or the pre-drilled holes in your cabinet doors. Our Size Guide page explains this in detail with printable templates." } },
+        "sec3": { "type": "section", "settings": { "title": "Returns & Exchanges" } },
+        "q9": { "type": "item", "settings": { "question": "What is your return policy?", "answer": "We accept returns within 30 days of delivery for products in original, unused condition. Simply contact us for a return authorization number. Return shipping is the customer's responsibility unless the item arrived damaged or incorrect." } },
+        "q10": { "type": "item", "settings": { "question": "Can I exchange for a different finish or size?", "answer": "Yes. Contact us within 30 days and we'll help you exchange your order for the right item. If the new item is a different price, we'll invoice or refund the difference." } },
+        "q11": { "type": "item", "settings": { "question": "What if I ordered the wrong item?", "answer": "We understand — hardware selection can be tricky. Contact us as soon as possible. If the order hasn't shipped, we can modify it. If it has shipped, we'll walk you through the exchange process." } },
+        "sec4": { "type": "section", "settings": { "title": "Sample Program" } },
+        "q12": { "type": "item", "settings": { "question": "How does the sample program work?", "answer": "You can order individual pieces as samples to try in your home before committing to a full order. Once you place your final order, we'll refund the cost of your samples (up to 5 pieces, up to 5% of your new order value)." } },
+        "q13": { "type": "item", "settings": { "question": "How much do samples cost?", "answer": "Samples are sold at the regular per-unit product price. Since hardware is typically sold by the piece, you simply order the quantity you want to try (usually 1–2 pieces per style)." } },
+        "q14": { "type": "item", "settings": { "question": "Is the sample refund automatic?", "answer": "Not automatic — once you receive your main order, email us both order confirmation numbers and we'll apply the refund within 1–2 business days." } },
+        "sec5": { "type": "section", "settings": { "title": "Trade Program" } },
+        "q15": { "type": "item", "settings": { "question": "Who qualifies for trade pricing?", "answer": "Interior designers, architects, builders, general contractors, and kitchen & bath dealers are eligible to apply for our trade program." } },
+        "q16": { "type": "item", "settings": { "question": "How do I apply?", "answer": "Visit our Trade page and fill out the short application form. We review applications within 1–2 business days and contact you with your trade pricing details." } },
+        "q17": { "type": "item", "settings": { "question": "How much of a discount do trade accounts receive?", "answer": "Trade discounts vary depending on volume and project type. Contact us after applying and we'll discuss the right pricing tier for your business." } }
+      },
+      "block_order": ["sec1","q1","q2","q3","q4","q5","sec2","q6","q7","q8","sec3","q9","q10","q11","sec4","q12","q13","q14","sec5","q15","q16","q17"]
+    }
+  },
+  "order": ["main"]
+}
