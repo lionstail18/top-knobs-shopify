@@ -281,6 +281,60 @@
       display: none !important;
     }
   }
+
+  /* ── Finishes mega-menu: swatch grid with gold overline ──────── */
+  @media (min-width: 769px) {
+    .cc-header .mega-nav--finishes > .container {
+      padding-top: 32px;
+      padding-bottom: 40px;
+    }
+    /* "BROWSE BY FINISH" overline label */
+    .cc-header .mega-nav--finishes > .container::before {
+      content: "Browse by Finish";
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgb(var(--header-accent-color));
+      margin-bottom: 28px;
+    }
+    /* Reset parent grid layout — finishes panel uses a wrap-grid of swatches,
+       not the column flow used by Products / Collections. */
+    .cc-header .mega-nav--finishes .child-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      column-gap: 16px;
+      row-gap: 28px;
+    }
+    /* Each finish: swatch on top, label below, both centred. */
+    .cc-header .mega-nav--finishes .child-nav__item--swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 0;
+      text-align: center;
+      text-decoration: none;
+      color: rgb(var(--text-color));
+      border: none;
+      transition: transform 0.15s ease;
+    }
+    .cc-header .mega-nav--finishes .child-nav__item--swatch:hover {
+      transform: translateY(-2px);
+    }
+    .cc-header .mega-nav--finishes .child-nav__item-swatch-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.3;
+      transition: color 0.2s ease;
+    }
+    .cc-header .mega-nav--finishes .child-nav__item--swatch:hover .child-nav__item-swatch-label {
+      color: rgb(var(--header-accent-color));
+    }
+  }
 {%- endstyle -%}
 
 <store-header class="header bg-theme-bg text-theme-text{% if section.settings.enable_sticky or search_is_minimised %} has-motion{% endif %}{% if search_is_minimised %} search-is-collapsed{% endif %}"
@@ -569,8 +623,11 @@
                               assign child_link_title_downcase = child_link.title | downcase
                               assign child_link_url_last_char = child_link.url | slice: -1
                               assign collection_image = false
+                              assign is_swatch_finish = false
 
-                              if mega_nav and mega_nav.settings.collection_images != "none" and child_link.type == 'collection_link'
+                              if mega_nav and mega_nav.settings.collection_images == "swatch"
+                                assign is_swatch_finish = true
+                              elsif mega_nav and mega_nav.settings.collection_images != "none" and child_link.type == 'collection_link'
                                 assign collection_image = true
                                 if mega_nav.settings.collection_images == "standard"
                                   assign collection_image_width = 30
@@ -610,6 +667,13 @@
                             -%}
                             <li{% if li_classes != "" %} class="{{ li_classes }}"{% endif %}>
                               {%- if child_link.links == blank -%}
+                                {%- if is_swatch_finish -%}
+                                  <a class="main-nav__item child-nav__item child-nav__item--swatch nav__item--no-underline"
+                                     href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>
+                                    {%- render 'tk-finish-swatch', finish_name: child_link.title, size: 72 -%}
+                                    <span class="child-nav__item-swatch-label">{{ child_link.title | escape }}</span>
+                                  </a>
+                                {%- else -%}
                                 {%- if collection_image -%}<div class="child-nav__item--toggle flex items-center child-nav__item-collection-image{% if mega_nav and mega_nav_has_columns and mega_nav.settings.show_underline == false %} nav__item--no-underline{% endif %}{% if mega_nav.type == "sidebar" %} js-sidebar-hover{% endif %}">{%- endif -%}
                                   {%- if collection_image -%}
                                     <div class="main-nav__collection-image media relative main-nav__collection-image--flex main-nav__collection-image--{{ mega_nav.settings.collection_images }}">
@@ -627,6 +691,7 @@
                                     {{- child_link.title | escape -}}
                                   </a>
                                 {%- if collection_image -%}</div>{%- endif -%}
+                                {%- endif -%}
                               {%- else -%}
                                 {%- if mega_nav -%}
                                   <div class="main-nav__item-content{% if mega_nav.settings.collection_images != 'none' %} child-nav__collection-image w-full{% endif %}{% if featured_links contains child_link_title_downcase %} main-nav__link--featured{% endif %}">
