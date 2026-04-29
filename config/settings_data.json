@@ -128,11 +128,12 @@
     "predictive_search_show_price": true,
     "predictive_search_include_skus": true,
     "prompts_mobile": true,
-    "enable_speech_search": true,
+    "show_search_types": false,
+    "enable_speech_search": false,
     "speech_icon_color": "#0096a6",
     "show_currency_code": false,
     "superscript_decimals": false,
-    "cart_icon": "bag",
+    "cart_icon": "cart",
     "cart_type": "drawer",
     "dock_cart_drawer": false,
     "after_add_to_cart": "drawer",
@@ -168,7 +169,7 @@
     "blocks": {
       "208873322266159137": {
         "type": "shopify://apps/searchanise-search-filter/blocks/app-embed-v2/d8f24ada-02b1-458a-bbeb-5bf16d5c921e",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }

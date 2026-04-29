@@ -23,6 +23,11 @@
                     loading: 'lazy',
                     class: 'tk-feat-col__img',
                     alt: block.settings.title | escape -}}
+              {%- elsif block.settings.image_asset != blank -%}
+                <img src="{{ block.settings.image_asset | asset_url }}"
+                     loading="lazy"
+                     class="tk-feat-col__img"
+                     alt="{{ block.settings.title | escape }}">
               {%- else -%}
                 <div class="tk-feat-col__img tk-feat-col__img--placeholder"></div>
               {%- endif -%}
@@ -187,6 +192,12 @@
           "type": "image_picker",
           "id": "image",
           "label": "Collection image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Default image asset filename",
+          "info": "Filename of an image bundled in the theme's assets folder (e.g. 'pemberton.jpg'). Used when no Collection image is uploaded above."
         },
         {
           "type": "text",

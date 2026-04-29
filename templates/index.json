@@ -132,7 +132,9 @@
           "settings": {
             "title": "The Pemberton Collection",
             "description": "Modern elegance meets timeless form. Clean architectural lines in premium finishes.",
-            "badge": "NEW"
+            "badge": "NEW",
+            "image_asset": "pemberton.jpg",
+            "url": "/collections/pemberton"
           }
         },
         "col2": {
@@ -140,7 +142,9 @@
           "settings": {
             "title": "The Serene Collection",
             "description": "Inspired by nature's calm — organic silhouettes in honey bronze and brushed nickel.",
-            "badge": "BESTSELLER"
+            "badge": "BESTSELLER",
+            "image_asset": "serene.jpg",
+            "url": "/collections/serene"
           }
         },
         "col3": {
@@ -148,7 +152,9 @@
           "settings": {
             "title": "The CHAREAU® Collection",
             "description": "French-inspired artistry with refined proportions for the discerning interior.",
-            "badge": ""
+            "badge": "",
+            "image_asset": "chareau.jpg",
+            "url": "/collections/chareau"
           }
         },
         "col4": {
@@ -156,15 +162,19 @@
           "settings": {
             "title": "The Garrison Collection",
             "description": "Classic craftsmanship reimagined. A versatile collection for traditional and transitional spaces.",
-            "badge": "POPULAR"
+            "badge": "POPULAR",
+            "image_asset": "garrison.jpg",
+            "url": "/collections/garrison"
           }
         },
         "col5": {
           "type": "item",
           "settings": {
-            "title": "The Crystal Collection",
-            "description": "Shimmer and shine — faceted crystal knobs and pulls that catch the light beautifully.",
-            "badge": ""
+            "title": "The Asbury Collection",
+            "description": "Transitional silhouettes with quiet confidence. Equally at home in classic or contemporary kitchens.",
+            "badge": "",
+            "image_asset": "asbury.jpg",
+            "url": "/collections/asbury"
           }
         },
         "col6": {
@@ -172,7 +182,9 @@
           "settings": {
             "title": "The Edwardian Collection",
             "description": "Heritage detailing, enduring appeal. Timeless pieces for distinguished interiors.",
-            "badge": ""
+            "badge": "",
+            "image_asset": "edwardian.jpg",
+            "url": "/collections/edwardian"
           }
         }
       },

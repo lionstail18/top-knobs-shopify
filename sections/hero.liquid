@@ -9,7 +9,18 @@
           alt: '' -}}
     </div>
   {%- else -%}
-    <div class="tk-hero__img tk-hero__img--placeholder" aria-hidden="true"></div>
+    {%- comment -%}
+      Default kitchen-lifestyle hero ships with the theme as assets/hero-kitchen.jpg
+      so the homepage looks finished out of the box. To override, upload a custom
+      image at Theme Editor → Hero Banner → Background image.
+    {%- endcomment -%}
+    <div class="tk-hero__img" aria-hidden="true">
+      <img src="{{ 'hero-kitchen.jpg' | asset_url }}"
+           loading="eager"
+           fetchpriority="high"
+           class="tk-hero__bg-img"
+           alt="">
+    </div>
   {%- endif -%}
 
   <div class="tk-hero__overlay" aria-hidden="true"></div>
