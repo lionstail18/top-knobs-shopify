@@ -208,57 +208,65 @@
         "fin1": {
           "type": "finish",
           "settings": {
-            "color": "#C8C0B0",
-            "name": "Polished Nickel"
+            "color": "#c5c4bf",
+            "name": "Polished Nickel",
+            "url": "/collections/polished-nickel-finish"
           }
         },
         "fin2": {
           "type": "finish",
           "settings": {
-            "color": "#A09890",
-            "name": "Brushed Nickel"
+            "color": "#a9a9a3",
+            "name": "Brushed Satin Nickel",
+            "url": "/collections/brushed-satin-nickel-finish"
           }
         },
         "fin3": {
           "type": "finish",
           "settings": {
-            "color": "#2A2826",
-            "name": "Matte Black"
+            "color": "#222222",
+            "name": "Flat Black",
+            "url": "/collections/flat-black-finish"
           }
         },
         "fin4": {
           "type": "finish",
           "settings": {
-            "color": "#8C6C2E",
-            "name": "Honey Bronze"
+            "color": "#8b6f47",
+            "name": "Honey Bronze",
+            "url": "/collections/honey-bronze-finish"
           }
         },
         "fin5": {
           "type": "finish",
           "settings": {
-            "color": "#3D2A18",
-            "name": "Oil Rubbed Bronze"
+            "color": "#3d2c1f",
+            "name": "Oil Rubbed Bronze",
+            "url": "/collections/oil-rubbed-bronze-finish"
           }
         },
         "fin6": {
           "type": "finish",
           "settings": {
-            "color": "#C2A058",
-            "name": "Brushed Gold"
+            "color": "#d4af37",
+            "name": "Polished Brass",
+            "url": "/collections/polished-brass-finish"
           }
         },
         "fin7": {
           "type": "finish",
           "settings": {
-            "color": "#8A9090",
-            "name": "Stainless Steel"
+            "color": "#a8895c",
+            "name": "Champagne Bronze",
+            "url": "/collections/champagne-bronze-finish"
           }
         },
         "fin8": {
           "type": "finish",
           "settings": {
-            "color": "#D8D8DA",
-            "name": "Polished Chrome"
+            "color": "#cccccc",
+            "name": "Polished Chrome",
+            "url": "/collections/polished-chrome-finish"
           }
         }
       },
@@ -280,9 +288,9 @@
     "product-grid": {
       "type": "product-grid",
       "settings": {
-        "eyebrow": "Most Loved",
-        "heading": "Bestsellers",
-        "btn_label": "View All",
+        "eyebrow": "Hand Picked",
+        "heading": "Featured",
+        "btn_label": "",
         "collection": "homepage-featured-products",
         "product_limit": 3
       }
