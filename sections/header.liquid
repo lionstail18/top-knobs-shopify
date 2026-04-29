@@ -306,14 +306,14 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       column-gap: 16px;
-      row-gap: 28px;
+      row-gap: 18px;
     }
     /* Each finish: swatch on top, label below, both centred. */
     .cc-header .mega-nav--finishes .child-nav__item--swatch {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       padding: 0;
       text-align: center;
       text-decoration: none;
@@ -670,7 +670,7 @@
                                 {%- if is_swatch_finish -%}
                                   <a class="main-nav__item child-nav__item child-nav__item--swatch nav__item--no-underline"
                                      href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>
-                                    {%- render 'tk-finish-swatch', finish_name: child_link.title, size: 72 -%}
+                                    {%- render 'tk-finish-swatch', finish_name: child_link.title, size: 60 -%}
                                     <span class="child-nav__item-swatch-label">{{ child_link.title | escape }}</span>
                                   </a>
                                 {%- else -%}

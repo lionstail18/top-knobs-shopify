@@ -24,6 +24,16 @@
   -%}
   <link rel="icon" href="{{ settings.favicon | image_url: width: 48, height: 48 }}" type="image/{{ image_type }}">
   <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+{%- else -%}
+  {%- comment -%}
+    Default Top Knobs favicon — TK monogram on navy with gold accent.
+    SVG is preferred by modern browsers (sharp at any size); PNG is the
+    fallback for older browsers and iOS home-screen icons. To override,
+    upload a custom favicon at Theme Settings → Favicon.
+  {%- endcomment -%}
+  <link rel="icon" href="{{ 'favicon.svg' | asset_url }}" type="image/svg+xml">
+  <link rel="alternate icon" href="{{ 'favicon.png' | asset_url }}" type="image/png">
+  <link rel="apple-touch-icon" href="{{ 'favicon.png' | asset_url }}">
 {%- endif -%}
 
 {%- if page_description -%}
