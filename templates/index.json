@@ -283,6 +283,7 @@
         "eyebrow": "Most Loved",
         "heading": "Bestsellers",
         "btn_label": "View All",
+        "collection": "homepage-featured-products",
         "product_limit": 3
       }
     },
