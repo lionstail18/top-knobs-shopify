@@ -134,7 +134,7 @@
             "description": "Modern elegance meets timeless form. Clean architectural lines in premium finishes.",
             "badge": "NEW",
             "image_asset": "pemberton.jpg",
-            "url": "/collections/pemberton"
+            "url": "/collections/top-knobs-pemberton-collection"
           }
         },
         "col2": {
@@ -144,7 +144,7 @@
             "description": "Inspired by nature's calm — organic silhouettes in honey bronze and brushed nickel.",
             "badge": "BESTSELLER",
             "image_asset": "serene.jpg",
-            "url": "/collections/serene"
+            "url": "/collections/top-knobs-serene"
           }
         },
         "col3": {
@@ -154,7 +154,7 @@
             "description": "French-inspired artistry with refined proportions for the discerning interior.",
             "badge": "",
             "image_asset": "chareau.jpg",
-            "url": "/collections/chareau"
+            "url": "/collections/top-knobs-chareau"
           }
         },
         "col4": {
@@ -164,7 +164,7 @@
             "description": "Classic craftsmanship reimagined. A versatile collection for traditional and transitional spaces.",
             "badge": "POPULAR",
             "image_asset": "garrison.jpg",
-            "url": "/collections/garrison"
+            "url": "/collections/top-knobs-garrison-collection"
           }
         },
         "col5": {
@@ -174,7 +174,7 @@
             "description": "Transitional silhouettes with quiet confidence. Equally at home in classic or contemporary kitchens.",
             "badge": "",
             "image_asset": "asbury.jpg",
-            "url": "/collections/asbury"
+            "url": "/collections/top-knobs-asbury"
           }
         },
         "col6": {
@@ -184,7 +184,7 @@
             "description": "Heritage detailing, enduring appeal. Timeless pieces for distinguished interiors.",
             "badge": "",
             "image_asset": "edwardian.jpg",
-            "url": "/collections/edwardian"
+            "url": "/collections/top-knobs-edwardian"
           }
         }
       },
