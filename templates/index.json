@@ -212,8 +212,7 @@
           "settings": {
             "color": "#5e5132",
             "name": "Aged Bronze",
-            "url": "/collections/aged-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-DB643-O_1.png?v=1777192695"
+            "url": "/collections/aged-bronze-finish"
           }
         },
         "fin2": {
@@ -221,8 +220,7 @@
           "settings": {
             "color": "#6f6c64",
             "name": "Antique Pewter",
-            "url": "/collections/antique-pewter-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PTA.png?v=1777201726"
+            "url": "/collections/antique-pewter-finish"
           }
         },
         "fin3": {
@@ -230,8 +228,7 @@
           "settings": {
             "color": "#bcb6a8",
             "name": "Ash Gray",
-            "url": "/collections/ash-gray-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK3128AG_1.png?v=1777202106"
+            "url": "/collections/ash-gray-finish"
           }
         },
         "fin4": {
@@ -239,8 +236,7 @@
           "settings": {
             "color": "#9c9a93",
             "name": "Brushed Nickel",
-            "url": "/collections/brushed-nickel-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A836-BN_1.png?v=1777192634"
+            "url": "/collections/brushed-nickel-finish"
           }
         },
         "fin5": {
@@ -248,8 +244,7 @@
           "settings": {
             "color": "#bdb9ad",
             "name": "Brushed Satin Nickel",
-            "url": "/collections/brushed-satin-nickel-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK138BSN.png?v=1777201737"
+            "url": "/collections/brushed-satin-nickel-finish"
           }
         },
         "fin6": {
@@ -257,8 +252,7 @@
           "settings": {
             "color": "#1d1d1f",
             "name": "Flat Black",
-            "url": "/collections/flat-black-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147BLK.png?v=1777201726"
+            "url": "/collections/flat-black-finish"
           }
         },
         "fin7": {
@@ -266,8 +260,7 @@
           "settings": {
             "color": "#5d3530",
             "name": "German Bronze",
-            "url": "/collections/german-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147GBZ.png?v=1777201726"
+            "url": "/collections/german-bronze-finish"
           }
         },
         "fin8": {
@@ -275,8 +268,7 @@
           "settings": {
             "color": "#b48342",
             "name": "Honey Bronze",
-            "url": "/collections/honey-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK724HB.png?v=1777202049"
+            "url": "/collections/honey-bronze-finish"
           }
         },
         "fin9": {
@@ -284,8 +276,7 @@
           "settings": {
             "color": "#0d0d0d",
             "name": "Matte Black",
-            "url": "/collections/matte-black-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A825-BL_1.png?v=1777192629"
+            "url": "/collections/matte-black-finish"
           }
         },
         "fin10": {
@@ -293,8 +284,7 @@
           "settings": {
             "color": "#2a1a0e",
             "name": "Oil Rubbed Bronze",
-            "url": "/collections/oil-rubbed-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147ORB.png?v=1777201726"
+            "url": "/collections/oil-rubbed-bronze-finish"
           }
         },
         "fin11": {
@@ -302,8 +292,7 @@
           "settings": {
             "color": "#d8dde0",
             "name": "Polished Chrome",
-            "url": "/collections/polished-chrome-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PC.png?v=1777201726"
+            "url": "/collections/polished-chrome-finish"
           }
         },
         "fin12": {
@@ -311,8 +300,7 @@
           "settings": {
             "color": "#c8c2b0",
             "name": "Polished Nickel",
-            "url": "/collections/polished-nickel-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PN.png?v=1777201727"
+            "url": "/collections/polished-nickel-finish"
           }
         },
         "fin13": {
@@ -320,8 +308,7 @@
           "settings": {
             "color": "#352620",
             "name": "Sable",
-            "url": "/collections/sable-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK716SAB.png?v=1777201685"
+            "url": "/collections/sable-finish"
           }
         },
         "fin14": {
@@ -329,8 +316,7 @@
           "settings": {
             "color": "#525a62",
             "name": "Slate",
-            "url": "/collections/slate-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A836-SL_1.png?v=1777192634"
+            "url": "/collections/slate-finish"
           }
         },
         "fin15": {
@@ -338,8 +324,7 @@
           "settings": {
             "color": "#7d5a30",
             "name": "Tuscan Bronze",
-            "url": "/collections/tuscan-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147TB.png?v=1777201726"
+            "url": "/collections/tuscan-bronze-finish"
           }
         },
         "fin16": {
@@ -347,8 +332,7 @@
           "settings": {
             "color": "#1f1814",
             "name": "Umbrio",
-            "url": "/collections/umbrio-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK204UM.png?v=1777201717"
+            "url": "/collections/umbrio-finish"
           }
         },
         "fin17": {
@@ -356,8 +340,7 @@
           "settings": {
             "color": "#6e4326",
             "name": "Venetian Bronze",
-            "url": "/collections/venetian-bronze-finish",
-            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A826-VB_1.png?v=1777192631"
+            "url": "/collections/venetian-bronze-finish"
           }
         }
       },

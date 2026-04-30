@@ -17,17 +17,8 @@
           {%- elsif norm contains 'antique' or norm contains 'aged' or norm contains 'oil rubbed' or norm == 'umbrio' or norm contains 'venetian' or norm contains 'german' or norm contains 'verde' or norm contains 'pewter' or norm contains 'cocoa' or norm contains 'mahogany' -%}
             {%- assign family = 'patina' -%}
           {%- endif -%}
-          {%- assign has_image = false -%}
-          {%- if block.settings.image_url != blank -%}
-            {%- assign has_image = true -%}
-          {%- endif -%}
           <a class="tk-finish-browser__swatch" href="{{ block.settings.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
-            {%- if has_image -%}
-              <span class="tk-finish-browser__circle tk-finish-browser__circle--photo"
-                    style="background-color: {{ block.settings.color }}; background-image: url('{{ block.settings.image_url }}'); background-size: 220%; background-position: center; background-repeat: no-repeat;"></span>
-            {%- else -%}
-              <span class="tk-finish-browser__circle tk-finish-browser__circle--{{ family }}" style="background: {{ block.settings.color }};"></span>
-            {%- endif -%}
+            <span class="tk-finish-browser__circle tk-finish-browser__circle--{{ family }}" style="background: {{ block.settings.color }};"></span>
             <span class="tk-finish-browser__label">{{ block.settings.name | escape }}</span>
           </a>
         {%- endif -%}
@@ -157,20 +148,6 @@
       radial-gradient(ellipse 80% 55% at 70% 85%, rgba(0,0,0,0.18), rgba(0,0,0,0) 70%);
   }
 
-  /* PHOTO — real product image as the swatch background */
-  .tk-finish-browser__circle--photo {
-    border: 1px solid rgba(0,0,0,0.10);
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,0.20),
-      0 2px 4px rgba(0,0,0,0.10),
-      0 6px 16px rgba(0,0,0,0.20);
-  }
-  .tk-finish-browser__circle--photo::after {
-    background:
-      radial-gradient(ellipse 65% 30% at 50% 18%, rgba(255,255,255,0.22), rgba(255,255,255,0) 70%),
-      radial-gradient(ellipse 80% 35% at 50% 92%, rgba(0,0,0,0.18), rgba(0,0,0,0) 70%);
-  }
-
   /* PATINA — soft mottled aged look */
   .tk-finish-browser__circle--patina {
     box-shadow:
@@ -242,12 +219,6 @@
           "type": "url",
           "id": "url",
           "label": "Collection link"
-        },
-        {
-          "type": "text",
-          "id": "image_url",
-          "label": "Swatch image URL (optional, overrides color)",
-          "info": "Paste any product image URL. The image will be cropped to a circle. Leave blank to use the swatch color."
         }
       ]
     }
