@@ -6,8 +6,28 @@
     <div class="tk-finish-browser__swatches">
       {%- for block in section.blocks -%}
         {%- if block.type == 'finish' -%}
+          {%- assign norm = block.settings.name | downcase | strip -%}
+          {%- assign family = 'satin' -%}
+          {%- if norm contains 'polished' or norm contains 'chrome' -%}
+            {%- assign family = 'polished' -%}
+          {%- elsif norm contains 'brushed' -%}
+            {%- assign family = 'brushed' -%}
+          {%- elsif norm contains 'matte' or norm contains 'flat' or norm == 'sable' or norm == 'slate' -%}
+            {%- assign family = 'matte' -%}
+          {%- elsif norm contains 'antique' or norm contains 'aged' or norm contains 'oil rubbed' or norm == 'umbrio' or norm contains 'venetian' or norm contains 'german' or norm contains 'verde' or norm contains 'pewter' or norm contains 'cocoa' or norm contains 'mahogany' -%}
+            {%- assign family = 'patina' -%}
+          {%- endif -%}
+          {%- assign has_image = false -%}
+          {%- if block.settings.image_url != blank -%}
+            {%- assign has_image = true -%}
+          {%- endif -%}
           <a class="tk-finish-browser__swatch" href="{{ block.settings.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
-            <span class="tk-finish-browser__circle" style="background: {{ block.settings.color }};"></span>
+            {%- if has_image -%}
+              <span class="tk-finish-browser__circle tk-finish-browser__circle--photo"
+                    style="background-color: {{ block.settings.color }}; background-image: url('{{ block.settings.image_url }}'); background-size: 220%; background-position: center; background-repeat: no-repeat;"></span>
+            {%- else -%}
+              <span class="tk-finish-browser__circle tk-finish-browser__circle--{{ family }}" style="background: {{ block.settings.color }};"></span>
+            {%- endif -%}
             <span class="tk-finish-browser__label">{{ block.settings.name | escape }}</span>
           </a>
         {%- endif -%}
@@ -56,22 +76,117 @@
     margin: 0 auto 10px;
     border: 1px solid rgba(0,0,0,0.18);
     box-shadow:
-      inset 0 8px 14px -4px rgba(255,255,255,0.45),
-      inset 0 -10px 16px -6px rgba(0,0,0,0.45),
       inset 0 0 0 1px rgba(255,255,255,0.08),
       0 2px 4px rgba(0,0,0,0.08),
       0 6px 16px rgba(0,0,0,0.18);
     position: relative;
+    overflow: hidden;
   }
   .tk-finish-browser__circle::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background:
-      radial-gradient(ellipse 70% 50% at 35% 25%, rgba(255,255,255,0.30), rgba(255,255,255,0) 60%),
-      radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.30), rgba(0,0,0,0) 65%);
     pointer-events: none;
+  }
+
+  /* POLISHED — high gloss with sharp specular highlight (mirror) */
+  .tk-finish-browser__circle--polished {
+    box-shadow:
+      inset 0 10px 16px -2px rgba(255,255,255,0.65),
+      inset 0 -12px 20px -4px rgba(0,0,0,0.55),
+      inset 0 0 0 1px rgba(255,255,255,0.15),
+      0 2px 4px rgba(0,0,0,0.10),
+      0 6px 18px rgba(0,0,0,0.22);
+  }
+  .tk-finish-browser__circle--polished::after {
+    background:
+      radial-gradient(ellipse 35% 22% at 35% 22%, rgba(255,255,255,0.85), rgba(255,255,255,0) 70%),
+      radial-gradient(ellipse 80% 60% at 70% 90%, rgba(0,0,0,0.45), rgba(0,0,0,0) 65%);
+  }
+
+  /* BRUSHED — horizontal striations, dampened gloss */
+  .tk-finish-browser__circle--brushed {
+    box-shadow:
+      inset 0 6px 12px -4px rgba(255,255,255,0.30),
+      inset 0 -8px 14px -6px rgba(0,0,0,0.35),
+      inset 0 0 0 1px rgba(255,255,255,0.06),
+      0 2px 4px rgba(0,0,0,0.08),
+      0 6px 14px rgba(0,0,0,0.16);
+  }
+  .tk-finish-browser__circle--brushed::after {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.06) 0,
+        rgba(255,255,255,0.06) 1px,
+        rgba(0,0,0,0.05) 1px,
+        rgba(0,0,0,0.05) 2px
+      ),
+      radial-gradient(ellipse 70% 45% at 35% 28%, rgba(255,255,255,0.18), rgba(255,255,255,0) 60%),
+      radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.22), rgba(0,0,0,0) 65%);
+  }
+
+  /* SATIN — uniform soft sheen (default-ish mid look) */
+  .tk-finish-browser__circle--satin {
+    box-shadow:
+      inset 0 8px 14px -4px rgba(255,255,255,0.40),
+      inset 0 -10px 16px -6px rgba(0,0,0,0.40),
+      inset 0 0 0 1px rgba(255,255,255,0.08),
+      0 2px 4px rgba(0,0,0,0.08),
+      0 6px 16px rgba(0,0,0,0.18);
+  }
+  .tk-finish-browser__circle--satin::after {
+    background:
+      radial-gradient(ellipse 65% 45% at 35% 28%, rgba(255,255,255,0.28), rgba(255,255,255,0) 65%),
+      radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.28), rgba(0,0,0,0) 65%);
+  }
+
+  /* MATTE — minimal highlight, almost flat */
+  .tk-finish-browser__circle--matte {
+    box-shadow:
+      inset 0 4px 8px -4px rgba(255,255,255,0.18),
+      inset 0 -6px 10px -6px rgba(0,0,0,0.30),
+      inset 0 0 0 1px rgba(255,255,255,0.04),
+      0 2px 4px rgba(0,0,0,0.10),
+      0 4px 12px rgba(0,0,0,0.14);
+  }
+  .tk-finish-browser__circle--matte::after {
+    background:
+      radial-gradient(ellipse 55% 35% at 35% 30%, rgba(255,255,255,0.10), rgba(255,255,255,0) 70%),
+      radial-gradient(ellipse 80% 55% at 70% 85%, rgba(0,0,0,0.18), rgba(0,0,0,0) 70%);
+  }
+
+  /* PHOTO — real product image as the swatch background */
+  .tk-finish-browser__circle--photo {
+    border: 1px solid rgba(0,0,0,0.10);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.20),
+      0 2px 4px rgba(0,0,0,0.10),
+      0 6px 16px rgba(0,0,0,0.20);
+  }
+  .tk-finish-browser__circle--photo::after {
+    background:
+      radial-gradient(ellipse 65% 30% at 50% 18%, rgba(255,255,255,0.22), rgba(255,255,255,0) 70%),
+      radial-gradient(ellipse 80% 35% at 50% 92%, rgba(0,0,0,0.18), rgba(0,0,0,0) 70%);
+  }
+
+  /* PATINA — soft mottled aged look */
+  .tk-finish-browser__circle--patina {
+    box-shadow:
+      inset 0 5px 10px -4px rgba(255,235,200,0.22),
+      inset 0 -8px 14px -6px rgba(0,0,0,0.40),
+      inset 0 0 0 1px rgba(255,255,255,0.05),
+      0 2px 4px rgba(0,0,0,0.10),
+      0 5px 14px rgba(0,0,0,0.18);
+  }
+  .tk-finish-browser__circle--patina::after {
+    background:
+      radial-gradient(circle at 25% 30%, rgba(255,255,255,0.15), rgba(255,255,255,0) 25%),
+      radial-gradient(circle at 65% 60%, rgba(0,0,0,0.18), rgba(0,0,0,0) 30%),
+      radial-gradient(circle at 80% 25%, rgba(255,255,255,0.08), rgba(255,255,255,0) 22%),
+      radial-gradient(ellipse 60% 40% at 35% 28%, rgba(255,255,255,0.18), rgba(255,255,255,0) 65%),
+      radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.28), rgba(0,0,0,0) 65%);
   }
   .tk-finish-browser__label {
     font-family: var(--tk-font-body);
@@ -127,6 +242,12 @@
           "type": "url",
           "id": "url",
           "label": "Collection link"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Swatch image URL (optional, overrides color)",
+          "info": "Paste any product image URL. The image will be cropped to a circle. Leave blank to use the swatch color."
         }
       ]
     }

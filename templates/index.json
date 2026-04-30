@@ -15,7 +15,7 @@
         "height": 640,
         "eyebrow": "Authorized Top Knobs Dealer",
         "heading": "Elevate<br>Every Detail",
-        "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections — with free shipping and a lifetime warranty.",
+        "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections \u2014 with free shipping and a lifetime warranty.",
         "btn1_label": "Shop Now",
         "btn2_label": "What's New"
       }
@@ -26,7 +26,7 @@
         "item1": {
           "type": "item",
           "settings": {
-            "icon": "◇",
+            "icon": "\u25c7",
             "title": "Lowest Price Guarantee",
             "subtitle": "Beat any authorized dealer price"
           }
@@ -34,7 +34,7 @@
         "item2": {
           "type": "item",
           "settings": {
-            "icon": "◇",
+            "icon": "\u25c7",
             "title": "Free Shipping $99+",
             "subtitle": "On all orders over $99"
           }
@@ -42,15 +42,15 @@
         "item3": {
           "type": "item",
           "settings": {
-            "icon": "◇",
+            "icon": "\u25c7",
             "title": "Sample Program",
-            "subtitle": "Try before you buy — we refund samples"
+            "subtitle": "Try before you buy \u2014 we refund samples"
           }
         },
         "item4": {
           "type": "item",
           "settings": {
-            "icon": "◇",
+            "icon": "\u25c7",
             "title": "Lifetime Warranty",
             "subtitle": "All Top Knobs products fully warranted"
           }
@@ -58,7 +58,7 @@
         "item5": {
           "type": "item",
           "settings": {
-            "icon": "◇",
+            "icon": "\u25c7",
             "title": "Trade Pricing",
             "subtitle": "Special pricing for design professionals"
           }
@@ -141,7 +141,7 @@
           "type": "item",
           "settings": {
             "title": "The Serene Collection",
-            "description": "Inspired by nature's calm — organic silhouettes in honey bronze and brushed nickel.",
+            "description": "Inspired by nature's calm \u2014 organic silhouettes in honey bronze and brushed nickel.",
             "badge": "BESTSELLER",
             "image_asset": "serene.jpg",
             "url": "/collections/top-knobs-serene"
@@ -150,7 +150,7 @@
         "col3": {
           "type": "item",
           "settings": {
-            "title": "The CHAREAU® Collection",
+            "title": "The CHAREAU\u00ae Collection",
             "description": "French-inspired artistry with refined proportions for the discerning interior.",
             "badge": "",
             "image_asset": "chareau.jpg",
@@ -208,9 +208,10 @@
         "fin1": {
           "type": "finish",
           "settings": {
-            "color": "#5d4a30",
+            "color": "#5e5132",
             "name": "Aged Bronze",
-            "url": "/collections/aged-bronze-finish"
+            "url": "/collections/aged-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-DB643-O_1.png?v=1777192695"
           }
         },
         "fin2": {
@@ -218,7 +219,8 @@
           "settings": {
             "color": "#6f6c64",
             "name": "Antique Pewter",
-            "url": "/collections/antique-pewter-finish"
+            "url": "/collections/antique-pewter-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PTA.png?v=1777201726"
           }
         },
         "fin3": {
@@ -226,7 +228,8 @@
           "settings": {
             "color": "#bcb6a8",
             "name": "Ash Gray",
-            "url": "/collections/ash-gray-finish"
+            "url": "/collections/ash-gray-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK3128AG_1.png?v=1777202106"
           }
         },
         "fin4": {
@@ -234,7 +237,8 @@
           "settings": {
             "color": "#9c9a93",
             "name": "Brushed Nickel",
-            "url": "/collections/brushed-nickel-finish"
+            "url": "/collections/brushed-nickel-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A836-BN_1.png?v=1777192634"
           }
         },
         "fin5": {
@@ -242,7 +246,8 @@
           "settings": {
             "color": "#bdb9ad",
             "name": "Brushed Satin Nickel",
-            "url": "/collections/brushed-satin-nickel-finish"
+            "url": "/collections/brushed-satin-nickel-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK138BSN.png?v=1777201737"
           }
         },
         "fin6": {
@@ -250,23 +255,26 @@
           "settings": {
             "color": "#1d1d1f",
             "name": "Flat Black",
-            "url": "/collections/flat-black-finish"
+            "url": "/collections/flat-black-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147BLK.png?v=1777201726"
           }
         },
         "fin7": {
           "type": "finish",
           "settings": {
-            "color": "#5a3e26",
+            "color": "#5d3530",
             "name": "German Bronze",
-            "url": "/collections/german-bronze-finish"
+            "url": "/collections/german-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147GBZ.png?v=1777201726"
           }
         },
         "fin8": {
           "type": "finish",
           "settings": {
-            "color": "#a37d3e",
+            "color": "#b48342",
             "name": "Honey Bronze",
-            "url": "/collections/honey-bronze-finish"
+            "url": "/collections/honey-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK724HB.png?v=1777202049"
           }
         },
         "fin9": {
@@ -274,15 +282,17 @@
           "settings": {
             "color": "#0d0d0d",
             "name": "Matte Black",
-            "url": "/collections/matte-black-finish"
+            "url": "/collections/matte-black-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A825-BL_1.png?v=1777192629"
           }
         },
         "fin10": {
           "type": "finish",
           "settings": {
-            "color": "#2d1f12",
+            "color": "#2a1a0e",
             "name": "Oil Rubbed Bronze",
-            "url": "/collections/oil-rubbed-bronze-finish"
+            "url": "/collections/oil-rubbed-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147ORB.png?v=1777201726"
           }
         },
         "fin11": {
@@ -290,7 +300,8 @@
           "settings": {
             "color": "#d8dde0",
             "name": "Polished Chrome",
-            "url": "/collections/polished-chrome-finish"
+            "url": "/collections/polished-chrome-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PC.png?v=1777201726"
           }
         },
         "fin12": {
@@ -298,15 +309,17 @@
           "settings": {
             "color": "#c8c2b0",
             "name": "Polished Nickel",
-            "url": "/collections/polished-nickel-finish"
+            "url": "/collections/polished-nickel-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147PN.png?v=1777201727"
           }
         },
         "fin13": {
           "type": "finish",
           "settings": {
-            "color": "#4a3328",
+            "color": "#352620",
             "name": "Sable",
-            "url": "/collections/sable-finish"
+            "url": "/collections/sable-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK716SAB.png?v=1777201685"
           }
         },
         "fin14": {
@@ -314,31 +327,35 @@
           "settings": {
             "color": "#525a62",
             "name": "Slate",
-            "url": "/collections/slate-finish"
+            "url": "/collections/slate-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A836-SL_1.png?v=1777192634"
           }
         },
         "fin15": {
           "type": "finish",
           "settings": {
-            "color": "#6b4d2f",
+            "color": "#7d5a30",
             "name": "Tuscan Bronze",
-            "url": "/collections/tuscan-bronze-finish"
+            "url": "/collections/tuscan-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK147TB.png?v=1777201726"
           }
         },
         "fin16": {
           "type": "finish",
           "settings": {
-            "color": "#28201a",
+            "color": "#1f1814",
             "name": "Umbrio",
-            "url": "/collections/umbrio-finish"
+            "url": "/collections/umbrio-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/TPK-TK204UM.png?v=1777201717"
           }
         },
         "fin17": {
           "type": "finish",
           "settings": {
-            "color": "#4f3522",
+            "color": "#6e4326",
             "name": "Venetian Bronze",
-            "url": "/collections/venetian-bronze-finish"
+            "url": "/collections/venetian-bronze-finish",
+            "image_url": "https://cdn.shopify.com/s/files/1/0768/9469/9691/files/ATL-A826-VB_1.png?v=1777192631"
           }
         }
       },
