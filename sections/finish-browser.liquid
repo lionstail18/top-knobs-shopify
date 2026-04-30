@@ -54,8 +54,24 @@
     height: 64px;
     border-radius: 50%;
     margin: 0 auto 10px;
-    border: 2px solid var(--color-border);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.18);
+    box-shadow:
+      inset 0 8px 14px -4px rgba(255,255,255,0.45),
+      inset 0 -10px 16px -6px rgba(0,0,0,0.45),
+      inset 0 0 0 1px rgba(255,255,255,0.08),
+      0 2px 4px rgba(0,0,0,0.08),
+      0 6px 16px rgba(0,0,0,0.18);
+    position: relative;
+  }
+  .tk-finish-browser__circle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse 70% 50% at 35% 25%, rgba(255,255,255,0.30), rgba(255,255,255,0) 60%),
+      radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.30), rgba(0,0,0,0) 65%);
+    pointer-events: none;
   }
   .tk-finish-browser__label {
     font-family: var(--tk-font-body);

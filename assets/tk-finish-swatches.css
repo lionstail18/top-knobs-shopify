@@ -12,11 +12,25 @@
   height: var(--tk-swatch-size);
   border-radius: 50%;
   background: #d8d8d4; /* fallback */
-  border: 1px solid rgba(0,0,0,0.12);
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -1px 2px rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow:
+    inset 0 calc(var(--tk-swatch-size) * 0.12) calc(var(--tk-swatch-size) * 0.22) calc(var(--tk-swatch-size) * -0.06) rgba(255,255,255,0.45),
+    inset 0 calc(var(--tk-swatch-size) * -0.16) calc(var(--tk-swatch-size) * 0.25) calc(var(--tk-swatch-size) * -0.09) rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    0 1px 2px rgba(0,0,0,0.10);
   position: relative;
   vertical-align: middle;
   flex-shrink: 0;
+}
+.tk-swatch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 70% 50% at 35% 25%, rgba(255,255,255,0.28), rgba(255,255,255,0) 60%),
+    radial-gradient(ellipse 80% 60% at 70% 85%, rgba(0,0,0,0.28), rgba(0,0,0,0) 65%);
+  pointer-events: none;
 }
 
 /* Light finishes need a stronger outline so they don't disappear on white bg */
