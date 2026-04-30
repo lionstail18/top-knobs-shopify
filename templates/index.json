@@ -80,35 +80,36 @@
           "type": "item",
           "settings": {
             "title": "Knobs",
-            "count": "1,200+"
+            "count": "1,200+",
+            "image_asset": "knobs.jpg",
+            "url": "/collections/knobs"
           }
         },
         "cat2": {
           "type": "item",
           "settings": {
             "title": "Pulls & Handles",
-            "count": "2,400+"
+            "count": "2,400+",
+            "image_asset": "pulls.jpg",
+            "url": "/collections/pulls-and-handles"
           }
         },
         "cat3": {
           "type": "item",
           "settings": {
             "title": "Appliance Pulls",
-            "count": "300+"
+            "count": "300+",
+            "image_asset": "appliancepull.jpg",
+            "url": "/collections/appliance-pulls"
           }
         },
         "cat4": {
           "type": "item",
           "settings": {
             "title": "Bath Accessories",
-            "count": "400+"
-          }
-        },
-        "cat5": {
-          "type": "item",
-          "settings": {
-            "title": "Hooks",
-            "count": "150+"
+            "count": "400+",
+            "image_asset": "bath.jpg",
+            "url": "/collections/bathroom-hardware"
           }
         }
       },
@@ -116,8 +117,7 @@
         "cat1",
         "cat2",
         "cat3",
-        "cat4",
-        "cat5"
+        "cat4"
       ],
       "settings": {
         "eyebrow": "Explore Our Range",

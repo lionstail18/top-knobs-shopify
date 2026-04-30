@@ -15,6 +15,11 @@
                     loading: 'lazy',
                     class: 'tk-cat-grid__img',
                     alt: block.settings.title | escape -}}
+              {%- elsif block.settings.image_asset != blank -%}
+                <img src="{{ block.settings.image_asset | asset_url }}"
+                     alt="{{ block.settings.title | escape }}"
+                     loading="lazy"
+                     class="tk-cat-grid__img" />
               {%- else -%}
                 <div class="tk-cat-grid__img tk-cat-grid__img--placeholder"></div>
               {%- endif -%}
@@ -52,8 +57,8 @@
   }
   .tk-cat-grid__grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
   .tk-cat-grid__card {
     display: block;
@@ -72,7 +77,7 @@
   .tk-cat-grid__img {
     display: block;
     width: 100%;
-    height: 200px;
+    height: 240px;
     object-fit: cover;
     object-position: center;
   }
@@ -93,10 +98,12 @@
     margin: 0;
   }
   @media (max-width: 1024px) {
-    .tk-cat-grid__grid { grid-template-columns: repeat(3, 1fr); }
+    .tk-cat-grid__grid { grid-template-columns: repeat(2, 1fr); }
+    .tk-cat-grid__img { height: 220px; }
   }
   @media (max-width: 600px) {
-    .tk-cat-grid__grid { grid-template-columns: repeat(2, 1fr); }
+    .tk-cat-grid__grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .tk-cat-grid__img { height: 160px; }
     .tk-cat-grid__h2 { font-size: 32px; }
   }
 {%- endstyle -%}
@@ -129,7 +136,13 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Category image"
+          "label": "Category image (Theme Editor upload)"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Bundled asset filename (fallback)",
+          "info": "Filename of an image in /assets/ (e.g. knobs.jpg). Used when no Theme Editor image is set."
         },
         {
           "type": "text",
