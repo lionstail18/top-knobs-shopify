@@ -208,12 +208,36 @@
         "fin1": {
           "type": "finish",
           "settings": {
-            "color": "#c5c4bf",
-            "name": "Polished Nickel",
-            "url": "/collections/polished-nickel-finish"
+            "color": "#6b5a44",
+            "name": "Aged Bronze",
+            "url": "/collections/aged-bronze-finish"
           }
         },
         "fin2": {
+          "type": "finish",
+          "settings": {
+            "color": "#7a7872",
+            "name": "Antique Pewter",
+            "url": "/collections/antique-pewter-finish"
+          }
+        },
+        "fin3": {
+          "type": "finish",
+          "settings": {
+            "color": "#a8a59c",
+            "name": "Ash Gray",
+            "url": "/collections/ash-gray-finish"
+          }
+        },
+        "fin4": {
+          "type": "finish",
+          "settings": {
+            "color": "#b0aea4",
+            "name": "Brushed Nickel",
+            "url": "/collections/brushed-nickel-finish"
+          }
+        },
+        "fin5": {
           "type": "finish",
           "settings": {
             "color": "#a9a9a3",
@@ -221,7 +245,7 @@
             "url": "/collections/brushed-satin-nickel-finish"
           }
         },
-        "fin3": {
+        "fin6": {
           "type": "finish",
           "settings": {
             "color": "#222222",
@@ -229,7 +253,15 @@
             "url": "/collections/flat-black-finish"
           }
         },
-        "fin4": {
+        "fin7": {
+          "type": "finish",
+          "settings": {
+            "color": "#4a3d31",
+            "name": "German Bronze",
+            "url": "/collections/german-bronze-finish"
+          }
+        },
+        "fin8": {
           "type": "finish",
           "settings": {
             "color": "#8b6f47",
@@ -237,7 +269,15 @@
             "url": "/collections/honey-bronze-finish"
           }
         },
-        "fin5": {
+        "fin9": {
+          "type": "finish",
+          "settings": {
+            "color": "#1a1a1a",
+            "name": "Matte Black",
+            "url": "/collections/matte-black-finish"
+          }
+        },
+        "fin10": {
           "type": "finish",
           "settings": {
             "color": "#3d2c1f",
@@ -245,28 +285,60 @@
             "url": "/collections/oil-rubbed-bronze-finish"
           }
         },
-        "fin6": {
-          "type": "finish",
-          "settings": {
-            "color": "#d4af37",
-            "name": "Polished Brass",
-            "url": "/collections/polished-brass-finish"
-          }
-        },
-        "fin7": {
-          "type": "finish",
-          "settings": {
-            "color": "#a8895c",
-            "name": "Champagne Bronze",
-            "url": "/collections/champagne-bronze-finish"
-          }
-        },
-        "fin8": {
+        "fin11": {
           "type": "finish",
           "settings": {
             "color": "#cccccc",
             "name": "Polished Chrome",
             "url": "/collections/polished-chrome-finish"
+          }
+        },
+        "fin12": {
+          "type": "finish",
+          "settings": {
+            "color": "#c5c4bf",
+            "name": "Polished Nickel",
+            "url": "/collections/polished-nickel-finish"
+          }
+        },
+        "fin13": {
+          "type": "finish",
+          "settings": {
+            "color": "#3a2820",
+            "name": "Sable",
+            "url": "/collections/sable-finish"
+          }
+        },
+        "fin14": {
+          "type": "finish",
+          "settings": {
+            "color": "#5a5e62",
+            "name": "Slate",
+            "url": "/collections/slate-finish"
+          }
+        },
+        "fin15": {
+          "type": "finish",
+          "settings": {
+            "color": "#5a4633",
+            "name": "Tuscan Bronze",
+            "url": "/collections/tuscan-bronze-finish"
+          }
+        },
+        "fin16": {
+          "type": "finish",
+          "settings": {
+            "color": "#3a3027",
+            "name": "Umbrio",
+            "url": "/collections/umbrio-finish"
+          }
+        },
+        "fin17": {
+          "type": "finish",
+          "settings": {
+            "color": "#5e4632",
+            "name": "Venetian Bronze",
+            "url": "/collections/venetian-bronze-finish"
           }
         }
       },
@@ -278,7 +350,16 @@
         "fin5",
         "fin6",
         "fin7",
-        "fin8"
+        "fin8",
+        "fin9",
+        "fin10",
+        "fin11",
+        "fin12",
+        "fin13",
+        "fin14",
+        "fin15",
+        "fin16",
+        "fin17"
       ],
       "settings": {
         "eyebrow": "Find Your Perfect Match",
