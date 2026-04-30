@@ -91,6 +91,7 @@
             "title": "Pulls & Handles",
             "count": "2,400+",
             "image_asset": "pulls.jpg",
+            "image_fit": "contain",
             "url": "/collections/pulls-and-handles"
           }
         },
@@ -100,6 +101,7 @@
             "title": "Appliance Pulls",
             "count": "300+",
             "image_asset": "appliancepull.jpg",
+            "image_fit": "contain",
             "url": "/collections/appliance-pulls"
           }
         },
@@ -108,7 +110,7 @@
           "settings": {
             "title": "Bath Accessories",
             "count": "400+",
-            "image_asset": "bath.jpg",
+            "image_asset": "bath2.jpg",
             "url": "/collections/bathroom-hardware"
           }
         }

@@ -8,10 +8,11 @@
     <div class="tk-cat-grid__grid">
       {%- for block in section.blocks -%}
         {%- if block.type == 'item' -%}
+          {%- assign fit = block.settings.image_fit | default: 'cover' -%}
           <a class="tk-cat-grid__card" href="{{ block.settings.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
-            <div class="tk-cat-grid__img-wrap">
+            <div class="tk-cat-grid__img-wrap tk-cat-grid__img-wrap--{{ fit }}">
               {%- if block.settings.image != blank -%}
-                {{- block.settings.image | image_url: width: 600 | image_tag:
+                {{- block.settings.image | image_url: width: 800 | image_tag:
                     loading: 'lazy',
                     class: 'tk-cat-grid__img',
                     alt: block.settings.title | escape -}}
@@ -73,13 +74,20 @@
   .tk-cat-grid__img-wrap {
     overflow: hidden;
     margin-bottom: 14px;
+    aspect-ratio: 4 / 5;
+    background: var(--color-bg);
   }
   .tk-cat-grid__img {
     display: block;
     width: 100%;
-    height: 240px;
-    object-fit: cover;
+    height: 100%;
     object-position: center;
+  }
+  .tk-cat-grid__img-wrap--cover .tk-cat-grid__img {
+    object-fit: cover;
+  }
+  .tk-cat-grid__img-wrap--contain .tk-cat-grid__img {
+    object-fit: contain;
   }
   .tk-cat-grid__img--placeholder {
     background: var(--color-border);
@@ -99,11 +107,9 @@
   }
   @media (max-width: 1024px) {
     .tk-cat-grid__grid { grid-template-columns: repeat(2, 1fr); }
-    .tk-cat-grid__img { height: 220px; }
   }
   @media (max-width: 600px) {
     .tk-cat-grid__grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .tk-cat-grid__img { height: 160px; }
     .tk-cat-grid__h2 { font-size: 32px; }
   }
 {%- endstyle -%}
@@ -143,6 +149,16 @@
           "id": "image_asset",
           "label": "Bundled asset filename (fallback)",
           "info": "Filename of an image in /assets/ (e.g. knobs.jpg). Used when no Theme Editor image is set."
+        },
+        {
+          "type": "select",
+          "id": "image_fit",
+          "label": "Image fit",
+          "options": [
+            { "value": "cover", "label": "Cover (fills tile, may crop)" },
+            { "value": "contain", "label": "Contain (shows whole image, may have whitespace)" }
+          ],
+          "default": "cover"
         },
         {
           "type": "text",
