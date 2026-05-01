@@ -1,0 +1,4 @@
+/primary-finish-*.csv
+/scripts/*-progress.json
+.DS_Store
+*.log
