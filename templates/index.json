@@ -80,6 +80,7 @@
           "type": "item",
           "settings": {
             "title": "Knobs",
+            "count": "800+",
             "image_asset": "knobs.jpg",
             "url": "/collections/knobs"
           }
@@ -88,6 +89,7 @@
           "type": "item",
           "settings": {
             "title": "Pulls & Handles",
+            "count": "3,600+",
             "image_asset": "pulls.jpg",
             "image_fit": "contain",
             "url": "/collections/pulls-and-handles"
@@ -97,6 +99,7 @@
           "type": "item",
           "settings": {
             "title": "Appliance Pulls",
+            "count": "1,000+",
             "image_asset": "appliancepull.jpg",
             "image_fit": "contain",
             "url": "/collections/appliance-pulls"
@@ -106,6 +109,7 @@
           "type": "item",
           "settings": {
             "title": "Bath Accessories",
+            "count": "700+",
             "image_asset": "bath2.jpg",
             "url": "/collections/bathroom-hardware-all"
           }
