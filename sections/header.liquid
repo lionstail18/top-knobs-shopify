@@ -67,7 +67,7 @@
 {%- style -%}
   /* ── Top Knobs wordmark ────────────────────────────────────── */
   .tk-wordmark {
-    display: block;
+    display: inline-block;
     text-decoration: none;
     color: inherit;
     line-height: 1;
@@ -75,6 +75,7 @@
   .tk-wordmark__row1 {
     display: flex;
     align-items: baseline;
+    justify-content: space-between;
     gap: 6px;
   }
   .tk-wordmark__brand {
@@ -101,6 +102,7 @@
     color: rgb(var(--text-color));
     opacity: 0.6;
     text-transform: uppercase;
+    text-align: right;
     margin-top: 3px;
   }
 
