@@ -189,11 +189,22 @@
     {%- paginate collection.products by per_page -%}
       {%- if collection.products.size > 0 -%}
         <div class="tk-coll__grid">
+          {%- comment -%} Render products with images first, then products without images. Per-page partition keeps the top of every page free of placeholder squares while preserving the merchant's chosen sort order. {%- endcomment -%}
           {%- for product in collection.products -%}
             {%- if apply_dedup -%}
               {%- unless product.tags contains 'primary-finish' -%}{%- continue -%}{%- endunless -%}
             {%- endif -%}
-            {%- render 'tk-product-card', product: product -%}
+            {%- if product.featured_image -%}
+              {%- render 'tk-product-card', product: product -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- for product in collection.products -%}
+            {%- if apply_dedup -%}
+              {%- unless product.tags contains 'primary-finish' -%}{%- continue -%}{%- endunless -%}
+            {%- endif -%}
+            {%- unless product.featured_image -%}
+              {%- render 'tk-product-card', product: product -%}
+            {%- endunless -%}
           {%- endfor -%}
         </div>
 
