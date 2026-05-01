@@ -16,7 +16,29 @@
         "heading": "Find Your Perfect Hardware",
         "suggestions": "Honey Bronze Knobs, Bar Pulls, Pemberton Collection, Brushed Nickel Pulls, Appliance Pulls, Serene Collection"
       }
+    },
+    "17776369152757f884": {
+      "type": "apps",
+      "blocks": {
+        "algolia_ai_search_discovery_instantsearch_K4rPJq": {
+          "type": "shopify://apps/algolia-ai-search-discovery/blocks/instantsearch/57bb7f86-d5fe-4d43-96ca-3953324494cf",
+          "settings": {
+            "disable_skeleton_loader": false,
+            "custom_skeleton_mockup": ""
+          }
+        }
+      },
+      "block_order": [
+        "algolia_ai_search_discovery_instantsearch_K4rPJq"
+      ],
+      "settings": {
+        "full_width": false,
+        "show_space": true
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main",
+    "17776369152757f884"
+  ]
 }
