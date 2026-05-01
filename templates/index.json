@@ -384,7 +384,8 @@
         "eyebrow": "Before You Commit",
         "heading": "Try Before<br>You Buy",
         "body": "Unsure which finish is right for your space? Order samples and see them in your home. We'll refund the cost of samples you don't choose toward your final order.",
-        "btn_label": "Learn About Our Sample Program"
+        "btn_label": "Learn About Our Sample Program",
+        "image_asset": "samples.jpg"
       }
     },
     "trade-cta": {

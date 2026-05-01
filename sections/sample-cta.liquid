@@ -23,6 +23,11 @@
           loading: 'lazy',
           class: 'tk-sample-cta__img',
           alt: section.settings.heading | escape -}}
+    {%- elsif section.settings.image_asset != blank -%}
+      <img src="{{ section.settings.image_asset | asset_url }}"
+           alt="{{ section.settings.heading | escape }}"
+           loading="lazy"
+           class="tk-sample-cta__img" />
     {%- else -%}
       <div class="tk-sample-cta__img tk-sample-cta__img--placeholder"></div>
     {%- endif -%}
@@ -84,7 +89,13 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image"
+      "label": "Image (Theme Editor upload)"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Bundled asset filename (fallback)",
+      "info": "Filename of an image in /assets/ (e.g. samples.jpg). Used when no Theme Editor image is set."
     },
     {
       "type": "text",
