@@ -124,11 +124,11 @@
     "social_instagram_url": "#",
     "social_pinterest_url": "#",
     "social_twitter_url": "#",
+    "show_search_types": false,
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
     "predictive_search_include_skus": true,
     "prompts_mobile": true,
-    "show_search_types": false,
     "enable_speech_search": false,
     "speech_icon_color": "#0096a6",
     "show_currency_code": false,
@@ -167,9 +167,9 @@
     "heading_type_scale": "1.3",
     "content_for_index": [],
     "blocks": {
-      "208873322266159137": {
-        "type": "shopify://apps/searchanise-search-filter/blocks/app-embed-v2/d8f24ada-02b1-458a-bbeb-5bf16d5c921e",
-        "disabled": true,
+      "11735689235857492391": {
+        "type": "shopify://apps/algolia-ai-search-discovery/blocks/autocomplete/57bb7f86-d5fe-4d43-96ca-3953324494cf",
+        "disabled": false,
         "settings": {}
       }
     }
