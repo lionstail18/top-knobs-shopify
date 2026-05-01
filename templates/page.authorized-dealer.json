@@ -21,7 +21,7 @@
         "risks_sub": "Not all online sellers are authorized. Here's what you risk when buying Top Knobs from an unauthorized source.",
         "guarantee_heading": "Our Guarantee to You",
         "guarantee_body1": "As an authorized Top Knobs dealer, we stand behind every product we sell. Every order comes with the manufacturer's lifetime limited warranty, genuine Top Knobs packaging, and the peace of mind that comes from buying through an official channel.",
-        "guarantee_body2": "We also offer the lowest prices online — and we'll match any authorized dealer price. If you find the same product cheaper elsewhere from an authorized source, contact us and we'll beat it."
+        "guarantee_body2": "We also offer the lowest prices online — and we'll match any authorized dealer's advertised price. If you find the same product at a lower advertised price from an authorized source, contact us and we'll match it."
       },
       "blocks": {
         "r1": { "type": "risk", "settings": { "title": "Grey Market Risk", "description": "Unauthorized sellers may offer counterfeit or grey-market products that look identical but fail quality and finish standards. You have no recourse if something goes wrong." } },
