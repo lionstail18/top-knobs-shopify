@@ -26,8 +26,32 @@
               {%- endif -%}
             </div>
             <p class="tk-cat-grid__name">{{ block.settings.title | escape }}</p>
+            {%- comment -%} Resolve count: manual override > derived from linked collection > nothing {%- endcomment -%}
+            {%- assign count_display = blank -%}
             {%- if block.settings.count != blank -%}
-              <p class="tk-cat-grid__count">{{ block.settings.count | escape }} styles</p>
+              {%- assign count_display = block.settings.count -%}
+            {%- else -%}
+              {%- assign coll_url = block.settings.url | default: '' -%}
+              {%- assign coll_handle = coll_url | split: '/collections/' | last | split: '?' | first | split: '/' | first -%}
+              {%- if coll_handle != '' and collections[coll_handle].products_count > 0 -%}
+                {%- assign n = collections[coll_handle].products_count -%}
+                {%- assign nh = n | divided_by: 100 | times: 100 -%}
+                {%- if nh >= 1000 -%}
+                  {%- assign th = nh | divided_by: 1000 -%}
+                  {%- assign rem = nh | modulo: 1000 -%}
+                  {%- if rem == 0 -%}
+                    {%- assign count_display = th | append: ',000+' -%}
+                  {%- else -%}
+                    {%- assign hu = rem | divided_by: 100 -%}
+                    {%- assign count_display = th | append: ',' | append: hu | append: '00+' -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- assign count_display = nh | append: '+' -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- if count_display != blank -%}
+              <p class="tk-cat-grid__count">{{ count_display }} styles</p>
             {%- endif -%}
           </a>
         {%- endif -%}
