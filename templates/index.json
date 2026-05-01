@@ -27,8 +27,8 @@
           "type": "item",
           "settings": {
             "icon": "\u25c7",
-            "title": "Price Match Promise",
-            "subtitle": "Match any authorized dealer's advertised price"
+            "title": "Price Match Guarantee",
+            "subtitle": ""
           }
         },
         "item2": {
@@ -36,7 +36,7 @@
           "settings": {
             "icon": "\u25c7",
             "title": "Free Shipping $99+",
-            "subtitle": "On all orders over $99"
+            "subtitle": ""
           }
         },
         "item3": {
@@ -44,7 +44,7 @@
           "settings": {
             "icon": "\u25c7",
             "title": "Sample Program",
-            "subtitle": "Try before you buy \u2014 we refund samples"
+            "subtitle": ""
           }
         },
         "item4": {
@@ -52,7 +52,7 @@
           "settings": {
             "icon": "\u25c7",
             "title": "Lifetime Warranty",
-            "subtitle": "All Top Knobs products fully warranted"
+            "subtitle": ""
           }
         },
         "item5": {
@@ -60,7 +60,7 @@
           "settings": {
             "icon": "\u25c7",
             "title": "Trade Pricing",
-            "subtitle": "Special pricing for design professionals"
+            "subtitle": ""
           }
         }
       },

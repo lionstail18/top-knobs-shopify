@@ -250,25 +250,65 @@
   </div>
 </div>
 
-<!-- Complete the Look -->
+<!-- Complete the Look — same design collection, same finish -->
 {%- if section.settings.show_complete_look -%}
-  {%- assign related_collection = product.collections.first -%}
-  {%- if related_collection != blank and related_collection.products.size > 1 -%}
-    <section class="tk-prod__related">
-      <div class="tk-prod__related-head">
-        <p class="tk-eyebrow">From the {{ related_collection.title | escape }}</p>
-        <h2 class="tk-prod__related-h2">Complete the Look</h2>
-      </div>
-      <div class="tk-prod__related-grid">
-        {%- assign shown = 0 -%}
-        {%- for related in related_collection.products -%}
-          {%- if related.id != product.id and shown < 3 -%}
-            {%- render 'tk-product-card', product: related -%}
-            {%- assign shown = shown | plus: 1 -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    </section>
+  {%- comment -%}
+    Find the product's "design collection" — the curated product line
+    (Pemberton, Transcend, Asbury, etc.) — by reading the "Collection: <name>"
+    tag and matching it against product.collections by title. This avoids
+    pulling auto-generated smart-collections (drill-centers, price-range,
+    style, material) which aren't meaningful "complete the look" sources.
+
+    Then filter that collection's products to ones in the SAME finish,
+    so a Flat Black Pemberton knob suggests other Flat Black Pemberton
+    pieces — actual cabinet hardware that would complete a real kitchen.
+  {%- endcomment -%}
+
+  {%- assign collection_tag_value = '' -%}
+  {%- for tag in product.tags -%}
+    {%- if tag contains 'Collection: ' -%}
+      {%- assign collection_tag_value = tag | replace: 'Collection: ', '' | strip -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign design_collection = blank -%}
+  {%- if collection_tag_value != blank -%}
+    {%- for c in product.collections -%}
+      {%- if c.title == collection_tag_value -%}
+        {%- assign design_collection = c -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- assign current_finish = product.metafields.top_knobs.finish_name.value -%}
+
+  {%- if design_collection != blank and current_finish != blank -%}
+    {%- capture related_cards -%}
+      {%- assign shown = 0 -%}
+      {%- for related in design_collection.products -%}
+        {%- if shown >= 3 -%}{%- break -%}{%- endif -%}
+        {%- if related.id == product.id -%}{%- continue -%}{%- endif -%}
+        {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
+        {%- if related_finish == current_finish -%}
+          {%- render 'tk-product-card', product: related -%}
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if shown > 0 -%}
+      <section class="tk-prod__related">
+        <div class="tk-prod__related-head">
+          <p class="tk-eyebrow">From the {{ design_collection.title | escape }} in {{ current_finish | escape }}</p>
+          <h2 class="tk-prod__related-h2">Complete the Look</h2>
+        </div>
+        <div class="tk-prod__related-grid">
+          {{ related_cards }}
+        </div>
+      </section>
+    {%- endif -%}
   {%- endif -%}
 {%- endif -%}
 
