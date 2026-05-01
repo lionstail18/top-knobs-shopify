@@ -167,10 +167,32 @@
       </div>
     {%- endif -%}
 
-    {%- paginate collection.products by 24 -%}
+    {%- comment -%}
+      Primary-finish dedup: collection pages should show one card per design
+      family (one product per "design root"), not one card per finish-SKU.
+      We skip non-primary-finish products in the render loop. We turn the
+      dedup OFF when:
+        - on a finish-specific collection (handle contains 'finish') —
+          everything is already one finish, no dedup needed
+        - any filter is active — user wants to see all matches
+        - the section setting `apply_primary_filter` is toggled off
+    {%- endcomment -%}
+    {%- assign apply_dedup = section.settings.apply_primary_filter -%}
+    {%- if collection.handle contains 'finish' -%}{%- assign apply_dedup = false -%}{%- endif -%}
+    {%- if has_active -%}{%- assign apply_dedup = false -%}{%- endif -%}
+    {%- if apply_dedup -%}
+      {%- assign per_page = 72 -%}
+    {%- else -%}
+      {%- assign per_page = 24 -%}
+    {%- endif -%}
+
+    {%- paginate collection.products by per_page -%}
       {%- if collection.products.size > 0 -%}
         <div class="tk-coll__grid">
           {%- for product in collection.products -%}
+            {%- if apply_dedup -%}
+              {%- unless product.tags contains 'primary-finish' -%}{%- continue -%}{%- endunless -%}
+            {%- endif -%}
             {%- render 'tk-product-card', product: product -%}
           {%- endfor -%}
         </div>
@@ -409,6 +431,14 @@
   "settings": [
     { "type": "image_picker", "id": "fallback_image", "label": "Fallback header image (used when collection has no image)" },
     { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true },
+    { "type": "header", "content": "Catalog dedup" },
+    {
+      "type": "checkbox",
+      "id": "apply_primary_filter",
+      "label": "Show only one product per design family",
+      "info": "Hides duplicate finish-SKUs of the same design on collection pages. Auto-disabled on finish-specific collections (e.g. /collections/honey-bronze-finish) and whenever a filter is active. Requires products to be tagged `primary-finish` — see scripts/tag-primary-finishes.py.",
+      "default": true
+    },
     { "type": "header", "content": "Default sort" },
     {
       "type": "select",

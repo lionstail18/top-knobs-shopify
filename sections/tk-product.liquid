@@ -110,7 +110,41 @@
     </div>
 
     <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="tk-prod__form" id="tk-prod-form">
-      <!-- Variant picker (finishes) -->
+      <!-- Family finish picker — sister products in the same design family -->
+      {%- comment -%}
+        Top Knobs catalog stores each finish as a separate Shopify product
+        (no variant axis). The family_finishes metafield carries the list of
+        sister products so this PDP can render a finish-picker that links to
+        each sibling. Active swatch is highlighted by matching finish_name.
+        Only renders when there's more than one finish in the family.
+      {%- endcomment -%}
+      {%- assign family_finishes = product.metafields.top_knobs.family_finishes.value -%}
+      {%- assign current_finish = product.metafields.top_knobs.finish_name.value -%}
+      {%- if family_finishes != blank and family_finishes.size > 1 -%}
+        <div class="tk-prod__option">
+          <p class="tk-prod__option-label">
+            Finish:
+            {%- if current_finish != blank -%}
+              <strong>{{ current_finish | escape }}</strong>
+            {%- endif -%}
+          </p>
+          <div class="tk-prod__swatches" role="list" aria-label="Available finishes">
+            {%- for finish in family_finishes -%}
+              {%- assign is_active = false -%}
+              {%- if current_finish == finish.name -%}{%- assign is_active = true -%}{%- endif -%}
+              <a class="tk-prod__swatch{% if is_active %} tk-prod__swatch--active{% endif %}"
+                 href="{{ routes.root_url }}products/{{ finish.handle }}"
+                 title="{{ finish.name | escape }}"
+                 {% if is_active %}aria-current="page"{% endif %}>
+                {%- render 'tk-finish-swatch', finish_name: finish.name, size: 36 -%}
+                <span class="tk-prod__swatch-name tk-prod__swatch-name--hidden">{{ finish.name | escape }}</span>
+              </a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- Variant picker (real variant axes — sizes, materials, etc.) -->
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
           <div class="tk-prod__option">
