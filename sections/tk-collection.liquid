@@ -9,7 +9,25 @@
   • Cleaned up filter counts: "Matte Black (1,234)" not "Matte Black 1234"
   • In-stock count formatted with comma separators
   • Sort dropdown moved into a cleaner toolbar
+  • Default sort enforced via redirect when ?sort_by= absent (configurable in schema)
 ============================================================ -->
+
+{%- comment -%}
+  Default-sort redirect: when a collection page is loaded without any sort
+  in the URL, redirect to the configured default. Runs as early as possible
+  to minimise visual flicker. Filters/page params are preserved.
+{%- endcomment -%}
+<script>
+  (function () {
+    try {
+      var url = new URL(window.location.href);
+      if (!url.searchParams.has('sort_by')) {
+        url.searchParams.set('sort_by', {{ section.settings.default_sort_by | default: 'price-descending' | json }});
+        window.location.replace(url.toString());
+      }
+    } catch (e) { /* no-op */ }
+  })();
+</script>
 
 <!-- Breadcrumb -->
 <div class="tk-coll__breadcrumb">
@@ -390,7 +408,24 @@
   "class": "tk-collection-section",
   "settings": [
     { "type": "image_picker", "id": "fallback_image", "label": "Fallback header image (used when collection has no image)" },
-    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true }
+    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true },
+    { "type": "header", "content": "Default sort" },
+    {
+      "type": "select",
+      "id": "default_sort_by",
+      "label": "Default sort order",
+      "info": "Applied when shoppers land on a collection page without a sort already in the URL. They can still change it via the dropdown.",
+      "options": [
+        { "value": "price-descending", "label": "Price: High to Low" },
+        { "value": "best-selling", "label": "Best selling" },
+        { "value": "manual", "label": "Featured (manual order)" },
+        { "value": "created-descending", "label": "Newest first" },
+        { "value": "price-ascending", "label": "Price: Low to High" },
+        { "value": "title-ascending", "label": "Alphabetical: A–Z" },
+        { "value": "title-descending", "label": "Alphabetical: Z–A" }
+      ],
+      "default": "price-descending"
+    }
   ]
 }
 {% endschema %}
