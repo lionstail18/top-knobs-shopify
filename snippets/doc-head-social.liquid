@@ -21,11 +21,29 @@
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:description" content="{{ og_description | escape }}">
 
-{%- if page_image -%}
-  <meta property="og:image" content="http:{{ page_image | image_url: width: 1200, height: 1200 }}">
-  <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200, height: 1200 }}">
-  <meta property="og:image:width" content="{{ page_image.width }}">
-  <meta property="og:image:height" content="{{ page_image.height }}">
+{%- comment -%}
+  Social share image — fall back chain so every page renders a rich card,
+  not just the few that have a page_image. Order: page-specific image →
+  theme share_image setting → store logo. The protocol is forced to https
+  on both og:image and og:image:secure_url; the previous theme used http
+  on the primary tag, which fails on https-only embedders.
+{%- endcomment -%}
+{%- liquid
+  assign social_image = page_image
+  if social_image == blank
+    assign social_image = settings.share_image
+  endif
+  if social_image == blank
+    assign social_image = settings.logo
+  endif
+-%}
+{%- if social_image != blank -%}
+  {%- assign social_image_url = social_image | image_url: width: 1200, height: 1200, crop: 'center' | prepend: 'https:' -%}
+  <meta property="og:image" content="{{ social_image_url }}">
+  <meta property="og:image:secure_url" content="{{ social_image_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta name="twitter:image" content="{{ social_image_url }}">
 {%- endif -%}
 
 {%- if request.page_type == 'product' -%}

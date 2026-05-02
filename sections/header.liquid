@@ -428,11 +428,16 @@
   {%- if search_is_minimised -%} data-is-search-minimised="true"{%- endif -%}
   style="--header-transition-speed: 300ms">
 
+  {%- comment -%}
+    Logo never wraps in <h1>. Earlier versions of this theme conditionally
+    wrapped the logo in an h1 on the homepage (and search), which produced
+    two h1 tags per page (logo + actual page heading). That breaks heading
+    hierarchy for SEO. The H1 should be the page's primary heading
+    (the hero title on home, the search heading on /search, etc.).
+    The logo_h1 section setting is retained but no longer has any effect.
+  {%- endcomment -%}
   {%- capture logo -%}
     <div class="header__logo header__logo--{{ section.settings.logo_position }} logo{% if center_logo %} text-center{% endif %} flex js-closes-menu">
-      {%- if request.page_type == 'index' and section.settings.logo_h1 -%}
-        <h1 class="logo__h1 m-0">
-      {%- endif -%}
         <a class="logo__link inline-block" href="{{ routes.root_url }}">
           {%- if section.settings.logo != blank -%}
             {%- liquid
@@ -461,9 +466,6 @@
             </span>
           {%- endif -%}
         </a>
-      {%- if request.page_type == 'index' and section.settings.logo_h1 -%}
-        </h1>
-      {%- endif -%}
     </div>
   {%- endcapture -%}
 
