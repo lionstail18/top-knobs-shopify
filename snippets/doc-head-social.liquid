@@ -33,19 +33,12 @@
   <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
 {%- endif -%}
 
-{%- unless settings.social_twitter_url == blank -%}
-  {%- liquid
-    assign split_twitter_url = settings.social_twitter_url | split: '/'
-    for part in split_twitter_url reversed
-      if part != blank
-        assign twitter_handle = part
-        break
-      endif
-    endfor
-  -%}
-  <meta name="twitter:site" content="@{{ twitter_handle }}">
-{%- endunless -%}
-
+{%- comment -%}
+  twitter:site removed — store has no Twitter account.
+  Other twitter:* tags retained: they let any user's tweet of a Top Knobs URL
+  render as a rich card with image and description, regardless of whether we
+  have a Twitter presence ourselves.
+{%- endcomment -%}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title | escape }}">
 <meta name="twitter:description" content="{{ og_description | escape }}">
