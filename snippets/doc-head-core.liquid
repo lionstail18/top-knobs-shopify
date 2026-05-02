@@ -7,7 +7,21 @@
     {{- page_title -}}
     {%- if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif -%}
     {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    {%- comment -%}
+      Append the shop name to the page title UNLESS the page title already
+      establishes the brand. Many product/collection titles already begin with
+      "Top Knobs" (because the underlying data follows the manufacturer's
+      naming), so checking only for the full shop.name produces titles like
+      "Top Knobs Pemberton Collection - Top Knobs Hardware" with redundant
+      brand. Compare against the first two words of shop.name instead.
+    {%- endcomment -%}
+    {%- assign brand_words = shop.name | split: ' ' -%}
+    {%- if brand_words.size > 1 -%}
+      {%- assign brand_short = brand_words[0] | append: ' ' | append: brand_words[1] -%}
+    {%- else -%}
+      {%- assign brand_short = shop.name -%}
+    {%- endif -%}
+    {%- unless page_title contains brand_short %} &ndash; {{ shop.name }}{% endunless -%}
   {%- endif -%}
 </title>
 
