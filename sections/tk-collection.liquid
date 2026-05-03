@@ -107,7 +107,15 @@
             <div class="tk-coll__filter-body">
               {%- case filter.type -%}
                 {%- when 'list' -%}
-                  {%- for value in filter.values -%}
+                  {%- comment -%}
+                    Sort filter values by count descending so the most-populated
+                    options surface first. Shopify's default order is whatever the
+                    merchant set in Search & Discovery (often alphabetical) — for
+                    a long list like "Type" or "Drill Centers", count-desc lands
+                    closer to what shoppers actually want to click.
+                  {%- endcomment -%}
+                  {%- assign sorted_values = filter.values | sort: 'count' | reverse -%}
+                  {%- for value in sorted_values -%}
                     {%- comment -%}
                       Clean the displayed label for hierarchical filter values.
                       Shopify renders things like "Cabinet Hardware|Pulls" or
