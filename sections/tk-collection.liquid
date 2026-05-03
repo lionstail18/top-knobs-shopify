@@ -74,6 +74,26 @@
           {%- endcomment -%}
           {%- if filter_label_lower == 'availability' -%}{%- continue -%}{%- endif -%}
 
+          {%- comment -%}
+            Hide filter groups that have no usable values for this collection.
+            Example: a "Drill Centers" filter (metafield-based) on a Knobs
+            collection — no knob has the metafield, so the filter would
+            otherwise render an empty group. We skip when:
+              - filter is a list with zero values, OR
+              - all of its values have count 0 AND none are currently active
+            Price filter is exempt (always relevant).
+          {%- endcomment -%}
+          {%- if filter.type == 'list' -%}
+            {%- assign has_usable_value = false -%}
+            {%- for v in filter.values -%}
+              {%- if v.count > 0 or v.active -%}
+                {%- assign has_usable_value = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- unless has_usable_value -%}{%- continue -%}{%- endunless -%}
+          {%- endif -%}
+
           {%- assign is_finish_filter = false -%}
           {%- if filter_label_lower contains 'finish' or filter_label_lower contains 'color' or filter_label_lower contains 'colour' -%}
             {%- assign is_finish_filter = true -%}
