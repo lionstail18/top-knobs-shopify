@@ -108,6 +108,21 @@
               {%- case filter.type -%}
                 {%- when 'list' -%}
                   {%- for value in filter.values -%}
+                    {%- comment -%}
+                      Clean the displayed label for hierarchical filter values.
+                      Shopify renders things like "Cabinet Hardware|Pulls" or
+                      "Cabinet Hardware - Knobs" or "Collection: Pemberton".
+                      For a customer-facing filter the prefix is noise — just
+                      show the leaf segment.
+                    {%- endcomment -%}
+                    {%- assign display_label = value.label -%}
+                    {%- if display_label contains '|' -%}
+                      {%- assign display_label = display_label | split: '|' | last | strip -%}
+                    {%- elsif display_label contains ' - ' -%}
+                      {%- assign display_label = display_label | split: ' - ' | last | strip -%}
+                    {%- elsif display_label contains 'Collection: ' -%}
+                      {%- assign display_label = display_label | replace: 'Collection: ', '' | strip -%}
+                    {%- endif -%}
                     <label class="tk-coll__filter-item{% if is_finish_filter %} tk-coll__filter-item--swatch{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
                       <input type="checkbox"
                              name="{{ value.param_name }}"
@@ -115,22 +130,26 @@
                              {% if value.active %}checked{% endif %}
                              {% if value.count == 0 and value.active == false %}disabled{% endif %}>
                       {%- if is_finish_filter -%}
-                        {%- render 'tk-finish-swatch', finish_name: value.label, size: 18, extra_class: 'tk-coll__filter-swatch' -%}
+                        {%- render 'tk-finish-swatch', finish_name: display_label, size: 18, extra_class: 'tk-coll__filter-swatch' -%}
                       {%- endif -%}
-                      <span class="tk-coll__filter-text">{{ value.label }}</span>
+                      <span class="tk-coll__filter-text">{{ display_label }}</span>
                       <span class="tk-coll__filter-count">({{ value.count }})</span>
                     </label>
                   {%- endfor -%}
                 {%- when 'price_range' -%}
+                  {%- comment -%}
+                    Shopify's price-filter URL params (filter.v.price.gte / .lte)
+                    are in WHOLE DOLLARS, not cents — and filter.min_value.value /
+                    filter.range_max are returned in the same whole-dollar unit
+                    when used as numbers. So we work entirely in dollars and do
+                    NOT multiply by 100 anywhere. The earlier version did and
+                    submitted $3,500 when you dragged to $35.
+                  {%- endcomment -%}
                   {%- liquid
-                    assign range_min_cents = 0
-                    assign range_max_cents = filter.range_max | default: 50000
-                    assign current_min_cents = filter.min_value.value | default: range_min_cents
-                    assign current_max_cents = filter.max_value.value | default: range_max_cents
-                    assign range_min_dollars = range_min_cents | divided_by: 100
-                    assign range_max_dollars = range_max_cents | divided_by: 100
-                    assign current_min_dollars = current_min_cents | divided_by: 100
-                    assign current_max_dollars = current_max_cents | divided_by: 100
+                    assign range_min_dollars = 0
+                    assign range_max_dollars = filter.range_max | default: 500
+                    assign current_min_dollars = filter.min_value.value | default: range_min_dollars
+                    assign current_max_dollars = filter.max_value.value | default: range_max_dollars
                   -%}
                   <div class="tk-coll__price-slider"
                        data-min="{{ range_min_dollars }}"
@@ -160,9 +179,9 @@
                              aria-label="Maximum price">
                     </div>
                     <p class="tk-coll__price-range-note">Range: ${{ range_min_dollars }} – ${{ range_max_dollars }}</p>
-                    {%- comment -%} Hidden number inputs carry the actual filter values to the form on submit {%- endcomment -%}
-                    <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" data-price-min-input>
-                    <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" data-price-max-input>
+                    {%- comment -%} Hidden inputs carry the filter values on form submit. Stored in whole dollars (same unit Shopify expects). {%- endcomment -%}
+                    <input type="hidden" name="{{ filter.min_value.param_name }}" value="" data-price-min-input>
+                    <input type="hidden" name="{{ filter.max_value.param_name }}" value="" data-price-max-input>
                   </div>
               {%- endcase -%}
             </div>
@@ -568,9 +587,10 @@
         fill.style.right = (100 - highPct) + '%';
         lowDisplay.textContent = '$' + lo;
         highDisplay.textContent = '$' + hi;
-        // Form values are in cents (Shopify expects price in cents)
-        lowInput.value = lo === min ? '' : Math.round(lo * 100);
-        highInput.value = hi === max ? '' : Math.round(hi * 100);
+        // Shopify's price filter URL params are in whole dollars (NOT cents).
+        // Empty when at min/max so the param is omitted from the URL.
+        lowInput.value = lo === min ? '' : Math.round(lo);
+        highInput.value = hi === max ? '' : Math.round(hi);
       }
 
       lowThumb.addEventListener('input', function () { update('low'); });
