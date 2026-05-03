@@ -84,14 +84,22 @@
             Price filter is exempt (always relevant).
           {%- endcomment -%}
           {%- if filter.type == 'list' -%}
-            {%- assign has_usable_value = false -%}
+            {%- comment -%}
+              Hide list filters that aren't useful here:
+                - 0 usable values (e.g., Drill Centers on a knobs collection)
+                - exactly 1 usable value with nothing currently selected
+                  (e.g., Collection filter on a single-collection page —
+                  the only option matches every product, so it can't narrow)
+              Keep filters with 1 value if the user has selected it, so they
+              can still untoggle from the sidebar instead of only via the chip.
+            {%- endcomment -%}
+            {%- assign usable_count = 0 -%}
+            {%- assign has_active = false -%}
             {%- for v in filter.values -%}
-              {%- if v.count > 0 or v.active -%}
-                {%- assign has_usable_value = true -%}
-                {%- break -%}
-              {%- endif -%}
+              {%- if v.count > 0 -%}{%- assign usable_count = usable_count | plus: 1 -%}{%- endif -%}
+              {%- if v.active -%}{%- assign has_active = true -%}{%- endif -%}
             {%- endfor -%}
-            {%- unless has_usable_value -%}{%- continue -%}{%- endunless -%}
+            {%- if usable_count <= 1 and has_active == false -%}{%- continue -%}{%- endif -%}
           {%- endif -%}
 
           {%- assign is_finish_filter = false -%}
