@@ -138,18 +138,22 @@
                   {%- endfor -%}
                 {%- when 'price_range' -%}
                   {%- comment -%}
-                    Shopify's price-filter URL params (filter.v.price.gte / .lte)
-                    are in WHOLE DOLLARS, not cents — and filter.min_value.value /
-                    filter.range_max are returned in the same whole-dollar unit
-                    when used as numbers. So we work entirely in dollars and do
-                    NOT multiply by 100 anywhere. The earlier version did and
-                    submitted $3,500 when you dragged to $35.
+                    Shopify unit conventions for the price filter:
+                      - filter.range_max and filter.min_value.value are in CENTS
+                        (e.g. 20340 = $203.40)
+                      - URL params filter.v.price.gte / .lte are in DOLLARS
+                        (e.g. 100 = $100 minimum)
+                    So we DIVIDE BY 100 for display, and submit the slider's
+                    dollar value directly without multiplication.
                   {%- endcomment -%}
                   {%- liquid
                     assign range_min_dollars = 0
-                    assign range_max_dollars = filter.range_max | default: 500
-                    assign current_min_dollars = filter.min_value.value | default: range_min_dollars
-                    assign current_max_dollars = filter.max_value.value | default: range_max_dollars
+                    assign range_max_dollars = filter.range_max | default: 50000 | divided_by: 100
+                    assign current_min_dollars = filter.min_value.value | default: 0 | divided_by: 100
+                    assign current_max_dollars = filter.max_value.value | divided_by: 100
+                    if filter.max_value.value == blank
+                      assign current_max_dollars = range_max_dollars
+                    endif
                   -%}
                   <div class="tk-coll__price-slider"
                        data-min="{{ range_min_dollars }}"
