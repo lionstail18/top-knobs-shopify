@@ -64,6 +64,16 @@
       <form action="{{ collection.url }}" method="get" class="tk-coll__filter-form" id="tk-coll-filter-form">
         {%- for filter in collection.filters -%}
           {%- assign filter_label_lower = filter.label | downcase -%}
+
+          {%- comment -%}
+            Skip the Availability filter sitewide. We don't want shoppers to
+            self-exclude products by toggling "out of stock" — every product
+            in this catalog is in stock by default, and the filter just adds
+            visual noise and steals sidebar real estate. To restore: also
+            re-enable in Shopify admin → Search & Discovery → Filters.
+          {%- endcomment -%}
+          {%- if filter_label_lower == 'availability' -%}{%- continue -%}{%- endif -%}
+
           {%- assign is_finish_filter = false -%}
           {%- if filter_label_lower contains 'finish' or filter_label_lower contains 'color' or filter_label_lower contains 'colour' -%}
             {%- assign is_finish_filter = true -%}
@@ -92,21 +102,47 @@
                     </label>
                   {%- endfor -%}
                 {%- when 'price_range' -%}
-                  <div class="tk-coll__filter-price">
-                    <div class="tk-coll__filter-price-row">
-                      <label class="tk-coll__filter-price-input">
-                        <span class="tk-coll__filter-price-prefix">$</span>
-                        <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="0" min="0">
-                      </label>
-                      <span class="tk-coll__filter-price-sep" aria-hidden="true">—</span>
-                      <label class="tk-coll__filter-price-input">
-                        <span class="tk-coll__filter-price-prefix">$</span>
-                        <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" min="0">
-                      </label>
+                  {%- liquid
+                    assign range_min_cents = 0
+                    assign range_max_cents = filter.range_max | default: 50000
+                    assign current_min_cents = filter.min_value.value | default: range_min_cents
+                    assign current_max_cents = filter.max_value.value | default: range_max_cents
+                    assign range_min_dollars = range_min_cents | divided_by: 100
+                    assign range_max_dollars = range_max_cents | divided_by: 100
+                    assign current_min_dollars = current_min_cents | divided_by: 100
+                    assign current_max_dollars = current_max_cents | divided_by: 100
+                  -%}
+                  <div class="tk-coll__price-slider"
+                       data-min="{{ range_min_dollars }}"
+                       data-max="{{ range_max_dollars }}"
+                       data-min-name="{{ filter.min_value.param_name }}"
+                       data-max-name="{{ filter.max_value.param_name }}">
+                    <div class="tk-coll__price-display">
+                      <span class="tk-coll__price-display-low">${{ current_min_dollars }}</span>
+                      <span class="tk-coll__price-display-high">${{ current_max_dollars }}</span>
                     </div>
-                    {%- if filter.range_max != blank -%}
-                      <p class="tk-coll__filter-price-note">Max in collection: {{ filter.range_max | money_without_trailing_zeros }}</p>
-                    {%- endif -%}
+                    <div class="tk-coll__price-track-wrap">
+                      <div class="tk-coll__price-track"></div>
+                      <div class="tk-coll__price-fill"></div>
+                      <input type="range"
+                             class="tk-coll__price-thumb tk-coll__price-thumb--low"
+                             min="{{ range_min_dollars }}"
+                             max="{{ range_max_dollars }}"
+                             value="{{ current_min_dollars }}"
+                             step="1"
+                             aria-label="Minimum price">
+                      <input type="range"
+                             class="tk-coll__price-thumb tk-coll__price-thumb--high"
+                             min="{{ range_min_dollars }}"
+                             max="{{ range_max_dollars }}"
+                             value="{{ current_max_dollars }}"
+                             step="1"
+                             aria-label="Maximum price">
+                    </div>
+                    <p class="tk-coll__price-range-note">Range: ${{ range_min_dollars }} – ${{ range_max_dollars }}</p>
+                    {%- comment -%} Hidden number inputs carry the actual filter values to the form on submit {%- endcomment -%}
+                    <input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" data-price-min-input>
+                    <input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" data-price-max-input>
                   </div>
               {%- endcase -%}
             </div>
@@ -325,31 +361,62 @@
   .tk-coll__filter-text { flex: 1; }
   .tk-coll__filter-count { color: var(--color-text2); font-size: 11px; }
 
-  .tk-coll__filter-price-row { display: flex; align-items: center; gap: 8px; }
-  .tk-coll__filter-price-input {
-    flex: 1;
-    display: flex; align-items: center;
-    border: 1px solid var(--color-border);
-    background: var(--color-bg);
-    height: 36px;
-    padding: 0 8px;
-  }
-  .tk-coll__filter-price-input:focus-within { border-color: var(--color-accent); }
-  .tk-coll__filter-price-prefix {
+  /* Dual-thumb price range slider — replaces the legacy two-number-input price filter. */
+  .tk-coll__price-slider { padding: 4px 0 0; }
+  .tk-coll__price-display {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
     font-family: var(--tk-font-body); font-size: 13px;
-    color: var(--color-text2); margin-right: 4px;
+    color: var(--color-text); font-weight: 500;
   }
-  .tk-coll__filter-price-input input {
-    flex: 1; min-width: 0; border: none; outline: none; background: none;
-    font-family: var(--tk-font-body); font-size: 13px; color: var(--color-text);
-    padding: 0;
+  .tk-coll__price-track-wrap {
+    position: relative;
+    height: 24px;
+    margin: 0 9px; /* room for thumbs at both ends so they don't clip the sidebar */
   }
-  .tk-coll__filter-price-input input::-webkit-outer-spin-button,
-  .tk-coll__filter-price-input input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .tk-coll__filter-price-sep { color: var(--color-text2); font-size: 12px; }
-  .tk-coll__filter-price-note {
+  .tk-coll__price-track {
+    position: absolute; top: 11px; left: 0; right: 0;
+    height: 2px; background: var(--color-border);
+    border-radius: 2px; pointer-events: none;
+  }
+  .tk-coll__price-fill {
+    position: absolute; top: 11px; height: 2px;
+    background: var(--color-accent);
+    border-radius: 2px; pointer-events: none;
+  }
+  .tk-coll__price-thumb {
+    position: absolute; top: 0; left: -9px; right: -9px; width: calc(100% + 18px);
+    margin: 0; padding: 0;
+    background: transparent; pointer-events: none;
+    -webkit-appearance: none; appearance: none;
+    height: 24px; outline: none;
+    z-index: 2;
+  }
+  .tk-coll__price-thumb::-webkit-slider-thumb {
+    pointer-events: all;
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--color-text);
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    cursor: grab; transition: transform 0.12s ease;
+  }
+  .tk-coll__price-thumb::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.1); }
+  .tk-coll__price-thumb::-moz-range-thumb {
+    pointer-events: all;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--color-text);
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    cursor: grab;
+  }
+  .tk-coll__price-thumb::-webkit-slider-runnable-track,
+  .tk-coll__price-thumb::-moz-range-track { background: transparent; border: none; }
+  .tk-coll__price-range-note {
     font-family: var(--tk-font-body); font-size: 11px;
-    color: var(--color-text2); margin: 8px 0 0;
+    color: var(--color-text2); margin: 12px 0 0;
   }
 
   .tk-coll__filter-apply {
@@ -453,6 +520,43 @@
         window.location.href = url.toString();
       });
     }
+
+    // Dual-thumb price slider — sync thumbs, update display + fill bar + hidden inputs.
+    document.querySelectorAll('.tk-coll__price-slider').forEach(function (slider) {
+      var min = parseFloat(slider.dataset.min);
+      var max = parseFloat(slider.dataset.max);
+      var lowThumb = slider.querySelector('.tk-coll__price-thumb--low');
+      var highThumb = slider.querySelector('.tk-coll__price-thumb--high');
+      var fill = slider.querySelector('.tk-coll__price-fill');
+      var lowDisplay = slider.querySelector('.tk-coll__price-display-low');
+      var highDisplay = slider.querySelector('.tk-coll__price-display-high');
+      var lowInput = slider.querySelector('[data-price-min-input]');
+      var highInput = slider.querySelector('[data-price-max-input]');
+
+      function update(activeThumb) {
+        var lo = parseFloat(lowThumb.value);
+        var hi = parseFloat(highThumb.value);
+        // Prevent thumbs crossing — keep at least 1 unit between them
+        if (lo >= hi) {
+          if (activeThumb === 'low') { lo = hi - 1; lowThumb.value = lo; }
+          else { hi = lo + 1; highThumb.value = hi; }
+        }
+        var range = max - min;
+        var lowPct = range ? ((lo - min) / range) * 100 : 0;
+        var highPct = range ? ((hi - min) / range) * 100 : 100;
+        fill.style.left = lowPct + '%';
+        fill.style.right = (100 - highPct) + '%';
+        lowDisplay.textContent = '$' + lo;
+        highDisplay.textContent = '$' + hi;
+        // Form values are in cents (Shopify expects price in cents)
+        lowInput.value = lo === min ? '' : Math.round(lo * 100);
+        highInput.value = hi === max ? '' : Math.round(hi * 100);
+      }
+
+      lowThumb.addEventListener('input', function () { update('low'); });
+      highThumb.addEventListener('input', function () { update('high'); });
+      update();
+    });
   });
 </script>
 
