@@ -147,13 +147,21 @@
                     dollar value directly without multiplication.
                   {%- endcomment -%}
                   {%- liquid
-                    assign range_min_dollars = 0
-                    assign range_max_dollars = filter.range_max | default: 50000 | divided_by: 100
-                    assign current_min_dollars = filter.min_value.value | default: 0 | divided_by: 100
-                    assign current_max_dollars = filter.max_value.value | divided_by: 100
-                    if filter.max_value.value == blank
-                      assign current_max_dollars = range_max_dollars
+                    # filter.range_max / filter.*_value.value are in CENTS.
+                    # Split assigns avoid Liquid's filter-chain parsing where
+                    # "| default: 50000 | divided_by: 100" treats divided_by
+                    # as the default's argument (default = 500), bypassing
+                    # the divide on the actual value.
+                    assign rmax_cents = filter.range_max | default: 50000
+                    assign cmin_cents = filter.min_value.value | default: 0
+                    assign cmax_cents = filter.max_value.value
+                    if cmax_cents == blank
+                      assign cmax_cents = rmax_cents
                     endif
+                    assign range_min_dollars = 0
+                    assign range_max_dollars = rmax_cents | divided_by: 100
+                    assign current_min_dollars = cmin_cents | divided_by: 100
+                    assign current_max_dollars = cmax_cents | divided_by: 100
                   -%}
                   <div class="tk-coll__price-slider"
                        data-min="{{ range_min_dollars }}"
