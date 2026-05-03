@@ -294,6 +294,15 @@
   <link rel="stylesheet" href="{{ 'main.css' | asset_url }}">
   <link rel="stylesheet" href="{{ 'tk-tokens.css' | asset_url }}">
   {{ 'tk-finish-swatches.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%}
+    Algolia AI Search & Discovery brand overrides — only on /search where
+    the InstantSearch widgets render. Targets the standard ais-* classes.
+  {%- endcomment -%}
+  {%- if request.page_type == 'search' -%}
+    {{ 'algolia-overrides.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+
   <script src="{{ 'main.js' | asset_url }}" defer="defer"></script>
 
   {%- unless settings.body_font.system? -%}
