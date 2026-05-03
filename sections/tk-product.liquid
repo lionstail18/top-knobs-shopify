@@ -204,28 +204,45 @@
         a buy-N+ discount. The schema setting + JS handler are left in place so this
         block can be restored cheaply if pricing ever changes — just paste the
         original <p class="tk-prod__qty-discount"> back in.
-      {%- endcomment -%}
 
-      <a href="{{ routes.all_products_collection_url }}?filter.p.tag=sample" class="tk-btn tk-btn--ghost-dark tk-prod__sample-btn">
-        Order a Sample — From $5
-      </a>
+        "Order a Sample" CTA removed at the merchant's request — customers route
+        through /pages/samples instead.
+      {%- endcomment -%}
     </form>
 
-    <!-- Specs (each row only renders when value present) -->
-    {%- assign material = product.metafields.tk.material -%}
+    {%- comment -%}
+      Specs read from product.metafields.details.* (the namespace the source
+      data was imported into). The legacy tk.* namespace is checked as a
+      fallback so any manually-set values still render. Rows hide when their
+      backing metafield is blank.
+    {%- endcomment -%}
+    {%- assign material = product.metafields.details.material | default: product.metafields.tk.material -%}
+    {%- assign drill_centers = product.metafields.details.drill_centers | default: product.metafields.tk.drill_centers -%}
+    {%- assign overall_length = product.metafields.details.overall_length | default: product.metafields.tk.overall_length -%}
+    {%- assign width_spec = product.metafields.details.width | default: product.metafields.tk.width -%}
+    {%- assign projection = product.metafields.details.projection | default: product.metafields.tk.projection -%}
     {%- assign mounting = product.metafields.tk.mounting -%}
-    {%- assign projection = product.metafields.tk.projection -%}
     {%- assign warranty = product.metafields.tk.warranty -%}
     {%- assign ships = product.metafields.tk.ships -%}
+
+    {%- comment -%} Format material: "Zinc Alloy" → "Solid zinc alloy with premium plating" for the standard import value. {%- endcomment -%}
+    {%- assign material_display = material -%}
+    {%- if material == 'Zinc Alloy' -%}
+      {%- assign material_display = 'Solid zinc alloy with premium plating' -%}
+    {%- endif -%}
+
     {%- assign has_any_spec = false -%}
-    {%- if material != blank or mounting != blank or projection != blank or warranty != blank or ships != blank or section.settings.show_default_specs -%}
+    {%- if material != blank or drill_centers != blank or overall_length != blank or width_spec != blank or projection != blank or mounting != blank or warranty != blank or ships != blank or section.settings.show_default_specs -%}
       {%- assign has_any_spec = true -%}
     {%- endif -%}
     {%- if has_any_spec -%}
       <div class="tk-prod__specs">
-        {%- if material != blank -%}<div class="tk-prod__spec-row"><span>Material</span><span>{{ material }}</span></div>{%- endif -%}
-        {%- if mounting != blank -%}<div class="tk-prod__spec-row"><span>Mounting</span><span>{{ mounting }}</span></div>{%- endif -%}
+        {%- if material != blank -%}<div class="tk-prod__spec-row"><span>Material</span><span>{{ material_display }}</span></div>{%- endif -%}
+        {%- if drill_centers != blank -%}<div class="tk-prod__spec-row"><span>Center-to-Center</span><span>{{ drill_centers }}</span></div>{%- endif -%}
+        {%- if overall_length != blank -%}<div class="tk-prod__spec-row"><span>Overall Length</span><span>{{ overall_length }}</span></div>{%- endif -%}
+        {%- if width_spec != blank -%}<div class="tk-prod__spec-row"><span>Width</span><span>{{ width_spec }}</span></div>{%- endif -%}
         {%- if projection != blank -%}<div class="tk-prod__spec-row"><span>Projection</span><span>{{ projection }}</span></div>{%- endif -%}
+        {%- if mounting != blank -%}<div class="tk-prod__spec-row"><span>Mounting</span><span>{{ mounting }}</span></div>{%- endif -%}
         {%- if warranty != blank -%}
           <div class="tk-prod__spec-row"><span>Warranty</span><span>{{ warranty }}</span></div>
         {%- elsif section.settings.show_default_specs -%}
@@ -236,6 +253,17 @@
         {%- elsif section.settings.show_default_specs -%}
           <div class="tk-prod__spec-row"><span>Ships</span><span>1–2 business days</span></div>
         {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%}
+      Product description block — renders product.description when set.
+      Hidden gracefully when the product has no description.
+    {%- endcomment -%}
+    {%- if product.description != blank -%}
+      <div class="tk-prod__description">
+        <h2 class="tk-prod__description-h2">About this {{ product.metafields.details.shape | default: 'piece' | downcase }}</h2>
+        <div class="tk-prod__description-body rte">{{ product.description }}</div>
       </div>
     {%- endif -%}
 
@@ -495,6 +523,13 @@
     line-height: 48px; padding: 0; box-sizing: border-box; margin-bottom: 24px;
   }
 
+  .tk-prod__description { border-top: 1px solid var(--color-border); padding-top: 20px; margin-bottom: 24px; }
+  .tk-prod__description-h2 { font-family: var(--tk-font-heading); font-size: 18px; font-weight: 400; color: var(--color-text); margin: 0 0 12px; text-transform: capitalize; }
+  .tk-prod__description-body { font-family: var(--tk-font-body); font-size: 14px; line-height: 1.7; color: var(--color-text2); }
+  .tk-prod__description-body p { margin: 0 0 12px; }
+  .tk-prod__description-body p:last-child { margin-bottom: 0; }
+  .tk-prod__description-body strong { color: var(--color-text); }
+  .tk-prod__description-body a { color: var(--color-accent); text-decoration: underline; }
   .tk-prod__specs { border-top: 1px solid var(--color-border); padding-top: 20px; margin-bottom: 20px; }
   .tk-prod__spec-row {
     display: flex; justify-content: space-between; margin-bottom: 10px;
