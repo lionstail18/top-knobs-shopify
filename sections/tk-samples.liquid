@@ -12,13 +12,22 @@
     {%- endif -%}
   </div>
   <div class="tk-samples__hero-media">
+    {%- comment -%}
+      Fallback chain: section.settings.image (set in theme customizer) →
+      theme asset 'samples.jpg' (the same image used on the home-page sample
+      CTA block, so the page hero matches the rest of the site visually) →
+      placeholder div as a last resort.
+    {%- endcomment -%}
     {%- if section.settings.image != blank -%}
       {{- section.settings.image | image_url: width: 900 | image_tag:
           loading: 'lazy',
           class: 'tk-samples__hero-img',
           alt: section.settings.heading | escape -}}
     {%- else -%}
-      <div class="tk-samples__hero-img tk-samples__hero-img--placeholder"></div>
+      <img src="{{ 'samples.jpg' | asset_url }}"
+           alt="{{ section.settings.heading | default: 'Order samples' | escape }}"
+           loading="lazy"
+           class="tk-samples__hero-img">
     {%- endif -%}
   </div>
 </section>
