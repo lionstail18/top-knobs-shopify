@@ -171,6 +171,11 @@
             <p class="mb-0 font-bold">{%- render 'price-as-money', price: cart.total_price, show_money_with_currency: true -%}</p>
           </div>
 
+          {%- comment -%} TK: AK/HI quote notice {%- endcomment -%}
+          <p class="cart__akhi-notice text-sm mt-4 mb-0" style="color: var(--color-text2); line-height: 1.5;">
+            Shipping to Alaska or Hawaii? Call <a href="tel:+18005308245" class="link">1-800-530-8245</a> or email <a href="mailto:cs@knobs.co" class="link">cs@knobs.co</a> for a custom quote.
+          </p>
+
           {%- if section.settings.cart_terms_page != blank -%}
             <cart-terms class="block mt-6">
               <input type="checkbox" class="checkbox js-cart-terms-checkbox" id="cart-terms" form="cart">

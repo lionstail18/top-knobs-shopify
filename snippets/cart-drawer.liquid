@@ -168,6 +168,10 @@
         </ul>
       {%- endif -%}
 
+              {%- comment -%} TK: AK/HI quote notice — empty zone for non-contiguous US blocks checkout, this points them to us {%- endcomment -%}
+        <p class="cart-drawer__akhi-notice text-sm text-center mb-3" style="color: var(--color-text2); line-height: 1.5;">
+          Shipping to Alaska or Hawaii? Call <a href="tel:+18005308245" class="link">1-800-530-8245</a> or email <a href="mailto:cs@knobs.co" class="link">cs@knobs.co</a> for a custom quote.
+        </p>
       <div class="cart-drawer__checkout-buttons">
         {%- if show_terms_and_conditions -%}
           <cart-terms class="block mt-2 mb-4 text-center">
