@@ -15,7 +15,7 @@
         "height": 640,
         "eyebrow": "Authorized Top Knobs Dealer",
         "heading": "Elevate<br>Every Detail",
-        "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections \u2014 with free shipping and a lifetime warranty.",
+        "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections — with free shipping and a lifetime warranty.",
         "btn1_label": "Shop Now",
         "btn2_label": "What's New"
       }
@@ -26,7 +26,7 @@
         "item1": {
           "type": "item",
           "settings": {
-            "icon": "\u25c7",
+            "icon": "◇",
             "title": "Price Match Guarantee",
             "subtitle": ""
           }
@@ -34,7 +34,7 @@
         "item2": {
           "type": "item",
           "settings": {
-            "icon": "\u25c7",
+            "icon": "◇",
             "title": "Free Shipping $99+",
             "subtitle": ""
           }
@@ -42,7 +42,7 @@
         "item3": {
           "type": "item",
           "settings": {
-            "icon": "\u25c7",
+            "icon": "◇",
             "title": "Sample Program",
             "subtitle": ""
           }
@@ -50,7 +50,7 @@
         "item4": {
           "type": "item",
           "settings": {
-            "icon": "\u25c7",
+            "icon": "◇",
             "title": "Lifetime Warranty",
             "subtitle": ""
           }
@@ -58,7 +58,7 @@
         "item5": {
           "type": "item",
           "settings": {
-            "icon": "\u25c7",
+            "icon": "◇",
             "title": "Trade Pricing",
             "subtitle": ""
           }
@@ -143,7 +143,7 @@
           "type": "item",
           "settings": {
             "title": "The Serene Collection",
-            "description": "Inspired by nature's calm \u2014 organic silhouettes in honey bronze and brushed nickel.",
+            "description": "Inspired by nature's calm — organic silhouettes in honey bronze and brushed nickel.",
             "badge": "BESTSELLER",
             "image_asset": "serene.jpg",
             "url": "/collections/top-knobs-serene"
@@ -152,7 +152,7 @@
         "col3": {
           "type": "item",
           "settings": {
-            "title": "The CHAREAU\u00ae Collection",
+            "title": "The CHAREAU® Collection",
             "description": "French-inspired artistry with refined proportions for the discerning interior.",
             "badge": "",
             "image_asset": "chareau.jpg",
@@ -207,14 +207,6 @@
     "finish-browser": {
       "type": "finish-browser",
       "blocks": {
-        "fin1": {
-          "type": "finish",
-          "settings": {
-            "color": "#5e5132",
-            "name": "Aged Bronze",
-            "url": "/collections/aged-bronze-finish"
-          }
-        },
         "fin2": {
           "type": "finish",
           "settings": {
@@ -229,14 +221,6 @@
             "color": "#bcb6a8",
             "name": "Ash Gray",
             "url": "/collections/ash-gray-finish"
-          }
-        },
-        "fin4": {
-          "type": "finish",
-          "settings": {
-            "color": "#9c9a93",
-            "name": "Brushed Nickel",
-            "url": "/collections/brushed-nickel-finish"
           }
         },
         "fin5": {
@@ -271,14 +255,6 @@
             "url": "/collections/honey-bronze-finish"
           }
         },
-        "fin9": {
-          "type": "finish",
-          "settings": {
-            "color": "#0d0d0d",
-            "name": "Matte Black",
-            "url": "/collections/matte-black-finish"
-          }
-        },
         "fin10": {
           "type": "finish",
           "settings": {
@@ -311,14 +287,6 @@
             "url": "/collections/sable-finish"
           }
         },
-        "fin14": {
-          "type": "finish",
-          "settings": {
-            "color": "#525a62",
-            "name": "Slate",
-            "url": "/collections/slate-finish"
-          }
-        },
         "fin15": {
           "type": "finish",
           "settings": {
@@ -334,34 +302,21 @@
             "name": "Umbrio",
             "url": "/collections/umbrio-finish"
           }
-        },
-        "fin17": {
-          "type": "finish",
-          "settings": {
-            "color": "#6e4326",
-            "name": "Venetian Bronze",
-            "url": "/collections/venetian-bronze-finish"
-          }
         }
       },
       "block_order": [
-        "fin1",
         "fin2",
         "fin3",
-        "fin4",
         "fin5",
         "fin6",
         "fin7",
         "fin8",
-        "fin9",
         "fin10",
         "fin11",
         "fin12",
         "fin13",
-        "fin14",
         "fin15",
-        "fin16",
-        "fin17"
+        "fin16"
       ],
       "settings": {
         "eyebrow": "Find Your Perfect Match",

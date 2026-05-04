@@ -93,10 +93,17 @@ cart-items {
   grid-row: 1/4;
   padding: 0;
 }
+/* TK: force square thumbnail with contained image so wide pulls render
+   centered with whitespace, instead of as a thin horizontal strip. */
+.cart-item__image > a {
+  display: block;
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  overflow: hidden;
+}
 .cart-item__image img {
   width: 100%;
-  height: auto;
-  max-height: 200px;
+  height: 100%;
   object-fit: contain;
 }
 
