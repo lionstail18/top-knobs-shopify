@@ -5,20 +5,9 @@
   background, gold accents, three-column layout (Brand / Shop / Help)
   plus a bottom strip with copyright, payment icons, and utility links.
 
-  Several Help-column links currently point to "#" because the underlying
-  pages aren't built yet. Search this file for "TODO:" to find each one
-  and update the href once the page exists.
-
-  Pages still to be created (and the link to update once they are):
-    • /pages/contact          — Contact Us
-    • /pages/shipping         — Shipping & Delivery
-    • /pages/returns          — Returns & Exchanges
-    • /pages/price-match      — Price Match Guarantee
-    • /pages/trade            — Trade Program
-    • /pages/faq              — FAQ
-    • /pages/privacy          — Privacy
-    • /pages/terms            — Terms
-    • /pages/accessibility    — Accessibility
+  Footer links audited and wired to real pages/policies/collections.
+  Removed temporarily: Price Match Guarantee, FAQ, Accessibility — pages don't exist yet.
+  When those pages are created, search for the "Removed" comments and re-add the <li>.
 
   Social icon URLs come from theme settings (Theme → Settings → Social media).
   If an icon doesn't appear, that setting is blank — fill it in admin.
@@ -76,13 +65,13 @@
         <h3 class="tk-footer__heading">Shop</h3>
         <ul class="tk-footer__links">
           <li><a href="/collections/all">All Products</a></li>
-          <li><a href="/collections/whats-new">What's New</a></li>
+          <li><a href="/collections/new">What's New</a></li>
           <li><a href="/collections/knobs">Knobs</a></li>
-          <li><a href="/collections/pulls">Pulls</a></li>
+          <li><a href="/collections/pulls-and-handles">Pulls</a></li>
           <li><a href="/collections/appliance-pulls">Appliance Pulls</a></li>
-          <li><a href="/collections/bath">Bath Hardware</a></li>
+          <li><a href="/collections/bathroom-hardware-all">Bath Hardware</a></li>
           <li><a href="/collections/backplates">Backplates</a></li>
-          <li><a href="/collections/all?filter.p.tag=sample">Order a Sample</a></li>
+          <li><a href="/pages/samples">Order a Sample</a></li>
         </ul>
       </div>
 
@@ -90,12 +79,11 @@
       <div class="tk-footer__col">
         <h3 class="tk-footer__heading">Help</h3>
         <ul class="tk-footer__links">
-          <li><a href="#">Contact Us</a></li>{%- comment -%}TODO: /pages/contact{%- endcomment -%}
-          <li><a href="#">Shipping &amp; Delivery</a></li>{%- comment -%}TODO: /pages/shipping{%- endcomment -%}
-          <li><a href="#">Returns &amp; Exchanges</a></li>{%- comment -%}TODO: /pages/returns{%- endcomment -%}
-          <li><a href="#">Price Match Guarantee</a></li>{%- comment -%}TODO: /pages/price-match{%- endcomment -%}
-          <li><a href="#">Trade Program</a></li>{%- comment -%}TODO: /pages/trade{%- endcomment -%}
-          <li><a href="#">FAQ</a></li>{%- comment -%}TODO: /pages/faq{%- endcomment -%}
+          <li><a href="/pages/contact">Contact Us</a></li>
+          <li><a href="/policies/shipping-policy">Shipping &amp; Delivery</a></li>
+          <li><a href="/policies/refund-policy">Returns &amp; Exchanges</a></li>
+          <li><a href="/pages/trade">Trade Program</a></li>
+          {%- comment -%} Removed Price Match Guarantee + FAQ — pages don't exist yet. Add back when content is ready. {%- endcomment -%}
         </ul>
       </div>
 
@@ -112,11 +100,10 @@
         {%- endfor -%}
       </div>
       <div class="tk-footer__legal">
-        <a href="#">Privacy</a>{%- comment -%}TODO: /pages/privacy{%- endcomment -%}
+        <a href="/policies/privacy-policy">Privacy</a>
         <span aria-hidden="true">·</span>
-        <a href="#">Terms</a>{%- comment -%}TODO: /pages/terms{%- endcomment -%}
-        <span aria-hidden="true">·</span>
-        <a href="#">Accessibility</a>{%- comment -%}TODO: /pages/accessibility{%- endcomment -%}
+        <a href="/policies/terms-of-service">Terms</a>
+        {%- comment -%} Removed Accessibility — page doesn't exist yet. {%- endcomment -%}
       </div>
     </div>
 
