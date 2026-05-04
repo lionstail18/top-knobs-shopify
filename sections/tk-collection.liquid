@@ -121,8 +121,16 @@
                     merchant set in Search & Discovery (often alphabetical) — for
                     a long list like "Type" or "Drill Centers", count-desc lands
                     closer to what shoppers actually want to click.
+
+                    Cap visible values at 6 — any more get hidden behind a
+                    "See N more" toggle button. Active values are shown
+                    regardless of position so a selected item from position
+                    #20 stays visible even when the rest are collapsed.
                   {%- endcomment -%}
                   {%- assign sorted_values = filter.values | sort: 'count' | reverse -%}
+                  {%- assign overflow_threshold = 6 -%}
+                  {%- assign overflow_size = sorted_values.size | minus: overflow_threshold -%}
+                  {%- if overflow_size < 0 -%}{%- assign overflow_size = 0 -%}{%- endif -%}
                   {%- for value in sorted_values -%}
                     {%- comment -%}
                       Clean the displayed label for hierarchical filter values.
@@ -139,7 +147,7 @@
                     {%- elsif display_label contains 'Collection: ' -%}
                       {%- assign display_label = display_label | replace: 'Collection: ', '' | strip -%}
                     {%- endif -%}
-                    <label class="tk-coll__filter-item{% if is_finish_filter %} tk-coll__filter-item--swatch{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                    <label class="tk-coll__filter-item{% if is_finish_filter %} tk-coll__filter-item--swatch{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}{% if value.active %} is-active{% endif %}">
                       <input type="checkbox"
                              name="{{ value.param_name }}"
                              value="{{ value.value }}"
@@ -152,6 +160,13 @@
                       <span class="tk-coll__filter-count">({{ value.count }})</span>
                     </label>
                   {%- endfor -%}
+                  {%- if overflow_size > 0 -%}
+                    <button type="button"
+                            class="tk-coll__filter-more"
+                            data-more-count="{{ overflow_size }}"
+                            data-more-label="See {{ overflow_size }} more"
+                            data-less-label="See less">See {{ overflow_size }} more</button>
+                  {%- endif -%}
                 {%- when 'price_range' -%}
                   {%- comment -%}
                     Shopify unit conventions for the price filter:
@@ -428,6 +443,27 @@
   .tk-coll__filter-text { flex: 1; }
   .tk-coll__filter-count { color: var(--color-text2); font-size: 11px; }
 
+  /* Truncation: hide list items past the 6th. Active items always show
+     (so a selection from the long-tail stays visible when collapsed). */
+  .tk-coll__filter-body > .tk-coll__filter-item:nth-of-type(n+7) { display: none; }
+  .tk-coll__filter-body > .tk-coll__filter-item.is-active { display: flex; }
+  .tk-coll__filter-body.is-expanded > .tk-coll__filter-item { display: flex; }
+  .tk-coll__filter-more {
+    background: none;
+    border: none;
+    padding: 8px 0 0;
+    cursor: pointer;
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-align: left;
+    width: 100%;
+  }
+  .tk-coll__filter-more:hover { text-decoration: underline; }
+
   /* Dual-thumb price range slider — replaces the legacy two-number-input price filter. */
   .tk-coll__price-slider { padding: 4px 0 0; }
   .tk-coll__price-display {
@@ -587,6 +623,17 @@
         window.location.href = url.toString();
       });
     }
+
+    // Filter "See more" toggle — expand/collapse list filters with > 6 values.
+    document.querySelectorAll('.tk-coll__filter-more').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var body = btn.closest('.tk-coll__filter-body');
+        if (!body) return;
+        var expanded = body.classList.toggle('is-expanded');
+        btn.textContent = expanded ? btn.dataset.lessLabel : btn.dataset.moreLabel;
+      });
+    });
 
     // Dual-thumb price slider — sync thumbs, update display + fill bar + hidden inputs.
     document.querySelectorAll('.tk-coll__price-slider').forEach(function (slider) {
