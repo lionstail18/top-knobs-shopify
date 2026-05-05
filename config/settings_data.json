@@ -169,7 +169,7 @@
     "blocks": {
       "11735689235857492391": {
         "type": "shopify://apps/algolia-ai-search-discovery/blocks/autocomplete/57bb7f86-d5fe-4d43-96ca-3953324494cf",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
