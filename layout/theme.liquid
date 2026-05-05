@@ -326,6 +326,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
   {%- endif -%}
 
+  {%- comment -%}
+    Algolia-powered header search autocomplete — replaces native predictive
+    search dropdown on every page. Loads globally because the header bar is
+    on every page.
+  {%- endcomment -%}
+  <script src="{{ 'tk-algolia-autocomplete.js' | asset_url }}" defer="defer"></script>
+
   {%- if request.page_type == 'search' -%}
     {%- comment -%}
       Algolia headless on /search. Loads BEFORE tk-live-filter.js so its
