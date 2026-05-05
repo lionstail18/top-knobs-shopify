@@ -326,6 +326,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
   {%- endif -%}
 
+  {%- if request.page_type == 'search' -%}
+    {%- comment -%}
+      Algolia headless on /search. Loads BEFORE tk-live-filter.js so its
+      window.tkAlgoliaActive flag is set first; live-filter.js then backs off.
+      Also paints a fade overlay over the SSR results so the user doesn't
+      see them flash before Algolia replaces them.
+    {%- endcomment -%}
+    <script src="{{ 'tk-algolia-search.js' | asset_url }}" defer="defer"></script>
+    <style>
+      /* Hide native SSR sidebar+grid as soon as the page loads if there's a
+         search query — Algolia will replace it. Falls back to visible if JS
+         is disabled or fails (no .tk-algolia-loading class added). */
+      body.tk-algolia-loading .tk-srch__sidebar,
+      body.tk-algolia-loading .tk-srch__main {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+    </style>
+  {%- endif -%}
+
   {%- if request.page_type == 'search' or request.page_type == 'collection' -%}
     <script src="{{ 'tk-live-filter.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
