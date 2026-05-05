@@ -504,6 +504,24 @@
     gap: 28px;
   }
 
+  /* tk-pcard helpers — mirror of the inline styles in snippets/tk-product-card.liquid.
+     We duplicate them here (the surrounding style block is hoisted to head) so they
+     persist when tk-algolia-search.js replaces the grid contents. The inline snippet
+     block lives INSIDE the grid and would otherwise be removed during that DOM swap. */
+  .tk-pcard__media { position: relative; }
+  .tk-pcard__sale-badge {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    background: oklch(50% 0.13 145); color: #fff;
+    font-family: var(--tk-font-body); font-size: 10px;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 8px;
+  }
+  .tk-pcard__price-wrap { display: flex; align-items: baseline; gap: 8px; }
+  .tk-pcard__price-was {
+    font-family: var(--tk-font-body); font-size: 12px;
+    color: var(--color-text2); text-decoration: line-through;
+  }
+
   /* ─── Pagination ─── */
   .tk-srch__pagination { display: flex; justify-content: center; gap: 8px; padding: 48px 0 24px; flex-wrap: wrap; }
   .tk-srch__page-btn {
