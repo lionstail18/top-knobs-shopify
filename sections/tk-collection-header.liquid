@@ -13,7 +13,12 @@
 
   Default-sort redirect must be at the top of the document (before any
   rendering) to minimise visual flicker.
+
+  Also loads tk-filter-overrides.css which restyles the stock Shopify
+  facet/results markup to match the brand design system.
 ============================================================ -->
+
+{{ 'tk-filter-overrides.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
   Default-sort redirect: when a collection page is loaded without any sort

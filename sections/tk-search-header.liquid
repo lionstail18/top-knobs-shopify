@@ -8,7 +8,12 @@
   The actual search results body is rendered by a sibling section in
   templates/search.json (Shopify's main-search.liquid), where Searchanise's
   app embed injects its filter sidebar + results widgets.
+
+  Also loads tk-filter-overrides.css which restyles the stock Shopify
+  facet/results markup to match the brand design system.
 ============================================================ -->
+
+{{ 'tk-filter-overrides.css' | asset_url | stylesheet_tag }}
 
 <div class="tk-search__header">
   <div class="tk-search__header-inner">
