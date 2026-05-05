@@ -326,6 +326,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
   {%- endif -%}
 
+  {%- if request.page_type == 'search' or request.page_type == 'collection' -%}
+    <script src="{{ 'tk-live-filter.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
   {{ content_for_header }}
 
   {%- if request.design_mode -%}

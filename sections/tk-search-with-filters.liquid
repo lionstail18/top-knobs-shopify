@@ -453,7 +453,13 @@
   }
 
   /* ─── Main results area ─── */
-  .tk-srch__main { flex: 1; padding: 24px 40px; min-width: 0; }
+  .tk-srch__main { flex: 1; padding: 24px 40px; min-width: 0; transition: opacity 0.15s ease; }
+  .tk-srch__main.is-loading { opacity: 0.45; pointer-events: none; }
+
+  /* When live filtering is active (JS enabled), hide the Apply Filters button —
+     filters now apply on every checkbox change. The button still works as a
+     no-JS fallback. */
+  .tk-srch__filter-form[data-live-enabled="true"] .tk-srch__filter-apply { display: none; }
   .tk-srch__toolbar {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
@@ -598,6 +604,10 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Skip if tk-live-filter.js already handles live updates (it manages
+    // sort, filter-more, and price slider via its own delegation/reinit).
+    if (window.tkLiveFilterLoaded) return;
+
     // Sort dropdown — preserve q and other URL params; reset page.
     var sort = document.getElementById('tk-srch-sort');
     if (sort) {
