@@ -13,21 +13,16 @@
 ============================================================ -->
 
 {%- comment -%}
-  Default-sort redirect: when a collection page is loaded without any sort
-  in the URL, redirect to the configured default. Runs as early as possible
-  to minimise visual flicker. Filters/page params are preserved.
+  Default sort: removed the JS redirect that used to force every collection
+  page to ?sort_by=price-descending. Now each collection uses its own Sort
+  order from Shopify admin (Products > Collections > [name] > Sort order).
+  Default is "Best selling" which falls back to creation order while order
+  data is sparse. Per-collection overrides (e.g., "Manually" with
+  drag-and-drop curation) are now respected. The section's
+  `default_sort_by` schema setting is kept (for the customizer UI) but no
+  longer drives any redirect — it's vestigial. Safe to remove from schema
+  in a follow-up.
 {%- endcomment -%}
-<script>
-  (function () {
-    try {
-      var url = new URL(window.location.href);
-      if (!url.searchParams.has('sort_by')) {
-        url.searchParams.set('sort_by', {{ section.settings.default_sort_by | default: 'price-descending' | json }});
-        window.location.replace(url.toString());
-      }
-    } catch (e) { /* no-op */ }
-  })();
-</script>
 
 <!-- Breadcrumb -->
 <div class="tk-coll__breadcrumb">
