@@ -171,6 +171,11 @@
         "type": "shopify://apps/algolia-ai-search-discovery/blocks/autocomplete/57bb7f86-d5fe-4d43-96ca-3953324494cf",
         "disabled": true,
         "settings": {}
+      },
+      "208873322266159137": {
+        "type": "shopify://apps/searchanise-search-filter/blocks/app-embed-v2/d8f24ada-02b1-458a-bbeb-5bf16d5c921e",
+        "disabled": false,
+        "settings": {}
       }
     }
   },
