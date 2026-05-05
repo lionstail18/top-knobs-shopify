@@ -9,45 +9,36 @@
  */
 /*
  * ------------------------------------------------------------
- * Top Knobs — search template (Path B / Searchanise migration)
+ * Top Knobs — search template
  *
- * Sections render in this order:
- *   1. tk-search-header  — page hero + search form + popular suggestions
- *   2. main-search       — Shopify-stock search results section. Searchanise's
- *                          app embed (`searchanise-search-filter/blocks/app-embed-v2`)
- *                          auto-injects its filter + results widgets here.
+ * REVERTED to use the original tk-search.liquid section after the
+ * Path B template surgery (tk-search-header + main-search) produced
+ * an inferior result — Shopify-stock product cards on /search don't
+ * match the polished tk-product-card rendering used on collections,
+ * leading to broken/empty image areas in the grid.
  *
- * If Searchanise stops rendering after this template change, restore by
- * setting "main" back to type: "tk-search".
+ * /search now once again has no filters (matches its original state).
+ * To add filters back, port the tk-collection filter sidebar logic
+ * into a new tk-search-with-filters section that uses search.filters
+ * instead of collection.filters. This keeps the brand styling intact.
+ *
+ * Searchanise on /search = sticky search modal only (already enabled
+ * site-wide via the app embed). The full Searchanise search results
+ * widget is not currently rendering on /search either way.
  * ------------------------------------------------------------
  */
 {
   "sections": {
-    "header": {
-      "type": "tk-search-header",
+    "main": {
+      "type": "tk-search",
       "settings": {
         "eyebrow": "Search Our Catalog",
         "heading": "Find Your Perfect Hardware",
         "suggestions": "Honey Bronze Knobs, Bar Pulls, Pemberton Collection, Brushed Nickel Pulls, Appliance Pulls, Serene Collection"
       }
-    },
-    "main": {
-      "type": "main-search",
-      "settings": {
-        "show_search_title": false,
-        "show_search_input": false,
-        "enable_filtering": true,
-        "enable_sorting": true,
-        "products_per_page": 24,
-        "card_size": "medium",
-        "card_size_mobile": "small",
-        "heading_align": "text-start",
-        "filters_open_lg": true
-      }
     }
   },
   "order": [
-    "header",
     "main"
   ]
 }
