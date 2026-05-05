@@ -7,35 +7,39 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
+/*
+ * ------------------------------------------------------------
+ * Top Knobs — collection template
+ *
+ * REVERTED to use the original tk-collection.liquid section after
+ * Path B template surgery produced an inferior visual result.
+ *
+ * tk-collection.liquid contains the polished filter sidebar, finish
+ * swatches via tk-finish-swatch snippet, custom price slider, active
+ * filter chips, default-sort redirect, breadcrumb, hero, and SEO
+ * footer all in one section. Re-introducing it restores the brand-
+ * standard collection page UX.
+ *
+ * Searchanise on collection pages = sticky search modal only. The
+ * Smart Collection / filter widget didn't auto-take-over Shopify's
+ * facet rendering anyway, so reverting loses no Searchanise function.
+ *
+ * If we want to retry Searchanise on collections later: see
+ * topknobs-migration-log.md for the Path B surgery pattern (header +
+ * main-collection-products + seo).
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "header": {
-      "type": "tk-collection-header",
-      "settings": {
-        "default_sort_by": "price-descending"
-      }
-    },
     "main": {
-      "type": "main-collection-products",
+      "type": "tk-collection",
       "settings": {
-        "products_per_page": 24,
-        "card_size_mobile": "small",
-        "card_size": "medium",
-        "enable_filtering": true,
-        "filters_open_lg": true,
-        "enable_sorting": true
-      }
-    },
-    "seo": {
-      "type": "tk-collection-seo",
-      "settings": {
+        "default_sort_by": "price-descending",
         "show_seo": true
       }
     }
   },
   "order": [
-    "header",
-    "main",
-    "seo"
+    "main"
   ]
 }
