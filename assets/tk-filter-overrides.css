@@ -1,0 +1,737 @@
+/* ============================================================
+   Top Knobs — Filter / Search-results overrides
+   (assets/tk-filter-overrides.css)
+
+   Targets the filter + grid markup rendered by Shopify's stock
+   `main-search` and `main-collection-products` sections (canopy theme).
+   When Searchanise's app embed eventually replaces these with snize-*
+   classes, we'll add a parallel override block — but the visual
+   language (typography, gold accent, finish swatches, pill chips,
+   sticky sidebar) stays consistent.
+
+   Design system:
+     - Heading font: var(--tk-font-heading) (Cormorant Garamond)
+     - Body font:    var(--tk-font-body)    (Jost)
+     - Brand gold:   var(--color-accent)    (#c2a058)
+     - Facet header: 11px uppercase, 0.16em letter-spacing, weight 600
+     - Sidebar:      260px wide, 32px padding, no top border
+     - Swatches:     32px circles, gold border on hover/active
+============================================================ */
+
+/* ---------- Layout: sidebar + main grid ---------- */
+
+.main-products-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 1640px;
+  margin: 0 auto;
+  padding: 8px var(--tk-page-x, 40px) 0;
+}
+.main-products-grid__filters {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 32px 28px 32px 0;
+  border-right: 1px solid var(--color-border);
+  position: sticky;
+  top: 80px;
+  align-self: flex-start;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.main-products-grid__filters::-webkit-scrollbar { width: 4px; }
+.main-products-grid__filters::-webkit-scrollbar-track { background: transparent; }
+.main-products-grid__filters::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+.main-products-grid__results {
+  flex: 1 1 auto;
+  padding: 24px 0 0 36px;
+  min-width: 0;
+}
+
+/* Hide stock layout chrome we don't want */
+.main-products-grid__filters > .filter__header,
+.main-products-grid__filters > h2.facets__heading {
+  display: none;
+}
+
+/* Hide the X "remove all" buttons next to facet headers — the toggle is enough */
+.facets__filters .filter > .js-clear-filter,
+.main-products-grid__filters details > summary > .js-clear-filter,
+.main-products-grid__filters details > summary > button[type="reset"] {
+  display: none !important;
+}
+
+/* ---------- Product grid columns: cap at 4 on desktop ---------- */
+
+.main-products-grid__results .grid,
+.main-products-grid__results [class*="grid-cols"],
+.main-products-grid__results > custom-pagination > div {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 24px !important;
+}
+@media (max-width: 1280px) {
+  .main-products-grid__results .grid,
+  .main-products-grid__results [class*="grid-cols"],
+  .main-products-grid__results > custom-pagination > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 900px) {
+  .main-products-grid__results .grid,
+  .main-products-grid__results [class*="grid-cols"],
+  .main-products-grid__results > custom-pagination > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 540px) {
+  .main-products-grid__results .grid,
+  .main-products-grid__results [class*="grid-cols"],
+  .main-products-grid__results > custom-pagination > div {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ---------- Product card polish ---------- */
+
+.main-products-grid__results .product-card,
+.main-products-grid__results .grid-product,
+.main-products-grid__results .grid-product__inner,
+.main-products-grid__results .product-card__inner {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* Card image area: square, contained, with subtle background */
+.main-products-grid__results .product-card__media,
+.main-products-grid__results .product-card .media,
+.main-products-grid__results .grid-product__image,
+.main-products-grid__results .product-card__image {
+  aspect-ratio: 1 / 1;
+  background: var(--color-bg2, #f5f3ee);
+  overflow: hidden;
+  border-radius: 0;
+  margin-bottom: 16px;
+}
+.main-products-grid__results .product-card__media img,
+.main-products-grid__results .grid-product__image img,
+.main-products-grid__results .product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12%;
+}
+
+/* Vendor label */
+.main-products-grid__results .product-card__vendor,
+.main-products-grid__results .grid-product__vendor,
+.main-products-grid__results .vendor {
+  font-family: var(--tk-font-body);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-text2);
+  margin-bottom: 6px;
+}
+
+/* Title */
+.main-products-grid__results .product-card__title,
+.main-products-grid__results .grid-product__title,
+.main-products-grid__results .product-card a[href*="/products/"] {
+  font-family: var(--tk-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 8px;
+  min-height: 2.8em;
+}
+
+/* Price */
+.main-products-grid__results .product-card__price,
+.main-products-grid__results .grid-product__price,
+.main-products-grid__results .price {
+  font-family: var(--tk-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+/* Sale price stays brand-appropriate, not bright red */
+.main-products-grid__results .price--sale,
+.main-products-grid__results .price__sale,
+.main-products-grid__results .price__regular--sale {
+  color: var(--color-accent);
+}
+.main-products-grid__results .price__compare,
+.main-products-grid__results .compare-at-price {
+  text-decoration: line-through;
+  color: var(--color-text2);
+  font-weight: 400;
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+/* Badges (10% off, New arrival): cleaner positioning */
+.main-products-grid__results .product-card__badges,
+.main-products-grid__results .grid-product__badges,
+.main-products-grid__results .badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2;
+}
+.main-products-grid__results .badge,
+.main-products-grid__results .product-badge {
+  font-family: var(--tk-font-body);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 0;
+  line-height: 1;
+}
+.main-products-grid__results .badge--sale,
+.main-products-grid__results .badge--discount {
+  background: var(--color-accent);
+  color: #fff;
+}
+.main-products-grid__results .badge--new {
+  background: #4a6740;
+  color: #fff;
+}
+
+/* Wrap card in relative for badge positioning */
+.main-products-grid__results .product-card,
+.main-products-grid__results .grid-product {
+  position: relative;
+}
+
+/* ---------- Toolbar: Filter | Sort | View ---------- */
+
+.products-toolbar,
+.facets__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px var(--tk-page-x, 40px) 16px;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--tk-font-body);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.products-toolbar__filter,
+.facets__mobile-toggle {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.products-toolbar__filter:hover,
+.facets__mobile-toggle:hover {
+  color: var(--color-accent);
+}
+.products-toolbar__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+.products-toolbar__sort label,
+.products-toolbar__sort .sort-label {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--color-text);
+  font-size: 11px;
+}
+.products-toolbar__sort select,
+.facets__sort select {
+  font-family: var(--tk-font-body);
+  font-size: 13px;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 6px 32px 6px 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c2a058' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.products-toolbar__view {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+}
+.products-toolbar__view button {
+  background: none;
+  border: 1px solid transparent;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--color-text2);
+}
+.products-toolbar__view button.is-active,
+.products-toolbar__view button[aria-pressed="true"] {
+  border-color: var(--color-border);
+  color: var(--color-accent);
+}
+
+/* ---------- Filter group (collapsible facets) ---------- */
+
+.facets {
+  font-family: var(--tk-font-body);
+}
+.facets__filters .filter,
+.main-products-grid__filters details {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 16px;
+  margin-bottom: 12px;
+}
+.facets__filters .filter:last-of-type,
+.main-products-grid__filters details:last-of-type {
+  border-bottom: none;
+}
+.filter__toggle,
+.main-products-grid__filters details > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--tk-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+.filter__toggle::-webkit-details-marker,
+.main-products-grid__filters summary::-webkit-details-marker { display: none; }
+.filter__toggle::after,
+.main-products-grid__filters details > summary::after {
+  content: '+';
+  color: var(--color-text2);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  transition: transform 0.2s ease;
+}
+.filter[open] > .filter__toggle::after,
+.main-products-grid__filters details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+/* ---------- Filter list items (checkboxes) ---------- */
+
+.filter__content {
+  padding: 4px 0 0;
+}
+.filter__list,
+.filter__values {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.filter__item,
+.filter__list li {
+  margin: 0;
+  padding: 0;
+}
+.filter__label,
+.filter-list-item label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--color-text);
+  position: relative;
+}
+.filter__label:hover,
+.filter-list-item label:hover {
+  color: var(--color-accent);
+}
+.filter__label input[type="checkbox"],
+.filter-list-item input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.filter__count,
+.filter-list-item .count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-text2);
+  font-weight: 400;
+}
+.filter__label.is-disabled,
+.filter-list-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Active state: check + gold text */
+.filter__label.is-active,
+.filter-list-item.is-checked label,
+.filter__label:has(input:checked) {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+/* ---------- Active refinements / clear all ---------- */
+
+.facets__active-filters,
+.active-filters {
+  margin-bottom: 18px;
+  padding: 16px var(--tk-page-x, 40px) 0;
+}
+.active-filters-header {
+  font-family: var(--tk-font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text2);
+  margin-bottom: 8px;
+}
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+}
+.active-filters li,
+.active-filter-pill {
+  background: var(--color-bg2);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 4px 10px;
+  font-family: var(--tk-font-body);
+  font-size: 11px;
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.active-filters a,
+.active-filter-pill a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+.active-filters li:hover,
+.active-filter-pill:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.facets__clear,
+.js-clear-all-filters {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: var(--color-accent);
+  font-family: var(--tk-font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---------- Price range (dual handle) ---------- */
+
+.filter__price-range {
+  padding: 8px 0 4px;
+}
+.filter__price-inputs,
+.facet__price input[type="number"] {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.filter__price-inputs input,
+.facet__price input[type="number"],
+.filter__price input[type="number"] {
+  width: 84px;
+  padding: 7px 8px 7px 18px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  font-family: var(--tk-font-body);
+  font-size: 12px;
+  color: var(--color-text);
+  background-image: linear-gradient(to right, transparent 0, transparent 8px, transparent 8px);
+}
+.filter__price-inputs input:focus,
+.facet__price input[type="number"]:focus,
+.filter__price input[type="number"]:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}
+.filter__price-inputs span,
+.facet__price-separator {
+  color: var(--color-text2);
+}
+
+/* Restyle the range slider — thin track, small subtle gold dots, not big buttons */
+.filter__price-range,
+.filter__range-wrapper,
+.filter__price-slider {
+  position: relative;
+  height: 18px;
+  margin: 8px 0;
+}
+.filter__price-range input[type="range"],
+.filter__range-wrapper input[type="range"],
+.filter__price-slider input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  height: 18px;
+}
+.filter__price-range input[type="range"]::-webkit-slider-runnable-track,
+.filter__range-wrapper input[type="range"]::-webkit-slider-runnable-track,
+.filter__price-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--color-border);
+}
+.filter__price-range input[type="range"]::-webkit-slider-thumb,
+.filter__range-wrapper input[type="range"]::-webkit-slider-thumb,
+.filter__price-slider input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+  margin-top: -6px;
+  transition: transform 0.15s ease;
+}
+.filter__price-range input[type="range"]::-webkit-slider-thumb:hover,
+.filter__range-wrapper input[type="range"]::-webkit-slider-thumb:hover,
+.filter__price-slider input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.filter__price-range input[type="range"]::-moz-range-thumb,
+.filter__range-wrapper input[type="range"]::-moz-range-thumb,
+.filter__price-slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.filter__price-range input[type="range"]::-moz-range-track,
+.filter__range-wrapper input[type="range"]::-moz-range-track,
+.filter__price-slider input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: var(--color-border);
+}
+/* Override theme-default huge slider knob if present */
+.filter__price-range input[type="range"][class*="big"],
+.filter__price-range input[type="range"].input-range {
+  width: 100%;
+}
+
+/* Add $ prefix to price inputs */
+.filter__price-inputs,
+.facet__price {
+  position: relative;
+}
+.filter__price-inputs::before,
+.facet__price::before {
+  content: '';
+}
+/* Use a wrapper class if theme provides one; otherwise rely on input padding-left */
+.filter__price input,
+.filter__price-inputs input {
+  padding-left: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ctext x='2' y='10' font-family='Jost,sans-serif' font-size='10' fill='%23999' font-weight='500'%3E%24%3C/text%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 6px center;
+}
+
+/* ---------- "See N more" toggle ---------- */
+
+.filter__more,
+.filter__show-more {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-family: var(--tk-font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 8px 0 0;
+  cursor: pointer;
+}
+.filter__more:hover { text-decoration: underline; }
+
+/* ---------- Search results count ---------- */
+
+.search__count,
+.facets__count,
+.results-count {
+  font-family: var(--tk-font-body);
+  font-size: 13px;
+  color: var(--color-text2);
+  padding: 12px var(--tk-page-x, 40px);
+  margin: 0;
+}
+
+/* ---------- Pagination (results) ---------- */
+
+.pagination,
+.custom-pagination__items {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 32px 0;
+  gap: 4px;
+}
+.pagination li,
+.custom-pagination__item {
+  margin: 0;
+}
+.pagination a,
+.pagination span,
+.custom-pagination__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  font-family: var(--tk-font-body);
+  font-size: 12px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+.pagination a:hover,
+.custom-pagination__link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.pagination .current,
+.custom-pagination__link.is-active,
+.custom-pagination__link[aria-current="page"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+/* ---------- Product card inside results grid ---------- */
+
+.main-products-grid__results .grid-product,
+.main-products-grid__results .product-card {
+  border: none;
+}
+
+/* ---------- Mobile (drawer) ---------- */
+
+@media (max-width: 1024px) {
+  .main-products-grid {
+    flex-direction: column;
+    padding: 12px 0 0;
+  }
+  .main-products-grid__filters {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 16px var(--tk-page-x, 24px);
+    position: relative;
+    top: auto;
+    max-height: none;
+  }
+  .main-products-grid__results {
+    padding: 0 var(--tk-page-x, 24px);
+  }
+  /* Mobile drawer pattern: sidebar hidden until "Filter" tapped */
+  .main-products-grid__filters.lg\\:js-hidden {
+    display: none;
+  }
+  .main-products-grid__filters.is-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    overflow-y: auto;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .products-toolbar,
+  .facets__toolbar {
+    padding: 14px var(--tk-page-x, 16px) 12px;
+    gap: 12px;
+  }
+  .products-toolbar__view { display: none; }
+}
+
+/* ---------- Finish swatches (when finish facet renders) ---------- */
+/* Will be picked up automatically when filter values include finish names
+   that match the tk-finish-swatch hex map. Searchanise needs admin config
+   to render swatches; for now the values are checkboxes with the finish
+   name. Once Searchanise is configured to render swatches, swap these. */
+
+.filter__label[data-finish] {
+  position: relative;
+  padding-left: 32px;
+}
+.filter__label[data-finish]::before {
+  content: '';
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  border: 1px solid rgba(0,0,0,0.06);
+}
