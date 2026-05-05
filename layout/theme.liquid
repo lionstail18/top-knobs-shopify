@@ -326,10 +326,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
   {%- endif -%}
 
-  {%- if request.path contains '/pages/search-results-page' -%}
-    <link rel="stylesheet" href="{{ 'searchanise-overrides.css' | asset_url }}">
-  {%- endif -%}
-
   {{ content_for_header }}
 
   {%- if request.design_mode -%}
