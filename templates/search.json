@@ -11,26 +11,23 @@
  * ------------------------------------------------------------
  * Top Knobs — search template
  *
- * REVERTED to use the original tk-search.liquid section after the
- * Path B template surgery (tk-search-header + main-search) produced
- * an inferior result — Shopify-stock product cards on /search don't
- * match the polished tk-product-card rendering used on collections,
- * leading to broken/empty image areas in the grid.
+ * Uses tk-search-with-filters.liquid: a port of tk-collection's
+ * filter sidebar / chips / sort / pagination to /search using
+ * Shopify's native search.* objects (search.results, search.filters,
+ * search.sort_options, etc).
  *
- * /search now once again has no filters (matches its original state).
- * To add filters back, port the tk-collection filter sidebar logic
- * into a new tk-search-with-filters section that uses search.filters
- * instead of collection.filters. This keeps the brand styling intact.
+ * Pre-search state (visiting /search without a query) renders a
+ * compact hero with refinement input + popular suggestions, mirroring
+ * the original tk-search hero.
  *
- * Searchanise on /search = sticky search modal only (already enabled
- * site-wide via the app embed). The full Searchanise search results
- * widget is not currently rendering on /search either way.
+ * Filter values come from the Shopify "Search & Discovery" admin app
+ * (free, first-party). To add/remove facets, configure them there.
  * ------------------------------------------------------------
  */
 {
   "sections": {
     "main": {
-      "type": "tk-search",
+      "type": "tk-search-with-filters",
       "settings": {
         "eyebrow": "Search Our Catalog",
         "heading": "Find Your Perfect Hardware",
