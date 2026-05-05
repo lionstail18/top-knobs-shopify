@@ -190,16 +190,13 @@
 
 /* ============================================================
    Top toolbar (tabs / view mode / sort)
+   We don't override the layout/display of .snize-main-panel-controls
+   or .snize-horizontal-wrapper/left/right — Searchanise's default
+   toolbar arrangement already works. We only style individual elements.
    ============================================================ */
 .snize-results-page .snize-main-panel {
-  margin-bottom: 16px;
-}
-.snize-results-page .snize-main-panel-controls {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 10px 0 14px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -307,12 +304,14 @@
    Product grid + cards
    The actual product grid container is the UL .snize-search-results-content.
    ============================================================ */
-.snize-results-page .snize-three-columns {
-  display: block;
+body.snize-results-page .snize-three-columns {
+  display: block !important;
   width: 100%;
 }
-.snize-results-page .snize-search-results-content {
-  display: grid;
+/* Higher-specificity selector + !important to win over Searchanise's CDN CSS
+   that sets display:flex on .snize-search-results-content. */
+body.snize-results-page .snize.snize-search-results .snize-search-results-content {
+  display: grid !important;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px 24px;
   list-style: none;
@@ -320,12 +319,12 @@
   padding: 8px 0;
 }
 @media (min-width: 1200px) {
-  .snize-results-page .snize-search-results-content {
+  body.snize-results-page .snize.snize-search-results .snize-search-results-content {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 @media (max-width: 768px) {
-  .snize-results-page .snize-search-results-content {
+  body.snize-results-page .snize.snize-search-results .snize-search-results-content {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -405,7 +404,9 @@
   font-weight: 400;
 }
 
-/* Sale badge — match tk-pcard__sale-badge */
+/* Sale badge — match tk-pcard__sale-badge.
+   Hide when empty (Searchanise renders the wrapper even with no inner text
+   for some products, which would otherwise show as a green rectangle). */
 .snize-results-page .snize-save-price-wrapper {
   position: absolute;
   top: 10px;
@@ -421,6 +422,10 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1;
+}
+.snize-results-page .snize-save-price-wrapper:empty,
+.snize-results-page .snize-save-price-wrapper:not(:has(.snize-highlight-saving-text)) {
+  display: none;
 }
 .snize-results-page .snize-highlight-saving-text {
   color: #fff;
