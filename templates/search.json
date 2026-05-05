@@ -7,18 +7,47 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
+/*
+ * ------------------------------------------------------------
+ * Top Knobs — search template (Path B / Searchanise migration)
+ *
+ * Sections render in this order:
+ *   1. tk-search-header  — page hero + search form + popular suggestions
+ *   2. main-search       — Shopify-stock search results section. Searchanise's
+ *                          app embed (`searchanise-search-filter/blocks/app-embed-v2`)
+ *                          auto-injects its filter + results widgets here.
+ *
+ * If Searchanise stops rendering after this template change, restore by
+ * setting "main" back to type: "tk-search".
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "main": {
-      "type": "tk-search",
+    "header": {
+      "type": "tk-search-header",
       "settings": {
         "eyebrow": "Search Our Catalog",
         "heading": "Find Your Perfect Hardware",
         "suggestions": "Honey Bronze Knobs, Bar Pulls, Pemberton Collection, Brushed Nickel Pulls, Appliance Pulls, Serene Collection"
       }
+    },
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "show_search_title": false,
+        "show_search_input": false,
+        "enable_filtering": true,
+        "enable_sorting": true,
+        "products_per_page": 24,
+        "card_size": "medium",
+        "card_size_mobile": "small",
+        "heading_align": "text-start",
+        "filters_open_lg": true
+      }
     }
   },
   "order": [
+    "header",
     "main"
   ]
 }
