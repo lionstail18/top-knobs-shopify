@@ -34,10 +34,10 @@
 .snize-results-page .snize.snize-search-results {
   display: grid;
   grid-template-columns: 240px 1fr;
-  grid-template-rows: auto auto;
   grid-template-areas:
-    "panel panel"
-    "sidebar content";
+    "panel    panel"
+    "sidebar  toolbar"
+    "sidebar  content";
   gap: 0 32px;
   max-width: 1440px;
   margin: 0 auto;
@@ -45,8 +45,33 @@
   align-items: start;
 }
 .snize-results-page .snize-main-panel { grid-area: panel; }
+.snize-results-page .snize-horizontal-wrapper { grid-area: toolbar; }
 .snize-results-page .snize-filters-sidebar { grid-area: sidebar; }
 .snize-results-page .snize-search-results-main-content { grid-area: content; min-width: 0; }
+
+/* Toolbar (sort dropdown + view-mode + result-count) — inline row, right-aligned controls */
+.snize-results-page .snize-horizontal-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 0 14px;
+  margin: 0 0 12px;
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+.snize-results-page .snize-horizontal-left {
+  font-family: var(--tk-font-body);
+  font-size: 12px;
+  color: var(--color-text2);
+  letter-spacing: 0.04em;
+}
+.snize-results-page .snize-horizontal-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 
 /* ============================================================
    Searchanise header (mostly empty in this layout — keep tidy)
