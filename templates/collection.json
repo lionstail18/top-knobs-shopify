@@ -9,12 +9,33 @@
  */
 {
   "sections": {
+    "header": {
+      "type": "tk-collection-header",
+      "settings": {
+        "default_sort_by": "price-descending"
+      }
+    },
     "main": {
-      "type": "tk-collection",
+      "type": "main-collection-products",
+      "settings": {
+        "products_per_page": 24,
+        "card_size_mobile": "small",
+        "card_size": "medium",
+        "enable_filtering": true,
+        "filters_open_lg": true,
+        "enable_sorting": true
+      }
+    },
+    "seo": {
+      "type": "tk-collection-seo",
       "settings": {
         "show_seo": true
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "header",
+    "main",
+    "seo"
+  ]
 }

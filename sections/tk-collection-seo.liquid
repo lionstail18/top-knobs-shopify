@@ -1,0 +1,68 @@
+<!-- ============================================================
+  Top Knobs — Collection SEO Footer (tk-collection-seo.liquid)
+
+  Renders below the product grid on every collection page. Shows the
+  collection's description as rich text if it has substantive copy;
+  otherwise falls back to a generic "About {Collection}" block with
+  brand boilerplate (lifetime warranty, free shipping over $99, samples).
+============================================================ -->
+
+{%- if section.settings.show_seo -%}
+  {%- liquid
+    assign coll_desc_text = collection.description | strip_html | strip
+    assign coll_title_text = collection.title | strip
+    assign has_real_desc = false
+    if coll_desc_text != blank and coll_desc_text != coll_title_text and coll_desc_text.size > 60
+      assign has_real_desc = true
+    endif
+  -%}
+  <section class="tk-coll__seo">
+    <div class="tk-coll__seo-inner">
+      {%- if has_real_desc -%}
+        <div class="tk-coll__seo-rich rte">{{ collection.description }}</div>
+      {%- else -%}
+        <h2 class="tk-coll__seo-h2">About {{ collection.title }}</h2>
+        <p class="tk-coll__seo-body">Top Knobs is one of America's most respected cabinet hardware brands, offering an unmatched range of knobs, pulls, appliance handles, and bath accessories across more than 40 curated collections. Every piece is crafted from solid zinc alloy and plated to the highest standards, then backed by a lifetime limited warranty.</p>
+        <p class="tk-coll__seo-body">As an authorized Top Knobs dealer, TopKnobsHardware.net carries the complete {{ collection.title }} catalog at the lowest prices online — guaranteed. All orders ship within 1–2 business days. Free shipping on orders over $99. Not sure which finish is right for your space? Our <a href="/pages/samples">sample program</a> lets you try hardware in your home before committing to a full order.</p>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{%- style -%}
+  .tk-coll__seo { padding: 64px var(--tk-page-x); border-top: 1px solid var(--color-border); background: var(--color-bg2); }
+  .tk-coll__seo-inner { max-width: 860px; }
+  .tk-coll__seo-h2 { font-family: var(--tk-font-heading); font-size: 28px; font-weight: 400; color: var(--color-text); margin: 0 0 16px; }
+  .tk-coll__seo-body { font-family: var(--tk-font-body); font-size: 14px; line-height: 1.85; color: var(--color-text2); margin: 0 0 16px; }
+  .tk-coll__seo-body a { color: var(--color-accent); text-decoration: underline; }
+  .tk-coll__seo-rich { font-family: var(--tk-font-body); font-size: 14px; line-height: 1.85; color: var(--color-text2); }
+  .tk-coll__seo-rich h2 { font-family: var(--tk-font-heading); font-size: 28px; font-weight: 400; color: var(--color-text); margin: 32px 0 14px; }
+  .tk-coll__seo-rich h2:first-child { margin-top: 0; }
+  .tk-coll__seo-rich h3 { font-family: var(--tk-font-heading); font-size: 20px; font-weight: 400; color: var(--color-text); margin: 24px 0 10px; }
+  .tk-coll__seo-rich p { margin: 0 0 14px; }
+  .tk-coll__seo-rich ul, .tk-coll__seo-rich ol { margin: 0 0 14px; padding-left: 22px; }
+  .tk-coll__seo-rich li { margin-bottom: 6px; }
+  .tk-coll__seo-rich a { color: var(--color-accent); text-decoration: underline; }
+  .tk-coll__seo-rich strong { color: var(--color-text); }
+  .tk-coll__seo-rich em { font-style: italic; }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Collection SEO",
+  "tag": "div",
+  "class": "tk-collection-seo-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_seo",
+      "label": "Show SEO copy block",
+      "default": true,
+      "info": "Renders the collection description (or the generic boilerplate if there's no real description)."
+    }
+  ],
+  "presets": [
+    { "name": "Collection SEO" }
+  ]
+}
+{% endschema %}

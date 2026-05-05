@@ -1,0 +1,127 @@
+<!-- ============================================================
+  Top Knobs — Collection Header (tk-collection-header.liquid)
+
+  Renders the top of every collection page:
+    1. Default-sort redirect script (preserves the v2 default-sort behaviour)
+    2. Breadcrumb (Home / {Collection})
+    3. Hero header with collection image, title, optional description
+
+  Filter sidebar + product grid + pagination are handled by the
+  main-collection-products section (Shopify stock) which Searchanise
+  / Search & Discovery facets render into. SEO copy is at the bottom
+  via tk-collection-seo.
+
+  Default-sort redirect must be at the top of the document (before any
+  rendering) to minimise visual flicker.
+============================================================ -->
+
+{%- comment -%}
+  Default-sort redirect: when a collection page is loaded without any sort
+  in the URL, redirect to the configured default. Runs as early as possible
+  to minimise visual flicker. Filters/page params are preserved.
+{%- endcomment -%}
+<script>
+  (function () {
+    try {
+      var url = new URL(window.location.href);
+      if (!url.searchParams.has('sort_by')) {
+        url.searchParams.set('sort_by', {{ section.settings.default_sort_by | default: 'price-descending' | json }});
+        window.location.replace(url.toString());
+      }
+    } catch (e) { /* no-op */ }
+  })();
+</script>
+
+<!-- Breadcrumb -->
+<div class="tk-coll__breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  <span aria-hidden="true">/</span>
+  <span class="tk-coll__breadcrumb-current">{{ collection.title | escape }}</span>
+</div>
+
+<!-- Collection header -->
+<div class="tk-coll__header">
+  {%- if collection.image != blank -%}
+    {{- collection.image | image_url: width: 2000 | image_tag:
+        loading: 'eager', class: 'tk-coll__header-img',
+        alt: collection.title | escape -}}
+  {%- elsif section.settings.fallback_image != blank -%}
+    {{- section.settings.fallback_image | image_url: width: 2000 | image_tag:
+        loading: 'eager', class: 'tk-coll__header-img',
+        alt: collection.title | escape -}}
+  {%- else -%}
+    <div class="tk-coll__header-img tk-coll__header-img--placeholder"></div>
+  {%- endif -%}
+  <div class="tk-coll__header-overlay">
+    <h1 class="tk-coll__h1">{{ collection.title | escape }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="tk-coll__desc">{{ collection.description | strip_html | truncatewords: 20 }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- style -%}
+  .tk-coll__breadcrumb {
+    padding: 16px var(--tk-page-x);
+    border-bottom: 1px solid var(--color-border);
+    display: flex; gap: 8px; align-items: center;
+    font-family: var(--tk-font-body);
+    font-size: 12px; color: var(--color-text2);
+  }
+  .tk-coll__breadcrumb a { color: var(--color-text2); text-decoration: none; }
+  .tk-coll__breadcrumb-current { color: var(--color-text); }
+
+  .tk-coll__header { position: relative; height: 240px; overflow: hidden; }
+  .tk-coll__header-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .tk-coll__header-img--placeholder { background: var(--color-border); }
+  .tk-coll__header-overlay {
+    position: absolute; inset: 0; background: rgba(13,21,38,0.55);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0 24px;
+  }
+  .tk-coll__h1 {
+    font-family: var(--tk-font-heading); font-size: 48px; font-weight: 400;
+    color: #fff; margin: 0; line-height: 1.05;
+  }
+  .tk-coll__desc { font-family: var(--tk-font-body); font-size: 14px; color: rgba(255,255,255,0.75); margin: 10px 0 0; max-width: 600px; }
+
+  @media (max-width: 768px) {
+    .tk-coll__header { height: 180px; }
+    .tk-coll__h1 { font-size: 32px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Collection Header",
+  "tag": "div",
+  "class": "tk-collection-header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback hero image",
+      "info": "Used when a collection has no image of its own."
+    },
+    {
+      "type": "select",
+      "id": "default_sort_by",
+      "label": "Default sort order",
+      "default": "price-descending",
+      "options": [
+        { "value": "manual",            "label": "Manual" },
+        { "value": "best-selling",      "label": "Best selling" },
+        { "value": "title-ascending",   "label": "Title A→Z" },
+        { "value": "title-descending",  "label": "Title Z→A" },
+        { "value": "price-ascending",   "label": "Price low→high" },
+        { "value": "price-descending",  "label": "Price high→low" },
+        { "value": "created-ascending", "label": "Oldest first" },
+        { "value": "created-descending","label": "Newest first" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Collection Header" }
+  ]
+}
+{% endschema %}
