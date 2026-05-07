@@ -455,44 +455,61 @@
   {%- if design_collection != blank and current_finish != blank -%}
     {%- assign max_cards = 12 -%}
     {%- capture pair_cards -%}
+      {%- comment -%}
+        Two-pass render to put the "lead" card first:
+        - Pass 1 finds the first opposite-type sibling (a Knob if current
+          is a Pull/Appliance Pull, a Pull if current is a Knob) at the
+          same finish + same collection, and renders it as the first card.
+          Appliance Pulls match Pull-detection because their product type
+          contains the word "pull".
+        - Pass 2 fills in the rest of the carousel with same-collection,
+          same-finish products of ANY type, in collection order, skipping
+          the current product and the lead already rendered.
+        If the current product is neither a pull nor a knob (e.g. towel
+        rings), pass 1 is skipped — the user just gets all same-collection
+        same-finish siblings in collection order.
+      {%- endcomment -%}
+
+      {%- assign lead_handle = '' -%}
+      {%- if want_type_pull or want_type_knob -%}
+        {%- for related in design_collection.products -%}
+          {%- if related.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
+          {%- if related_finish != current_finish -%}{%- continue -%}{%- endif -%}
+          {%- assign rel_pt_raw = related.product_type | default: related.type -%}
+          {%- assign rel_pt_lower = rel_pt_raw | downcase -%}
+          {%- if want_type_pull and rel_pt_lower contains 'pull' -%}
+            <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
+            {%- assign lead_handle = related.handle -%}
+            {%- break -%}
+          {%- elsif want_type_knob and rel_pt_lower contains 'knob' -%}
+            <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
+            {%- assign lead_handle = related.handle -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
       {%- assign shown = 0 -%}
+      {%- if lead_handle != '' -%}{%- assign shown = 1 -%}{%- endif -%}
       {%- for related in design_collection.products -%}
         {%- if shown >= max_cards -%}{%- break -%}{%- endif -%}
         {%- if related.id == product.id -%}{%- continue -%}{%- endif -%}
+        {%- if related.handle == lead_handle -%}{%- continue -%}{%- endif -%}
         {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
         {%- if related_finish != current_finish -%}{%- continue -%}{%- endif -%}
-
-        {%- assign rel_pt_raw = related.product_type | default: related.type -%}
-        {%- assign rel_pt_lower = rel_pt_raw | downcase -%}
-        {%- if want_type_pull -%}
-          {%- unless rel_pt_lower contains 'pull' -%}{%- continue -%}{%- endunless -%}
-        {%- elsif want_type_knob -%}
-          {%- unless rel_pt_lower contains 'knob' -%}{%- continue -%}{%- endunless -%}
-        {%- endif -%}
-
         <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
         {%- assign shown = shown | plus: 1 -%}
       {%- endfor -%}
     {%- endcapture -%}
 
     {%- if shown > 0 -%}
-      {%- liquid
-        if want_type_pull
-          assign pair_h2 = 'Pair with Pulls'
-          assign pair_eyebrow = 'Matching pulls from the same collection'
-        elsif want_type_knob
-          assign pair_h2 = 'Pair with Knobs'
-          assign pair_eyebrow = 'Matching knobs from the same collection'
-        else
-          assign pair_h2 = 'More from this Collection'
-          assign pair_eyebrow = 'From the ' | append: design_collection.title | append: ' Collection'
-        endif
-      -%}
+      {%- assign pair_eyebrow = 'From the ' | append: design_collection.title | append: ' Collection' -%}
       <section class="tk-prod__pair" data-total="{{ shown }}">
         <div class="tk-prod__pair-head">
           <div class="tk-prod__pair-head-left">
             <p class="tk-eyebrow">{{ pair_eyebrow | escape }}</p>
-            <h2 class="tk-prod__pair-h2">{{ pair_h2 | escape }}</h2>
+            <h2 class="tk-prod__pair-h2">Pair with&hellip;</h2>
           </div>
           <div class="tk-prod__pair-head-right">
             <a href="{{ design_collection.url }}" class="tk-prod__pair-shop-link">Shop the {{ design_collection.title | escape }} Collection &rarr;</a>
