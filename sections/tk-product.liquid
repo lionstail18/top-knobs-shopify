@@ -429,17 +429,22 @@
 
     assign current_finish = product.metafields.top_knobs.finish_name.value
 
-    # Opposite-product-type filter for Pull↔Knob cross-matching.
-    # Detected by string-containment on product.product_type.
     assign current_pt_lower = product.product_type | downcase
     assign want_type_pull = false
     assign want_type_knob = false
-    if current_pt_lower contains 'pull'
-      assign want_type_knob = true
-    elsif current_pt_lower contains 'knob'
-      assign want_type_pull = true
-    endif
   -%}
+  {%- comment -%}
+    Opposite-product-type filter for Pull↔Knob cross-matching, done outside
+    the {% liquid %} block as plain tags. Earlier attempts placing this inside
+    {% liquid %} ... {% endliquid %} produced unset want_* flags despite the
+    assign filter chain (downcase) being applied — possibly a Liquid scoping
+    quirk in how `contains` evaluates against vars assigned in the same block.
+  {%- endcomment -%}
+  {%- if current_pt_lower contains 'pull' -%}
+    {%- assign want_type_knob = true -%}
+  {%- elsif current_pt_lower contains 'knob' -%}
+    {%- assign want_type_pull = true -%}
+  {%- endif -%}
 
   <!-- TK-DEBUG-PAIR: tag={{ collection_tag_value }} | design_coll_title={{ design_collection.title }} | design_coll_handle={{ design_collection.handle }} | finish={{ current_finish }} | pt_raw=[{{ product.product_type }}] | pt_lower=[{{ current_pt_lower }}] | want_pull={{ want_type_pull }} | want_knob={{ want_type_knob }} -->
 
