@@ -504,7 +504,18 @@
     {%- endcapture -%}
 
     {%- if shown > 0 -%}
-      {%- assign pair_eyebrow = 'From the ' | append: design_collection.title | append: ' Collection' -%}
+      {%- comment -%}
+        Eyebrow text. The collection.title in this catalog typically already
+        contains "Collection" (eg. "Top Knobs Lynwood Collection"), so we
+        don't append it again. If it doesn't, append " Collection" so the
+        eyebrow always reads naturally.
+      {%- endcomment -%}
+      {%- assign coll_title_lower = design_collection.title | downcase -%}
+      {%- if coll_title_lower contains 'collection' -%}
+        {%- assign pair_eyebrow = 'From the ' | append: design_collection.title -%}
+      {%- else -%}
+        {%- assign pair_eyebrow = 'From the ' | append: design_collection.title | append: ' Collection' -%}
+      {%- endif -%}
       <section class="tk-prod__pair" data-total="{{ shown }}">
         <div class="tk-prod__pair-head">
           <div class="tk-prod__pair-head-left">
