@@ -395,14 +395,36 @@
       endif
     endfor
 
+    # Find the design collection in the product's collections.
+    # Match strategy (in order): exact title, title contains tag value,
+    # handle contains tag value as slug. The looser fallbacks catch the
+    # common case where a tag like "Lynwood" maps to a collection titled
+    # "Top Knobs Lynwood" with handle "top-knobs-lynwood".
     assign design_collection = blank
     if collection_tag_value != blank
+      assign tag_slug = collection_tag_value | downcase | replace: ' ', '-' | replace: '&', 'and'
       for c in product.collections
         if c.title == collection_tag_value
           assign design_collection = c
           break
         endif
       endfor
+      if design_collection == blank
+        for c in product.collections
+          if c.title contains collection_tag_value
+            assign design_collection = c
+            break
+          endif
+        endfor
+      endif
+      if design_collection == blank
+        for c in product.collections
+          if c.handle contains tag_slug
+            assign design_collection = c
+            break
+          endif
+        endfor
+      endif
     endif
 
     assign current_finish = product.metafields.top_knobs.finish_name.value
