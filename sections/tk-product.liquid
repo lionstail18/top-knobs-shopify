@@ -441,7 +441,7 @@
     endif
   -%}
 
-  <!-- TK-DEBUG-PAIR: tag={{ collection_tag_value }} | design_coll_title={{ design_collection.title }} | design_coll_handle={{ design_collection.handle }} | finish={{ current_finish }} | want_pull={{ want_type_pull }} | want_knob={{ want_type_knob }} -->
+  <!-- TK-DEBUG-PAIR: tag={{ collection_tag_value }} | design_coll_title={{ design_collection.title }} | design_coll_handle={{ design_collection.handle }} | finish={{ current_finish }} | pt_raw=[{{ product.product_type }}] | pt_lower=[{{ current_pt_lower }}] | want_pull={{ want_type_pull }} | want_knob={{ want_type_knob }} -->
 
   {%- if design_collection != blank and current_finish != blank -%}
     {%- assign max_cards = 12 -%}
