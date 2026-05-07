@@ -304,8 +304,11 @@
         assign material_display = 'Solid zinc alloy with premium plating'
       endif
 
-      # Product Type — strip "Cabinet Hardware - " or "|" prefixes for cleaner display
-      assign pt_display = product.product_type
+      # Product Type — strip "Cabinet Hardware - " or "|" prefixes for cleaner display.
+      # Note: this catalog stores the value on product.type (legacy alias), not
+      # product.product_type. Read the legacy field with a fallback.
+      assign pt_raw = product.product_type | default: product.type
+      assign pt_display = pt_raw
       if pt_display contains ' - '
         assign pt_display = pt_display | split: ' - ' | last | strip
       elsif pt_display contains '|'
@@ -429,7 +432,10 @@
 
     assign current_finish = product.metafields.top_knobs.finish_name.value
 
-    assign current_pt_lower = product.product_type | downcase
+    # product.type is the value-bearing field on this catalog;
+    # product.product_type is empty for legacy-imported products.
+    assign current_pt_raw = product.product_type | default: product.type
+    assign current_pt_lower = current_pt_raw | downcase
     assign want_type_pull = false
     assign want_type_knob = false
   -%}
@@ -446,8 +452,6 @@
     {%- assign want_type_pull = true -%}
   {%- endif -%}
 
-  <!-- TK-DEBUG-PAIR: tag={{ collection_tag_value }} | finish={{ current_finish }} | pt=[{{ product.product_type }}] | type=[{{ product.type }}] | tags={{ product.tags | join: ',' }} | want_pull={{ want_type_pull }} | want_knob={{ want_type_knob }} -->
-
   {%- if design_collection != blank and current_finish != blank -%}
     {%- assign max_cards = 12 -%}
     {%- capture pair_cards -%}
@@ -458,11 +462,11 @@
         {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
         {%- if related_finish != current_finish -%}{%- continue -%}{%- endif -%}
 
+        {%- assign rel_pt_raw = related.product_type | default: related.type -%}
+        {%- assign rel_pt_lower = rel_pt_raw | downcase -%}
         {%- if want_type_pull -%}
-          {%- assign rel_pt_lower = related.product_type | downcase -%}
           {%- unless rel_pt_lower contains 'pull' -%}{%- continue -%}{%- endunless -%}
         {%- elsif want_type_knob -%}
-          {%- assign rel_pt_lower = related.product_type | downcase -%}
           {%- unless rel_pt_lower contains 'knob' -%}{%- continue -%}{%- endunless -%}
         {%- endif -%}
 
