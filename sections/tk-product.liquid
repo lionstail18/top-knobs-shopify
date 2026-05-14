@@ -1088,7 +1088,13 @@
     document.querySelectorAll('.tk-prod__thumb').forEach(function (thumb) {
       thumb.addEventListener('click', function () {
         var src = thumb.dataset.img;
-        if (src && mainImg) mainImg.src = src;
+        if (src && mainImg) {
+          // Clear srcset so the new src actually wins. Without this the
+          // browser keeps showing the responsive-image pick from srcset
+          // even though src has changed.
+          if (mainImg.hasAttribute('srcset')) mainImg.removeAttribute('srcset');
+          mainImg.src = src;
+        }
         document.querySelectorAll('.tk-prod__thumb').forEach(function (t) { t.classList.remove('tk-prod__thumb--active'); });
         thumb.classList.add('tk-prod__thumb--active');
       });
