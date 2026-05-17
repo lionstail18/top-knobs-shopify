@@ -168,6 +168,34 @@
   }
 {%- endstyle -%}
 
+
+{%- assign faq_ld_count = 0 -%}
+{%- for block in section.blocks -%}{%- if block.type == 'item' and block.settings.question != blank and block.settings.answer != blank -%}{%- assign faq_ld_count = faq_ld_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+{%- if faq_ld_count > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign faq_ld_first = true -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'item' and block.settings.question != blank and block.settings.answer != blank -%}
+        {%- unless faq_ld_first -%},{%- endunless -%}{%- assign faq_ld_first = false -%}
+        {
+          "@type": "Question",
+          "name": {{ block.settings.question | strip_html | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ block.settings.answer | strip_html | json }}
+          }
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "FAQ Page",
