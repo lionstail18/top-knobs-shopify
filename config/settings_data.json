@@ -182,9 +182,14 @@
         "disabled": true,
         "settings": {}
       },
+      "4061484991452085298": {
+        "type": "shopify://apps/commslayer-helpdesk-chat/blocks/chat-widget/e555a08e-ceaa-4a9b-ab9f-a58bccbfc762",
+        "disabled": false,
+        "settings": {}
+      },
       "169412249732273955": {
         "type": "shopify://apps/intercom-ai-customer-service/blocks/widget/ef6552d6-43c7-4fc7-b903-fec510e74dee",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
