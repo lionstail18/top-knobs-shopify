@@ -1260,6 +1260,90 @@
   });
 </script>
 
+<div class="tk-sticky-atc" id="tk-sticky-atc" aria-hidden="true">
+  <div class="tk-sticky-atc__info">
+    <span class="tk-sticky-atc__title">{{ product.title | escape }}</span>
+    <span class="tk-sticky-atc__price" id="tk-sticky-atc-price">{{ product.selected_or_first_available_variant.price | default: product.price | money }}</span>
+  </div>
+  <button type="button" class="tk-sticky-atc__btn" id="tk-sticky-atc-btn">Add to Cart</button>
+</div>
+
+{%- style -%}
+  .tk-sticky-atc {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    display: none; align-items: center; gap: 14px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--color-bg, #fff);
+    border-top: 1px solid var(--color-border, #eae0d0);
+    box-shadow: 0 -3px 14px rgba(42, 89, 115, 0.12);
+    transform: translateY(110%); transition: transform 220ms ease;
+    font-family: var(--tk-font-body, 'Montserrat', sans-serif);
+  }
+  .tk-sticky-atc.is-visible { transform: translateY(0); }
+  .tk-sticky-atc__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .tk-sticky-atc__title {
+    font-size: 13px; color: var(--color-text2, #5c6e7c);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tk-sticky-atc__price {
+    font-family: var(--tk-font-heading, 'Noto Serif', serif);
+    font-size: 16px; font-weight: 600; color: var(--color-text, #2a5973);
+  }
+  .tk-sticky-atc__btn {
+    flex: 0 0 auto; min-height: 44px; padding: 10px 22px;
+    background: var(--color-accent, #8f3627); color: #fff;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 0; border-radius: 2px; cursor: pointer; transition: background 150ms ease;
+  }
+  .tk-sticky-atc__btn:hover { background: var(--color-accent2, #b85333); }
+  .tk-sticky-atc__btn:disabled { background: var(--color-border, #c9bfaf); opacity: .65; cursor: not-allowed; }
+  @media (max-width: 768px) { .tk-sticky-atc { display: flex; } }
+{%- endstyle -%}
+
+<script>
+  (function () {
+    function init() {
+      var bar = document.getElementById('tk-sticky-atc');
+      var realBtn = document.getElementById('tk-prod-add-btn');
+      if (!bar || !realBtn) return;
+      var sBtn = document.getElementById('tk-sticky-atc-btn');
+      var sPrice = document.getElementById('tk-sticky-atc-price');
+      var realPrice = document.getElementById('tk-prod-price-now');
+      var mq = window.matchMedia('(max-width: 768px)');
+      sBtn.addEventListener('click', function () { if (!realBtn.disabled) realBtn.click(); });
+      function sync() {
+        if (realPrice) sPrice.textContent = realPrice.textContent;
+        sBtn.disabled = realBtn.disabled;
+        if (!sBtn.classList.contains('is-echo')) {
+          sBtn.textContent = realBtn.disabled ? 'Sold Out' : 'Add to Cart';
+        }
+      }
+      sync();
+      new MutationObserver(sync).observe(realBtn, { attributes: true, childList: true, characterData: true, subtree: true });
+      if (realPrice) new MutationObserver(sync).observe(realPrice, { childList: true, characterData: true, subtree: true });
+      document.addEventListener('tk:cart:added', function () {
+        sBtn.classList.add('is-echo'); sBtn.textContent = '✓ Added';
+        setTimeout(function () { sBtn.classList.remove('is-echo'); sync(); }, 2000);
+      });
+      function setVis(show) {
+        var on = show && mq.matches;
+        bar.classList.toggle('is-visible', on);
+        bar.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if ('inert' in bar) bar.inert = !on;
+      }
+      setVis(false);
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (e) { setVis(!e[0].isIntersecting); }, { threshold: 0 });
+        io.observe(realBtn);
+      }
+      mq.addEventListener('change', function () { if (!mq.matches) setVis(false); });
+    }
+    if (document.readyState !== 'loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  })();
+</script>
+
+
 {% schema %}
 {
   "name": "Product",
