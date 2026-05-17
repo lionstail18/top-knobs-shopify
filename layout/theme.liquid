@@ -34,6 +34,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-M28D9QJD');</script>
 <!-- End Google Tag Manager -->
 
+  {%- comment -%}
+    Thin-content noindex gate (added 2026-05-17; parity with Knobs.co
+    2026-05-16). Collections with no body copy AND fewer than 5 products
+    are long-tail thin pages. noindex,follow keeps link equity flowing
+    while keeping them out of the index. Self-correcting (indexable once a
+    body or 5+ products exist). Reversible: delete this block.
+  {%- endcomment -%}
+  {%- if request.page_type == 'collection' and collection -%}
+    {%- assign _cbody = collection.description | strip_html | strip | size -%}
+    {%- if _cbody < 40 and collection.all_products_count < 5 -%}
+      <meta name="robots" content="noindex,follow">
+    {%- endif -%}
+  {%- endif -%}
   {%- render 'doc-head-core' -%}
   {%- render 'doc-head-social' -%}
   {%- render 'structured-data' -%}
