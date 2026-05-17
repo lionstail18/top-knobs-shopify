@@ -9,7 +9,7 @@
 
 {%- if section.settings.show_seo -%}
   {%- liquid
-    assign coll_desc_text = collection.description | strip_html | strip
+    assign coll_desc_text = collection.description | replace: '</h1>', '. ' | replace: '</h2>', '. ' | replace: '</h3>', '. ' | replace: '</p>', ' ' | strip_html | strip
     assign coll_title_text = collection.title | strip
     assign has_real_desc = false
     if coll_desc_text != blank and coll_desc_text != coll_title_text and coll_desc_text.size > 60

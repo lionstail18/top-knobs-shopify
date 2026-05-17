@@ -58,7 +58,7 @@
     </script>
 
   {%- when 'collection' -%}
-    {%- assign coll_desc = collection.description | strip_html | truncate: 5000 -%}
+    {%- assign coll_desc = collection.description | replace: '</h1>', '. ' | replace: '</h2>', '. ' | replace: '</h3>', '. ' | replace: '</p>', ' ' | strip_html | truncate: 5000 -%}
     {%- if coll_desc == blank -%}{%- assign coll_desc = collection.title -%}{%- endif -%}
     <script type="application/ld+json">
     {
