@@ -181,7 +181,7 @@
       <div>
         {%- assign copyright_year = 'now' | date: '%Y' -%}
         <span>{{ 'sections.footer.copyright_html' | t: year: copyright_year, shop_url: routes.root_url, shop_name: shop.name }}</span>
-        {% if section.settings.show_powered_by %}
+        {% if false %}
           <span>{{ powered_by_link }}</span>
         {% endif %}
       </div>
