@@ -256,9 +256,21 @@
     const form = document.getElementById(cfg.formId);
     if (form) form.dataset.liveEnabled = 'true';
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', markLiveEnabled);
-  } else {
+  // Initial-load binding (added 2026-05-17). The inline section script bails
+  // when tkLiveFilterLoaded is set (set at top of this file), so the
+  // "See N more" filter toggles and the price slider would otherwise have
+  // NO handler bound until the first live-filter interaction —
+  // reinitFilterMoreButtons()/reinitSliders() were only called inside
+  // applyUrl(). Bind them here on first paint too. (Both are idempotent
+  // via dataset guards, so this is safe.)
+  function initOnLoad() {
     markLiveEnabled();
+    reinitFilterMoreButtons();
+    reinitSliders();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOnLoad);
+  } else {
+    initOnLoad();
   }
 })();
