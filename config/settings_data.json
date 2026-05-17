@@ -184,12 +184,12 @@
       },
       "6143736321357441667": {
         "type": "shopify://apps/tidio-live-chat-chatbots/blocks/app-embed/1002274d-fb18-4939-98f6-5f05a8deeadc",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "169412249732273955": {
         "type": "shopify://apps/intercom-ai-customer-service/blocks/widget/ef6552d6-43c7-4fc7-b903-fec510e74dee",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       }
     }
