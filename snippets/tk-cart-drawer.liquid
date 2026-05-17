@@ -450,7 +450,7 @@
   function renderCart(cart) {
     var totalItems = cart.item_count;
     var subtotal   = cart.total_price;
-    var shipping   = subtotal >= FREE_SHIP ? 0 : 795;
+    var shipping   = subtotal >= FREE_SHIP ? 0 : 995;
     var grandTotal = subtotal + shipping;
 
     countLabel.textContent = totalItems > 0
