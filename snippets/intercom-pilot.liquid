@@ -23,12 +23,7 @@
     if (localStorage.getItem(KEY) !== '1') return;
   } catch (e) { return; }
 
-  var tries = 0;
-  function whenReady(cb) {
-    if (typeof window.Intercom === 'function') { cb(); return; }
-    if (tries++ > 40) return; // ~10s max
-    setTimeout(function () { whenReady(cb); }, 250);
-  }
+  function ic() { return (typeof window.Intercom === 'function') ? window.Intercom : null; }
 
   function supplementalAttrs() {
     var a = {};
@@ -63,32 +58,48 @@
           current_page_type: {{ request.page_type | json }},
           current_page_url: window.location.href
         };
+        var I = ic();
+        if (!I) { console.log('[intercom-pilot] Intercom not ready, skipped push'); return; }
         var attrs = snapshot;
         var s = supplementalAttrs();
         for (var k in s) attrs[k] = s[k];
         // Custom attributes on the contact ...
-        window.Intercom('update', attrs);
+        I('update', attrs);
         // ... plus a timeline event so it is unmistakably visible / verifiable.
-        window.Intercom('trackEvent', 'pilot_cart_snapshot', snapshot);
+        I('trackEvent', 'pilot_cart_snapshot', snapshot);
+        console.log('[intercom-pilot] pushed cart snapshot', snapshot);
       })
-      .catch(function () {});
+      .catch(function (e) { console.log('[intercom-pilot] cart fetch failed', e); });
   }
 
-  whenReady(function () {
-    pushCart();
+  // Push when the Messenger is opened (guaranteed booted + tied to the live
+  // conversation), plus timed retries to catch the post-boot window, plus
+  // cart-change / focus re-pushes.
+  function arm() {
+    var I = ic();
+    if (I) { try { I('onShow', pushCart); } catch (e) {} }
+    [800, 2500, 5000, 9000].forEach(function (ms) { setTimeout(pushCart, ms); });
     ['cart:updated', 'cart:refresh', 'ajaxCart.afterCartLoad'].forEach(function (ev) {
       document.addEventListener(ev, pushCart);
     });
     window.addEventListener('focus', pushCart);
 
     {%- if request.page_type == 'product' and product -%}
-    window.Intercom('trackEvent', 'viewed_product', {
-      title: {{ product.title | json }},
-      sku: {{ product.selected_or_first_available_variant.sku | json }},
-      price: {{ product.price | divided_by: 100.0 | json }},
-      url: window.location.href
-    });
+    setTimeout(function () {
+      var I2 = ic();
+      if (I2) I2('trackEvent', 'viewed_product', {
+        title: {{ product.title | json }},
+        sku: {{ product.selected_or_first_available_variant.sku | json }},
+        price: {{ product.price | divided_by: 100.0 | json }},
+        url: window.location.href
+      });
+    }, 2500);
     {%- endif -%}
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', arm);
+  } else { arm(); }
+  console.log('[intercom-pilot] armed');
 })();
 </script>
