@@ -1,0 +1,83 @@
+{%- comment -%}
+  intercom-pilot.liquid (TOP KNOBS variant) — EVALUATION ONLY, self-gated.
+
+  Top Knobs already runs the OFFICIAL Intercom Shopify app (app embed in
+  settings_data.json). That app boots the Messenger site-wide and handles
+  logged-in identity + order history on its own. This snippet therefore
+  does NOT load or boot Intercom and does NOT re-identify the user — it
+  only ENRICHES the identity the app already established with the live
+  cart / browsing context the app does not capture.
+
+  Self-gated: does nothing unless the URL contains ?intercom_pilot=1.
+  Zero impact on normal visitors; fully reversible (one-line revert).
+{%- endcomment -%}
+<script>
+(function () {
+  if (new URLSearchParams(window.location.search).get('intercom_pilot') !== '1') return;
+
+  // Wait for the official app's Intercom to be ready, then enrich. Bounded poll.
+  var tries = 0;
+  function whenReady(cb) {
+    if (typeof window.Intercom === 'function') { cb(); return; }
+    if (tries++ > 40) return; // ~10s max
+    setTimeout(function () { whenReady(cb); }, 250);
+  }
+
+  function supplementalAttrs() {
+    var a = {};
+    {%- if customer -%}
+    a.trade_account = {{ customer.b2b? | default: false | json }};
+    a.customer_tags = {{ customer.tags | join: ',' | json }};
+    {%- if customer.b2b? and company -%}
+    a.company_name = {{ company.name | json }};
+    a.company_plan = "Trade";
+    {%- endif -%}
+    {%- endif -%}
+    return a;
+  }
+
+  function pushCart() {
+    fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        var items = cart.items || [];
+        var lines = items.map(function (it) {
+          return it.product_title
+            + (it.variant_title ? ' / ' + it.variant_title : '')
+            + ' x' + it.quantity
+            + (it.sku ? ' (' + it.sku + ')' : '');
+        });
+        var payload = {
+          cart_total: cart.total_price / 100,
+          cart_item_count: cart.item_count,
+          cart_currency: cart.currency,
+          cart_contents: lines.join('; ').slice(0, 800),
+          cart_skus: items.map(function (i) { return i.sku; }).join(',').slice(0, 500),
+          current_page_type: {{ request.page_type | json }},
+          current_page_url: window.location.href
+        };
+        var s = supplementalAttrs();
+        for (var k in s) payload[k] = s[k];
+        window.Intercom('update', payload);
+      })
+      .catch(function () {});
+  }
+
+  whenReady(function () {
+    pushCart();
+    ['cart:updated', 'cart:refresh', 'ajaxCart.afterCartLoad'].forEach(function (ev) {
+      document.addEventListener(ev, pushCart);
+    });
+    window.addEventListener('focus', pushCart);
+
+    {%- if request.page_type == 'product' and product -%}
+    window.Intercom('trackEvent', 'viewed_product', {
+      title: {{ product.title | json }},
+      sku: {{ product.selected_or_first_available_variant.sku | json }},
+      price: {{ product.price | divided_by: 100.0 | json }},
+      url: window.location.href
+    });
+    {%- endif -%}
+  });
+})();
+</script>
