@@ -172,11 +172,6 @@
         "disabled": false,
         "settings": {}
       },
-      "10864971697205422121": {
-        "type": "shopify://apps/gorgias-live-chat-helpdesk/blocks/gorgias/a66db725-7b96-4e3f-916e-6c8e6f87aaaa",
-        "disabled": true,
-        "settings": {}
-      },
       "4061484991452085298": {
         "type": "shopify://apps/commslayer-helpdesk-chat/blocks/chat-widget/e555a08e-ceaa-4a9b-ab9f-a58bccbfc762",
         "disabled": true,
@@ -187,13 +182,18 @@
         "disabled": true,
         "settings": {}
       },
-      "169412249732273955": {
-        "type": "shopify://apps/intercom-ai-customer-service/blocks/widget/ef6552d6-43c7-4fc7-b903-fec510e74dee",
+      "9246707248847178381": {
+        "type": "shopify://apps/livechat-ai-live-chat-by-text/blocks/chat_widget/edc4358c-5386-40b3-a5a3-34aa308c6d45",
+        "disabled": true,
+        "settings": {}
+      },
+      "10864971697205422121": {
+        "type": "shopify://apps/gorgias-live-chat-helpdesk/blocks/gorgias/a66db725-7b96-4e3f-916e-6c8e6f87aaaa",
         "disabled": false,
         "settings": {}
       },
-      "9246707248847178381": {
-        "type": "shopify://apps/livechat-ai-live-chat-by-text/blocks/chat_widget/edc4358c-5386-40b3-a5a3-34aa308c6d45",
+      "169412249732273955": {
+        "type": "shopify://apps/intercom-ai-customer-service/blocks/widget/ef6552d6-43c7-4fc7-b903-fec510e74dee",
         "disabled": true,
         "settings": {}
       }
