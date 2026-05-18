@@ -187,9 +187,14 @@
         "disabled": true,
         "settings": {}
       },
+      "9246707248847178381": {
+        "type": "shopify://apps/livechat-ai-live-chat-by-text/blocks/chat_widget/edc4358c-5386-40b3-a5a3-34aa308c6d45",
+        "disabled": false,
+        "settings": {}
+      },
       "169412249732273955": {
         "type": "shopify://apps/intercom-ai-customer-service/blocks/widget/ef6552d6-43c7-4fc7-b903-fec510e74dee",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
