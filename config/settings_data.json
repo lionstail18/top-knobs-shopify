@@ -182,13 +182,13 @@
         "disabled": true,
         "settings": {}
       },
-      "9246707248847178381": {
-        "type": "shopify://apps/livechat-ai-live-chat-by-text/blocks/chat_widget/edc4358c-5386-40b3-a5a3-34aa308c6d45",
+      "10864971697205422121": {
+        "type": "shopify://apps/gorgias-live-chat-helpdesk/blocks/gorgias/a66db725-7b96-4e3f-916e-6c8e6f87aaaa",
         "disabled": true,
         "settings": {}
       },
-      "10864971697205422121": {
-        "type": "shopify://apps/gorgias-live-chat-helpdesk/blocks/gorgias/a66db725-7b96-4e3f-916e-6c8e6f87aaaa",
+      "9246707248847178381": {
+        "type": "shopify://apps/livechat-ai-live-chat-by-text/blocks/chat_widget/edc4358c-5386-40b3-a5a3-34aa308c6d45",
         "disabled": false,
         "settings": {}
       },
