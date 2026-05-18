@@ -1,5 +1,5 @@
 {%- comment -%}
-  intercom-pilot.liquid (TOP KNOBS variant) — EVALUATION ONLY, self-gated.
+  intercom-pilot.liquid (TOP KNOBS variant) — EVALUATION ONLY, sticky-gated.
 
   Top Knobs already runs the OFFICIAL Intercom Shopify app (app embed in
   settings_data.json). That app boots the Messenger site-wide and handles
@@ -8,14 +8,21 @@
   only ENRICHES the identity the app already established with the live
   cart / browsing context the app does not capture.
 
-  Self-gated: does nothing unless the URL contains ?intercom_pilot=1.
-  Zero impact on normal visitors; fully reversible (one-line revert).
+  STICKY GATE: visiting any URL once with ?intercom_pilot=1 arms the
+  pilot for the whole browser (localStorage) so it survives normal
+  navigation. ?intercom_pilot=0 disarms it. With nothing armed this
+  snippet does nothing — zero impact on normal visitors; one-line revert.
 {%- endcomment -%}
 <script>
 (function () {
-  if (new URLSearchParams(window.location.search).get('intercom_pilot') !== '1') return;
+  var KEY = 'intercom_pilot';
+  try {
+    var q = new URLSearchParams(window.location.search).get(KEY);
+    if (q === '1') localStorage.setItem(KEY, '1');
+    if (q === '0') localStorage.removeItem(KEY);
+    if (localStorage.getItem(KEY) !== '1') return;
+  } catch (e) { return; }
 
-  // Wait for the official app's Intercom to be ready, then enrich. Bounded poll.
   var tries = 0;
   function whenReady(cb) {
     if (typeof window.Intercom === 'function') { cb(); return; }
@@ -47,7 +54,7 @@
             + ' x' + it.quantity
             + (it.sku ? ' (' + it.sku + ')' : '');
         });
-        var payload = {
+        var snapshot = {
           cart_total: cart.total_price / 100,
           cart_item_count: cart.item_count,
           cart_currency: cart.currency,
@@ -56,9 +63,13 @@
           current_page_type: {{ request.page_type | json }},
           current_page_url: window.location.href
         };
+        var attrs = snapshot;
         var s = supplementalAttrs();
-        for (var k in s) payload[k] = s[k];
-        window.Intercom('update', payload);
+        for (var k in s) attrs[k] = s[k];
+        // Custom attributes on the contact ...
+        window.Intercom('update', attrs);
+        // ... plus a timeline event so it is unmistakably visible / verifiable.
+        window.Intercom('trackEvent', 'pilot_cart_snapshot', snapshot);
       })
       .catch(function () {});
   }
