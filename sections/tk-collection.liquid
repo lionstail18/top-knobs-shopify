@@ -294,6 +294,15 @@
     {%- assign apply_dedup = section.settings.apply_primary_filter -%}
     {%- if collection.handle contains 'finish' -%}{%- assign apply_dedup = false -%}{%- endif -%}
     {%- if has_active -%}{%- assign apply_dedup = false -%}{%- endif -%}
+    {%- comment -%}
+      PARKED — primary-finish dedup is abandoned on both stores (mirrors the
+      knobs-collection.liquid override). The catalog is not reliably tagged
+      `primary-finish` (~28% coverage), so the render-loop skip below empties
+      any collection whose page-1 products are non-primary-finish even though
+      the pre-dedup count says products exist (e.g. drill-centers-* manual
+      collections). Force OFF; the dedup branch is retained but unreachable.
+    {%- endcomment -%}
+    {%- assign apply_dedup = false -%}
     {%- if apply_dedup -%}
       {%- assign per_page = 72 -%}
     {%- else -%}
