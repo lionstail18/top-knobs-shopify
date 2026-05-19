@@ -422,6 +422,41 @@
       display: none !important;
     }
   }
+
+  /* ── Mobile wordmark lockup (≤768px): clean left-aligned stack of
+        all three lines. Fixes the cramped / misaligned mobile site
+        title (TK, 2026-05-19). Desktop (≥769px) block above is
+        untouched — this is mobile-only. ───────────────────────────── */
+  @media (max-width: 768px) {
+    .cc-header .header__logo .tk-wordmark {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .tk-wordmark__row1 {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 1px;
+    }
+    .tk-wordmark__brand {
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    .tk-wordmark__outlet {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      white-space: nowrap;
+    }
+    .tk-wordmark__sub {
+      text-align: left;
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
+      opacity: 0.6;
+    }
+  }
 {%- endstyle -%}
 
 <store-header class="header bg-theme-bg text-theme-text{% if section.settings.enable_sticky or search_is_minimised %} has-motion{% endif %}{% if search_is_minimised %} search-is-collapsed{% endif %}"
