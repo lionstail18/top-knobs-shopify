@@ -53,8 +53,9 @@
 </div>
 
 <div class="tk-coll__layout">
+  <button type="button" class="tk-coll__filter-toggle" aria-expanded="false" aria-controls="tk-coll-sidebar"><span>Filters</span><span class="tk-coll__filter-toggle-ico" aria-hidden="true">+</span></button>
   <!-- Sidebar filters -->
-  <aside class="tk-coll__sidebar" aria-label="Filters">
+  <aside class="tk-coll__sidebar" id="tk-coll-sidebar" aria-label="Filters">
     {%- if collection.filters.size > 0 -%}
       <form action="{{ collection.url }}" method="get" class="tk-coll__filter-form" id="tk-coll-filter-form">
         {%- for filter in collection.filters -%}
@@ -611,6 +612,37 @@
   @media (max-width: 600px) {
     .tk-coll__grid { grid-template-columns: 1fr; }
   }
+
+  /* ── Mobile: tight text header + collapsible filters + 2-up grid (2026-05-19, parity w/ KC) ── */
+  .tk-coll__filter-toggle { display: none; }
+  @media (max-width: 768px) {
+    .tk-coll__header { height: auto; min-height: 0; }
+    .tk-coll__header-img,
+    .tk-coll__header-img--placeholder { display: none; }
+    .tk-coll__header-overlay {
+      position: static; inset: auto; background: none;
+      align-items: flex-start; text-align: left;
+      padding: 14px var(--tk-page-x, 16px) 10px;
+    }
+    .tk-coll__h1 { font-size: 24px; color: var(--color-text); line-height: 1.15; }
+    .tk-coll__desc {
+      color: var(--color-text2); font-size: 13px; margin: 4px 0 0;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .tk-coll__filter-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      width: auto; margin: 12px var(--tk-page-x, 16px) 0;
+      min-height: 44px; padding: 0 16px;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      color: var(--color-text); font-family: var(--tk-font-body);
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+    }
+    .tk-coll__sidebar { display: none; }
+    .tk-coll__sidebar.is-open { display: block; }
+    .tk-coll__grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .tk-coll__main { padding-top: 8px; }
+    .tk-coll__toolbar { margin-bottom: 10px; padding-bottom: 8px; }
+  }
 {%- endstyle -%}
 
 <script>
@@ -678,6 +710,23 @@
       update();
     });
   });
+</script>
+
+
+<script>
+  (function () {
+    function init() {
+      var t = document.querySelector('.tk-coll__filter-toggle');
+      var s = document.getElementById('tk-coll-sidebar');
+      if (!t || !s) return;
+      t.addEventListener('click', function () {
+        var open = s.classList.toggle('is-open');
+        t.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+    if (document.readyState !== 'loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  })();
 </script>
 
 {% schema %}
