@@ -1,10 +1,99 @@
+{%- comment -%}
+  Finish-aware card image (parity with knobs-product-card). When a finish
+  context is supplied (card_finish_class — set by tk-collection.liquid on
+  finish-* pages / a single active Finish filter), lead with that finish's
+  photo: precomputed map metafield custom.finish_class_image → else first
+  variant whose Finish option contains the class keyword → that variant's
+  linked image or the product image whose filename carries the SKU code →
+  else product.featured_image (also when no finish context, so non-finish
+  grids keep the original zero-overhead path). Scans bounded to 80.
+{%- endcomment -%}
+{%- liquid
+  assign card_image = product.featured_image
+  assign card_image_url = ''
+  if card_finish_class != blank
+    assign kpc = product.metafields.custom.finish_class_image.value
+    if kpc != blank
+      assign kpc_u = kpc[card_finish_class]
+      if kpc_u != blank
+        assign card_image_url = kpc_u
+      endif
+    endif
+    if card_image_url == blank
+      assign kfc_alt = card_finish_class
+      if card_finish_class == 'gray'
+        assign kfc_alt = 'grey'
+      endif
+      assign fin_pos = 0
+      for o in product.options
+        assign ol = o | downcase
+        if ol contains 'finish' or ol contains 'color' or ol contains 'colour'
+          assign fin_pos = forloop.index
+          break
+        endif
+      endfor
+      if fin_pos > 0
+        assign vmatch = blank
+        assign vscan = 0
+        for v in product.variants
+          if vscan >= 80
+            break
+          endif
+          assign vscan = vscan | plus: 1
+          if fin_pos == 1
+            assign fv = v.option1
+          elsif fin_pos == 2
+            assign fv = v.option2
+          else
+            assign fv = v.option3
+          endif
+          assign fvl = fv | downcase
+          if fvl contains card_finish_class or fvl contains kfc_alt
+            assign vmatch = v
+            break
+          endif
+        endfor
+        if vmatch != blank
+          if vmatch.image != blank
+            assign card_image = vmatch.image
+          else
+            assign sk = vmatch.sku | default: ''
+            assign sk_segs = sk | split: '-'
+            assign sk_tok = sk
+            if sk_segs.size > 1
+              assign sk_b = sk_segs | first
+              assign sk_tok = sk | remove_first: sk_b | remove_first: '-'
+            endif
+            assign t_us = sk_tok | append: '_'
+            assign t_dot = sk_tok | append: '.'
+            assign t_dash = sk_tok | append: '-'
+            assign t_full = sk | append: '.'
+            assign iscan = 0
+            for im in product.images
+              if iscan >= 80
+                break
+              endif
+              assign iscan = iscan | plus: 1
+              if im.src contains t_us or im.src contains t_dot or im.src contains t_dash or im.src contains t_full
+                assign card_image = im
+                break
+              endif
+            endfor
+          endif
+        endif
+      endif
+    endif
+  endif
+-%}
 <div class="tk-pcard">
   <a class="tk-pcard__link" href="{{ product.url }}">
     <div class="tk-pcard__media">
-      {%- if product.featured_image != blank -%}
-        {{- product.featured_image | image_url: width: 600 | image_tag:
+      {%- if card_image_url != blank -%}
+        <img src="{{ card_image_url }}" class="tk-pcard__img" alt="{{ product.title | escape }}" loading="lazy">
+      {%- elsif card_image != blank -%}
+        {{- card_image | image_url: width: 600 | image_tag:
             loading: 'lazy', class: 'tk-pcard__img',
-            alt: product.featured_image.alt | default: product.title | escape -}}
+            alt: card_image.alt | default: product.title | escape -}}
       {%- else -%}
         <div class="tk-pcard__img tk-pcard__img--placeholder"></div>
       {%- endif -%}

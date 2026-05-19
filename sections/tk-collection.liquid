@@ -303,6 +303,55 @@
       collections). Force OFF; the dedup branch is retained but unreachable.
     {%- endcomment -%}
     {%- assign apply_dedup = false -%}
+
+    {%- comment -%}
+      Finish-aware card image context (parity with knobs-collection.liquid,
+      adapted to TK's Storefront collection.filters mechanism — TK does NOT
+      use KC's tag-based current_tags scheme). Computed ONCE; handed to
+      tk-product-card so each card leads with the browsed finish's photo.
+      Blank for every non-finish context → non-finish grids keep the
+      original zero-overhead featured-image path (the heavy per-card scans
+      never run there). Source string = a single active Finish filter value
+      if present, else the finish-* collection handle; reduced to a broad
+      class keyword the card matches against variant finish names.
+    {%- endcomment -%}
+    {%- assign card_finish_class = '' -%}
+    {%- assign kfc_src = '' -%}
+    {%- assign kfc_pfx = collection.handle | slice: 0, 7 -%}
+    {%- if kfc_pfx == 'finish-' -%}
+      {%- assign kfc_src = collection.handle | remove_first: 'finish-' | replace: '-', ' ' -%}
+    {%- endif -%}
+    {%- assign kfc_fn = 0 -%}
+    {%- assign kfc_fv = '' -%}
+    {%- for filter in collection.filters -%}
+      {%- assign flab = filter.label | downcase -%}
+      {%- if flab contains 'finish' or flab contains 'color' or flab contains 'colour' -%}
+        {%- for av in filter.active_values -%}
+          {%- assign kfc_fn = kfc_fn | plus: 1 -%}
+          {%- assign kfc_fv = av.label | downcase -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if kfc_fn == 1 -%}{%- assign kfc_src = kfc_fv -%}{%- endif -%}
+    {%- if kfc_fn > 1 -%}{%- assign kfc_src = '' -%}{%- endif -%}
+    {%- assign kfc_src = kfc_src | downcase -%}
+    {%- if kfc_src contains 'black' -%}{%- assign card_finish_class = 'black' -%}
+    {%- elsif kfc_src contains 'bronze' -%}{%- assign card_finish_class = 'bronze' -%}
+    {%- elsif kfc_src contains 'chrome' -%}{%- assign card_finish_class = 'chrome' -%}
+    {%- elsif kfc_src contains 'nickel' -%}{%- assign card_finish_class = 'nickel' -%}
+    {%- elsif kfc_src contains 'brass' -%}{%- assign card_finish_class = 'brass' -%}
+    {%- elsif kfc_src contains 'copper' -%}{%- assign card_finish_class = 'copper' -%}
+    {%- elsif kfc_src contains 'pewter' -%}{%- assign card_finish_class = 'pewter' -%}
+    {%- elsif kfc_src contains 'gold' -%}{%- assign card_finish_class = 'gold' -%}
+    {%- elsif kfc_src contains 'silver' -%}{%- assign card_finish_class = 'silver' -%}
+    {%- elsif kfc_src contains 'iron' -%}{%- assign card_finish_class = 'iron' -%}
+    {%- elsif kfc_src contains 'white' -%}{%- assign card_finish_class = 'white' -%}
+    {%- elsif kfc_src contains 'gray' or kfc_src contains 'grey' -%}{%- assign card_finish_class = 'gray' -%}
+    {%- elsif kfc_src contains 'brown' -%}{%- assign card_finish_class = 'brown' -%}
+    {%- elsif kfc_src contains 'aluminum' -%}{%- assign card_finish_class = 'aluminum' -%}
+    {%- elsif kfc_src contains 'steel' -%}{%- assign card_finish_class = 'steel' -%}
+    {%- endif -%}
+
     {%- if apply_dedup -%}
       {%- assign per_page = 72 -%}
     {%- else -%}
@@ -318,7 +367,7 @@
               {%- unless product.tags contains 'primary-finish' -%}{%- continue -%}{%- endunless -%}
             {%- endif -%}
             {%- if product.featured_image -%}
-              {%- render 'tk-product-card', product: product -%}
+              {%- render 'tk-product-card', product: product, card_finish_class: card_finish_class -%}
             {%- endif -%}
           {%- endfor -%}
           {%- for product in collection.products -%}
@@ -326,7 +375,7 @@
               {%- unless product.tags contains 'primary-finish' -%}{%- continue -%}{%- endunless -%}
             {%- endif -%}
             {%- unless product.featured_image -%}
-              {%- render 'tk-product-card', product: product -%}
+              {%- render 'tk-product-card', product: product, card_finish_class: card_finish_class -%}
             {%- endunless -%}
           {%- endfor -%}
         </div>

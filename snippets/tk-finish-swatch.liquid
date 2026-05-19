@@ -221,6 +221,23 @@
   {%- when 'aged dover' -%}{%- assign hex = '#8a7c5a' -%}
   {%- when 'uv coated' -%}{%- assign hex = '#cacac8' -%}
 
+  {%- comment -%} ─── 2026-05-19 sweep: remaining gray-letter misses (vendor-specific names; parity with knobs-finish-swatch) ─── {%- endcomment -%}
+  {%- when 'barcelona' -%}{%- assign hex = '#b08d57' -%}
+  {%- when 'polished antique' -%}{%- assign hex = '#a98a52' -%}
+  {%- when 'antique english' -%}{%- assign hex = '#4a3a2a' -%}
+  {%- when 'antique english matte' -%}{%- assign hex = '#43342a' -%}
+  {%- when 'regent english' -%}{%- assign hex = '#4a3a2a' -%}
+  {%- when 'antique' -%}{%- assign hex = '#8a7048' -%}
+  {%- when 'blonde antique' -%}{%- assign hex = '#c9b27e' -%}
+  {%- when 'lustre' -%}{%- assign hex = '#b9b4a6' -%}
+  {%- when 'mink' -%}{%- assign hex = '#6f6259' -%}
+  {%- when 'oil rubbed' -%}{%- assign hex = '#2a1a0e' -%}
+  {%- when 'wrought' -%}{%- assign hex = '#33302c' -%}
+  {%- when 'wrought iron' -%}{%- assign hex = '#33302c' -%}
+  {%- when 'gun metal' -%}{%- assign hex = '#2a3439' -%}
+  {%- when 'clear' -%}{%- assign hex = '#e8e8f0' -%}
+  {%- when 'turquoise' -%}{%- assign hex = '#2fb6b6' -%}
+
   {%- comment -%} Wash-tinted finishes (dark base + hint of tint) {%- endcomment -%}
   {%- when 'black w/bronze wash' -%}{%- assign hex = '#231a10' -%}
   {%- when 'black w/copper wash' -%}{%- assign hex = '#26180e' -%}
@@ -312,7 +329,26 @@
   {%- elsif normalized contains 'brown' or normalized contains 'chocolate' or normalized contains 'espresso' -%}{%- assign hex = '#6a4a2a' -%}
   {%- elsif normalized contains 'almond' or normalized contains 'cream' or normalized contains 'tan' -%}{%- assign hex = '#dac9a8' -%}
   {%- elsif normalized contains 'natural' -%}{%- assign hex = '#c4b294' -%}
+  {%- elsif normalized contains 'oil rubbed' -%}{%- assign hex = '#2a1a0e' -%}
+  {%- elsif normalized contains 'wrought' -%}{%- assign hex = '#33302c' -%}
+  {%- elsif normalized contains 'gun metal' -%}{%- assign hex = '#2a3439' -%}
+  {%- elsif normalized contains 'english' -%}{%- assign hex = '#4a3a2a' -%}
+  {%- elsif normalized contains 'lustre' or normalized contains 'luster' -%}{%- assign hex = '#b9b4a6' -%}
+  {%- elsif normalized contains 'mink' -%}{%- assign hex = '#6f6259' -%}
+  {%- elsif normalized contains 'turquoise' or normalized contains 'teal' -%}{%- assign hex = '#2fb6b6' -%}
+  {%- elsif normalized contains 'antique' -%}{%- assign hex = '#8a7048' -%}
   {%- endif -%}
+{%- endif -%}
+
+{%- comment -%}
+  Tier 4 — never a bare letter. Any finish that still missed gets a
+  neutral brushed-metal chip so it reads as a metal finish, not a
+  placeholder. (Parity with knobs-finish-swatch; adapted to TK's
+  single-span markup — once hex is set, tk-swatch--unknown and the
+  initial-letter span below can't trigger.)
+{%- endcomment -%}
+{%- if hex == '' -%}
+  {%- assign hex = 'linear-gradient(135deg,#cfcabd 0%,#a7a299 45%,#cfcabd 70%,#8f8a80 100%)' -%}
 {%- endif -%}
 
 <span class="tk-swatch{% if extra_class %} {{ extra_class }}{% endif %}{% if hex == '' %} tk-swatch--unknown{% endif %}"
