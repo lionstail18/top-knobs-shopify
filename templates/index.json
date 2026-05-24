@@ -16,10 +16,10 @@
         "eyebrow": "Authorized Top Knobs Dealer",
         "heading": "Elevate<br>Every Detail",
         "body": "Premium cabinet hardware at the lowest prices online. Over 4,500 designs across 40+ curated collections — with free shipping and a lifetime warranty.",
-        "btn1_label": "Shop Now",
-        "btn1_url": "/collections/shop-all",
-        "btn2_label": "What's New",
-        "btn2_url": "/collections/shop-all?sort_by=created-descending"
+        "btn1_label": "Shop Best Sellers",
+        "btn1_url": "/collections/bestsellers",
+        "btn2_label": "Order Samples",
+        "btn2_url": "/pages/samples"
       }
     },
     "trust-bar": {
