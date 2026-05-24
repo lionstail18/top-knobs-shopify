@@ -67,7 +67,19 @@
           class: 'tk-about__dealer-img',
           alt: section.settings.dealer_heading | escape -}}
     {%- else -%}
-      <div class="tk-about__dealer-img tk-about__dealer-img--placeholder"></div>
+      {%- comment -%}
+        Branded typographic fallback when no dealer image is set.
+        Dark navy field with gold accents; renders the dealer authorization
+        as a visual seal so the column never appears as an empty grey box.
+      {%- endcomment -%}
+      <div class="tk-about__dealer-img tk-about__dealer-fallback">
+        <span class="tk-about__dealer-fallback-mark">✦</span>
+        <p class="tk-about__dealer-fallback-eyebrow">Authorized Dealer</p>
+        <p class="tk-about__dealer-fallback-name">TOP KNOBS</p>
+        <p class="tk-about__dealer-fallback-tag">Hardware Outlet</p>
+        <span class="tk-about__dealer-fallback-divider"></span>
+        <p class="tk-about__dealer-fallback-foot">Lifetime Warranty<br>100% Authentic</p>
+      </div>
     {%- endif -%}
   </div>
 </section>
@@ -195,6 +207,63 @@
     object-fit: cover;
   }
   .tk-about__dealer-img--placeholder { background: var(--color-border); }
+
+  /* Branded typographic fallback when dealer_image is unset.
+     Always shown — never the empty grey placeholder above. */
+  .tk-about__dealer-fallback {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(180deg, #0F1A2E 0%, #1E2A40 100%);
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 32px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .tk-about__dealer-fallback-mark {
+    font-size: 56px; line-height: 1;
+    color: var(--color-accent);
+    margin: 0 0 24px;
+  }
+  .tk-about__dealer-fallback-eyebrow {
+    font-family: var(--tk-font-body);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 18px;
+  }
+  .tk-about__dealer-fallback-name {
+    font-family: var(--tk-font-heading);
+    font-size: 36px; font-weight: 400;
+    letter-spacing: 0.04em;
+    color: #FFFFFF;
+    margin: 0 0 6px;
+    line-height: 1;
+  }
+  .tk-about__dealer-fallback-tag {
+    font-family: var(--tk-font-body);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    margin: 0 0 28px;
+  }
+  .tk-about__dealer-fallback-divider {
+    display: block;
+    width: 64px; height: 1px;
+    background: var(--color-accent);
+    opacity: 0.7;
+    margin: 0 0 22px;
+  }
+  .tk-about__dealer-fallback-foot {
+    font-family: var(--tk-font-body);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
+    line-height: 1.8; margin: 0;
+  }
   @media (max-width: 1024px) {
     .tk-about__story { padding: 72px var(--tk-page-x); }
   }
