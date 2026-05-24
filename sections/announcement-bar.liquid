@@ -66,8 +66,9 @@
                 {{ block.shopify_attributes }}>
             {%- comment -%}
               CRO batch 2026-05-24: wrap in <a> when block.settings.link_url
-              is set, so each value prop becomes a clickable shortcut to the
-              policy/info page that backs the promise.
+              is set, so each value prop can be a clickable shortcut to the
+              policy/info page that backs the promise. No store-specific
+              hardcoded URL fallback on TK — TK's page slugs differ from KC's.
             {%- endcomment -%}
             {%- if block.settings.link_url != blank -%}
               <a href="{{ block.settings.link_url }}">{{ block.settings.text | escape }}</a>
@@ -115,8 +116,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background color",
-      "default": "#0D1526",
-      "info": "Deep Navy — matches the nav/header background"
+      "default": "#0D1526"
     },
     {
       "type": "color",
