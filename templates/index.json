@@ -350,7 +350,8 @@
         "eyebrow": "For Design Professionals",
         "heading": "Trade Pricing Available",
         "body": "Interior designers, architects, and contractors qualify for exclusive trade pricing and dedicated support.",
-        "btn_label": "Apply for Trade Account"
+        "btn_label": "Apply for Trade Account",
+        "btn_url": "/pages/trade"
       }
     }
   },
