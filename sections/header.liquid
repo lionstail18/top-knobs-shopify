@@ -215,6 +215,26 @@
     font-weight: 500;
   }
 
+  /* CRO batch 2026-05-24: as the viewport tightens, the phone number was
+     overflowing into the Login icon. Below ~1100px, re-hide the visible
+     label (revert to standard visually-hidden positioning) so only the
+     gold phone icon remains. The icon still tap-to-calls; the aria-label
+     on the anchor keeps full screen-reader accessibility. */
+  @media (max-width: 1100px) {
+    .cc-header .header__icon--phone .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+  }
+
   /* ── Nav bar: 44 px, Jost 12 px uppercase, gold hover ──────── */
   @media (min-width: 769px) {
     .cc-header .main-nav,
