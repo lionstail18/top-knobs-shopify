@@ -1,0 +1,208 @@
+{%- comment -%}
+  ============================================================
+  Top Knobs — Design Collections grid (templates/list-collections.json)
+  ============================================================
+  Replaces Shopify's default /collections index page (which auto-lists
+  every collection in the store, including the size-based smart filters
+  like "1 1/4''" and "1 1/2''" that aren't customer-facing design lines).
+
+  Renders ONLY curated Top Knobs design collections — the brand-design
+  product lines (Lynwood, Pemberton, Tuscany, etc.). The list lives in
+  the schema as `collection_list`; each entry is a {handle, label} pair.
+  Add/remove entries via the theme customizer.
+
+  Each card shows the collection's first product image as the visual.
+  When a card's image is missing, a typographic branded fallback renders.
+  ============================================================ {%- endcomment -%}
+
+<div class="tk-dc">
+  <div class="tk-dc__head">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="tk-eyebrow tk-dc__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h1 class="tk-dc__h1">{{ section.settings.heading | escape | default: 'Shop by Collection' }}</h1>
+    {%- if section.settings.intro != blank -%}
+      <p class="tk-dc__intro">{{ section.settings.intro | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="tk-dc__grid">
+    {%- for block in section.blocks -%}
+      {%- assign handle = block.settings.collection_handle | strip -%}
+      {%- if handle == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign coll = collections[handle] -%}
+      {%- if coll == blank or coll.handle == 'none' -%}{%- continue -%}{%- endif -%}
+
+      {%- assign display_title = block.settings.label -%}
+      {%- if display_title == blank -%}
+        {%- assign t = coll.title -%}
+        {%- comment -%} Strip "Top Knobs " and " Collection" {%- endcomment -%}
+        {%- if t contains 'Top Knobs ' -%}{%- assign t = t | remove_first: 'Top Knobs ' | strip -%}{%- endif -%}
+        {%- if t contains ' Collection' -%}{%- assign t = t | remove: ' Collection' | strip -%}{%- endif -%}
+        {%- assign display_title = t -%}
+      {%- endif -%}
+
+      {%- assign hero_product = coll.products | first -%}
+      {%- assign hero_image = blank -%}
+      {%- if hero_product and hero_product.featured_image -%}
+        {%- assign hero_image = hero_product.featured_image -%}
+      {%- endif -%}
+
+      <a class="tk-dc__card" href="{{ coll.url }}" {{ block.shopify_attributes }}>
+        <div class="tk-dc__card-media">
+          {%- if hero_image != blank -%}
+            {{- hero_image | image_url: width: 600 | image_tag:
+                loading: 'lazy',
+                class: 'tk-dc__card-img',
+                alt: display_title | escape -}}
+          {%- else -%}
+            <div class="tk-dc__card-fallback">
+              <span class="tk-dc__card-fallback-mark">✦</span>
+              <span class="tk-dc__card-fallback-text">{{ display_title | escape }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+        <div class="tk-dc__card-body">
+          <h2 class="tk-dc__card-title">{{ display_title | escape }}</h2>
+          {%- if coll.products_count > 0 -%}
+            <p class="tk-dc__card-meta">{{ coll.products_count }} piece{% if coll.products_count != 1 %}s{% endif %}</p>
+          {%- endif -%}
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- style -%}
+  .tk-dc {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 56px var(--tk-page-x) 80px;
+  }
+  .tk-dc__head {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 48px;
+  }
+  .tk-dc__eyebrow { margin: 0 0 12px; }
+  .tk-dc__h1 {
+    font-family: var(--tk-font-heading);
+    font-size: 48px; font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 14px;
+    line-height: 1.05;
+  }
+  .tk-dc__intro {
+    font-family: var(--tk-font-body);
+    font-size: 14px; line-height: 1.7;
+    color: var(--color-text2);
+    margin: 0;
+  }
+
+  .tk-dc__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 32px 28px;
+  }
+
+  .tk-dc__card {
+    display: block;
+    text-decoration: none;
+    color: var(--color-text);
+    background: var(--color-bg);
+    transition: transform 0.2s ease;
+  }
+  .tk-dc__card:hover { transform: translateY(-3px); }
+  .tk-dc__card-media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--color-bg2);
+    overflow: hidden;
+  }
+  .tk-dc__card-img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 14%;
+    transition: transform 0.4s ease;
+  }
+  .tk-dc__card:hover .tk-dc__card-img { transform: scale(1.04); }
+
+  .tk-dc__card-fallback {
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, #0F1A2E 0%, #1E2A40 100%);
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .tk-dc__card-fallback-mark {
+    font-size: 32px; color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+  .tk-dc__card-fallback-text {
+    font-family: var(--tk-font-heading);
+    font-size: 22px; font-weight: 400;
+    color: #FFFFFF;
+    line-height: 1.2;
+  }
+
+  .tk-dc__card-body {
+    padding: 16px 4px 8px;
+    text-align: center;
+  }
+  .tk-dc__card-title {
+    font-family: var(--tk-font-heading);
+    font-size: 22px; font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+  .tk-dc__card-meta {
+    font-family: var(--tk-font-body);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--color-text2);
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .tk-dc__grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .tk-dc__h1 { font-size: 38px; }
+  }
+  @media (max-width: 600px) {
+    .tk-dc__grid { grid-template-columns: 1fr 1fr; gap: 20px 16px; }
+    .tk-dc__h1 { font-size: 30px; }
+    .tk-dc__card-title { font-size: 18px; }
+    .tk-dc {  padding: 32px var(--tk-page-x) 56px; }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Design Collections",
+  "tag": "section",
+  "class": "tk-design-collections-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Top Knobs Catalog" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by Collection" },
+    { "type": "textarea", "id": "intro", "label": "Intro paragraph", "default": "Browse the complete Top Knobs catalog by design collection. From the architectural lines of Sanctuary to the artisan detail of Edwardian, every collection brings a distinct point of view to cabinet hardware." }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Collection card",
+      "settings": [
+        { "type": "text", "id": "collection_handle", "label": "Collection handle", "info": "The URL slug after /collections/" },
+        { "type": "text", "id": "label", "label": "Display label (optional)", "info": "Override the auto-derived label" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Design Collections" }
+  ]
+}
+{% endschema %}

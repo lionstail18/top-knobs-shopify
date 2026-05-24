@@ -10,18 +10,375 @@
 {
   "sections": {
     "main": {
-      "type": "main-list-collections",
+      "type": "tk-design-collections",
+      "blocks": {
+        "c1": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-sanctuary",
+            "label": "Sanctuary"
+          }
+        },
+        "c2": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-pemberton-collection",
+            "label": "Pemberton"
+          }
+        },
+        "c3": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-garrison-collection",
+            "label": "Garrison"
+          }
+        },
+        "c4": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-brockwell-collection",
+            "label": "Brockwell"
+          }
+        },
+        "c5": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-edwardian-bath",
+            "label": "Edwardian Bath"
+          }
+        },
+        "c6": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-devon",
+            "label": "Devon"
+          }
+        },
+        "c7": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-grace",
+            "label": "Grace"
+          }
+        },
+        "c8": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-ellis",
+            "label": "Ellis"
+          }
+        },
+        "c9": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-serene",
+            "label": "Serene"
+          }
+        },
+        "c10": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-coddington-collection",
+            "label": "Coddington"
+          }
+        },
+        "c11": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-mercer",
+            "label": "Mercer"
+          }
+        },
+        "c12": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-lynwood",
+            "label": "Lynwood"
+          }
+        },
+        "c13": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-barrington",
+            "label": "Barrington"
+          }
+        },
+        "c14": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-transcend",
+            "label": "Transcend"
+          }
+        },
+        "c15": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-aspen",
+            "label": "Aspen"
+          }
+        },
+        "c16": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-chareau",
+            "label": "Chareau"
+          }
+        },
+        "c17": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-tuscany",
+            "label": "Tuscany"
+          }
+        },
+        "c18": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-dakota",
+            "label": "Dakota"
+          }
+        },
+        "c19": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-aspen-ii",
+            "label": "Aspen II"
+          }
+        },
+        "c20": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-nouveau-iii",
+            "label": "Nouveau III"
+          }
+        },
+        "c21": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-asbury",
+            "label": "Asbury"
+          }
+        },
+        "c22": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-nouveau",
+            "label": "Nouveau"
+          }
+        },
+        "c23": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-sanctuary-ii",
+            "label": "Sanctuary II"
+          }
+        },
+        "c24": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-edwardian",
+            "label": "Edwardian"
+          }
+        },
+        "c25": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-hopewell",
+            "label": "Hopewell"
+          }
+        },
+        "c26": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-stainless-ii",
+            "label": "Stainless II"
+          }
+        },
+        "c27": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-nouveau-ii",
+            "label": "Nouveau II"
+          }
+        },
+        "c28": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-crystal",
+            "label": "Crystal"
+          }
+        },
+        "c29": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-cobblestone",
+            "label": "Cobblestone"
+          }
+        },
+        "c30": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-britannia-collection",
+            "label": "Britannia"
+          }
+        },
+        "c31": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-somerset-ii",
+            "label": "Somerset II"
+          }
+        },
+        "c32": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-amwell",
+            "label": "Amwell"
+          }
+        },
+        "c33": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-somerset",
+            "label": "Somerset"
+          }
+        },
+        "c34": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-stratton",
+            "label": "Stratton"
+          }
+        },
+        "c35": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-stainless",
+            "label": "Stainless"
+          }
+        },
+        "c36": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-victoria-falls",
+            "label": "Victoria Falls"
+          }
+        },
+        "c37": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-pennington",
+            "label": "Pennington"
+          }
+        },
+        "c38": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-normandy-collection",
+            "label": "Normandy"
+          }
+        },
+        "c39": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-aqua-bath",
+            "label": "Aqua Bath"
+          }
+        },
+        "c40": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-hudson",
+            "label": "Hudson"
+          }
+        },
+        "c41": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-luxor",
+            "label": "Luxor"
+          }
+        },
+        "c42": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-tower-bridge",
+            "label": "Tower Bridge"
+          }
+        },
+        "c43": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-princetonian",
+            "label": "Princetonian"
+          }
+        },
+        "c44": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-trevi",
+            "label": "Trevi"
+          }
+        },
+        "c45": {
+          "type": "collection_card",
+          "settings": {
+            "collection_handle": "top-knobs-sydney",
+            "label": "Sydney"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c8",
+        "c9",
+        "c10",
+        "c11",
+        "c12",
+        "c13",
+        "c14",
+        "c15",
+        "c16",
+        "c17",
+        "c18",
+        "c19",
+        "c20",
+        "c21",
+        "c22",
+        "c23",
+        "c24",
+        "c25",
+        "c26",
+        "c27",
+        "c28",
+        "c29",
+        "c30",
+        "c31",
+        "c32",
+        "c33",
+        "c34",
+        "c35",
+        "c36",
+        "c37",
+        "c38",
+        "c39",
+        "c40",
+        "c41",
+        "c42",
+        "c43",
+        "c44",
+        "c45"
+      ],
       "settings": {
-        "title": "Shop Collections",
-        "heading_size": "h1",
-        "description": "",
-        "enlarge_description": false,
-        "text_align": "items-center text-center",
-        "display_type": "all",
-        "selected_collections": [],
-        "collections_per_page": 24,
-        "card_size": "medium",
-        "use_product_image": true
+        "eyebrow": "Top Knobs Catalog",
+        "heading": "Shop by Collection",
+        "intro": "Browse the complete Top Knobs catalog by design collection. From the architectural lines of Sanctuary to the artisan detail of Edwardian, every collection brings a distinct point of view to cabinet hardware."
       }
     }
   },
