@@ -193,9 +193,12 @@
     color: rgb(var(--text-color));
   }
 
-  /* CRO batch 2026-05-24: mobile click-to-call phone icon (parity port).
-     Coloured with the brand accent (TK gold) so it reads as the action
-     it is, not just another nav icon. */
+  /* CRO batch 2026-05-24 (revised): click-to-call phone icon in the
+     persistent header__icons row, beside Login + Cart. Coloured with
+     the brand accent (TK gold) so it reads as the action it is, not
+     just another nav icon. The 9px letter-spacing the base rule applies
+     to icon mini-labels makes "800-530-8245" too wide and visually
+     loose, so this overrides to 10px, no extra letter-spacing, no wrap. */
   .cc-header .header__icon--phone {
     color: rgb(var(--header-accent-color));
   }
@@ -204,25 +207,12 @@
   }
   .cc-header .header__icon--phone .visually-hidden {
     color: rgb(var(--header-accent-color)) !important;
-    opacity: 0.85 !important;
-  }
-
-  /* CRO batch 2026-05-24: desktop CTA in nav — once we drop the grey
-     bg/border (cta_*_color alphas = 0 in settings), strip any leftover
-     padding so the icon + phone number sit cleanly aligned. */
-  .cc-header .secondary-nav__cta {
-    padding-block: 0;
-    padding-inline: 8px;
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    gap: 6px;
-  }
-  .cc-header .secondary-nav__cta:hover,
-  .cc-header .secondary-nav__cta:focus-visible {
-    opacity: 0.85;
-    text-decoration: none;
-    outline: none;
+    opacity: 0.9 !important;
+    font-size: 10px !important;
+    letter-spacing: 0.02em !important;
+    white-space: nowrap !important;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
   }
 
   /* ── Nav bar: 44 px, Jost 12 px uppercase, gold hover ──────── */
@@ -613,20 +603,24 @@
       {%- endif -%}
 
       {%- comment -%}
-        CRO batch 2026-05-24: mobile-only click-to-call phone icon
-        (parity port from KC). The desktop CTA lives inside <main-menu>
-        (secondary-nav-container) and collapses with the hamburger drawer
-        on mobile — so a phone-intent visitor on a phone could never
-        reach it. Render the same tel: link as an icon-only button
-        alongside cart/search/account on small screens (md:hidden =
-        display:none at ≥768px so it doesn't duplicate the desktop CTA).
+        CRO batch 2026-05-24 (revised same-day per Dave): click-to-call
+        phone link in the persistent `header__icons` row, alongside
+        Login + Cart. Replaces the previous secondary-nav CTA (which
+        was pushing the centred menu off-axis) — that CTA is now
+        disabled via `cta_show:false` in header-group.json. The phone
+        number itself renders as the icon-below label (matching the
+        Login/Cart "icon above, text below" pattern) so the actual
+        callable digits are visible on every page, every viewport.
+        Visible label drops the "1-" to save column width; aria-label
+        keeps the full form for screen readers.
+        `data-event="phone_call"` lets GTM build a click trigger.
       {%- endcomment -%}
-      {%- if section.settings.cta_show and section.settings.cta_link contains 'tel:' -%}
-        <a class="header__icon md:hidden header__icon--phone" href="{{ section.settings.cta_link }}" aria-label="Call us at {{ section.settings.cta_label | escape | default: 'our toll-free line' }}" data-event="phone_call_mobile">
-          {%- render 'icon', icon: 'phone', width: 22, height: 22 -%}
-          <span class="visually-hidden">Call</span>
-        </a>
-      {%- endif -%}
+      {%- assign phone_link = 'tel:+18005308245' -%}
+      {%- assign phone_label_short = '800-530-8245' -%}
+      <a class="header__icon header__icon--phone" href="{{ phone_link }}" aria-label="Call us at 1-{{ phone_label_short }}" data-event="phone_call">
+        {%- render 'icon', icon: 'phone', width: 22, height: 22 -%}
+        <span class="visually-hidden">{{ phone_label_short }}</span>
+      </a>
 
       <a class="header__icon{% if settings.cart_shaking and cart != empty %} header__icon--cart-shake has-motion{% endif %} relative" id="cart-icon" href="{{ routes.cart_url }}"{% if settings.cart_shaking and cart != empty %} data-shake-frequency="{{ settings.cart_shaking_frequency }}"{% endif %}{% if settings.preload_links %} data-no-instant{% endif %}>
         {%- if settings.cart_icon == 'bag' -%}

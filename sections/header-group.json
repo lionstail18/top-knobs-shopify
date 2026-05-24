@@ -116,7 +116,7 @@
         "menu_featured_link": "What's New",
         "enable_customer_account_component": false,
         "customer_account_menu": "customer-account-main-menu",
-        "cta_show": true,
+        "cta_show": false,
         "cta_icon": "phone",
         "cta_label": "1-800-530-8245",
         "cta_link": "tel:+18005308245",
