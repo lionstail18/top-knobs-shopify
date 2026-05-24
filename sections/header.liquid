@@ -573,6 +573,26 @@
           </a>
         {%- endunless -%}
       {%- endif -%}
+
+      {%- comment -%}
+        CRO batch 2026-05-24 (Dave-placed): click-to-call phone link
+        between the search bar and the Login icon. Rendered as a
+        first-class `.header__icon` (icon above, label below) matching
+        the Login/Cart pattern. Previous secondary-nav CTA is disabled
+        via `cta_show:false` in header-group.json (it was pushing the
+        centred menu off-axis). Visible label is "800-530-8245" — the
+        "1-" is dropped to save column width; aria-label keeps the full
+        form for screen readers; href is the full `tel:+18005308245`
+        so dialers work correctly. `data-event="phone_call"` lets GTM
+        build a click trigger.
+      {%- endcomment -%}
+      {%- assign phone_link = 'tel:+18005308245' -%}
+      {%- assign phone_label_short = '800-530-8245' -%}
+      <a class="header__icon header__icon--phone" href="{{ phone_link }}" aria-label="Call us at 1-{{ phone_label_short }}" data-event="phone_call">
+        {%- render 'icon', icon: 'phone', width: 22, height: 22 -%}
+        <span class="visually-hidden">{{ phone_label_short }}</span>
+      </a>
+
       {%- if shop.customer_accounts_enabled -%}
         {%- if section.settings.enable_customer_account_component -%}
           <shopify-account menu="{{ section.settings.customer_account_menu }}">
@@ -601,26 +621,6 @@
           {%- endif -%}
         {%- endif -%}
       {%- endif -%}
-
-      {%- comment -%}
-        CRO batch 2026-05-24 (revised same-day per Dave): click-to-call
-        phone link in the persistent `header__icons` row, alongside
-        Login + Cart. Replaces the previous secondary-nav CTA (which
-        was pushing the centred menu off-axis) — that CTA is now
-        disabled via `cta_show:false` in header-group.json. The phone
-        number itself renders as the icon-below label (matching the
-        Login/Cart "icon above, text below" pattern) so the actual
-        callable digits are visible on every page, every viewport.
-        Visible label drops the "1-" to save column width; aria-label
-        keeps the full form for screen readers.
-        `data-event="phone_call"` lets GTM build a click trigger.
-      {%- endcomment -%}
-      {%- assign phone_link = 'tel:+18005308245' -%}
-      {%- assign phone_label_short = '800-530-8245' -%}
-      <a class="header__icon header__icon--phone" href="{{ phone_link }}" aria-label="Call us at 1-{{ phone_label_short }}" data-event="phone_call">
-        {%- render 'icon', icon: 'phone', width: 22, height: 22 -%}
-        <span class="visually-hidden">{{ phone_label_short }}</span>
-      </a>
 
       <a class="header__icon{% if settings.cart_shaking and cart != empty %} header__icon--cart-shake has-motion{% endif %} relative" id="cart-icon" href="{{ routes.cart_url }}"{% if settings.cart_shaking and cart != empty %} data-shake-frequency="{{ settings.cart_shaking_frequency }}"{% endif %}{% if settings.preload_links %} data-no-instant{% endif %}>
         {%- if settings.cart_icon == 'bag' -%}
