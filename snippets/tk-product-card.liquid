@@ -130,7 +130,8 @@
         {%- assign __lw_size = __lw | size -%}
         {%- if __lw_size >= 4 -%}
           {%- assign __lw_clean = __lw | replace: '0','' | replace: '1','' | replace: '2','' | replace: '3','' | replace: '4','' | replace: '5','' | replace: '6','' | replace: '7','' | replace: '8','' | replace: '9','' -%}
-          {%- if __lw_clean.size < __lw_size and __lw == __lw | upcase -%}
+          {%- assign __lw_upper = __lw | upcase -%}
+          {%- if __lw_clean.size < __lw_size and __lw == __lw_upper -%}
             {%- unless __lw contains "'" or __lw contains '"' or __lw contains '/' or __lw contains '(' or __lw contains ')' or __lw contains ',' or __lw contains '%' -%}
               {%- assign __keep = __words.size | minus: 1 -%}
               {%- assign __title = __words | slice: 0, __keep | join: ' ' -%}
