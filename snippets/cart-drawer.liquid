@@ -182,9 +182,12 @@
           </cart-terms>
         {%- endif -%}
 
-        {%- if section.settings.enable_empty_cart or section.settings.enable_empty_cart_mobile -%}
-          <a class="btn btn--secondary w-full mb-2 js-empty-cart{% if section.settings.enable_empty_cart == false %} md:hidden{% elsif section.settings.enable_empty_cart_mobile == false %} hidden md:block{% endif %}" href="{{ routes.cart_clear_url }}">{{ 'cart.general.empty_cart' | t }}</a>
-        {%- endif -%}
+        {%- comment -%}
+          CRO batch 2026-05-24: Checkout is now the top-of-stack primary CTA.
+          Empty cart demoted to a small text link rendered AFTER the express
+          checkout buttons (was a full-width btn--secondary above Checkout
+          and was easy to misclick on mobile).
+        {%- endcomment -%}
 
         {%- if section.settings.show_checkout_button -%}
           <button type="submit" class="btn btn--primary btn--icon-with-text w-full" name="checkout" form="cart-drawer-form"{% if cart == empty %} disabled{% endif %}>
@@ -200,6 +203,10 @@
           <div class="dynamic-cart-btns mt-2">
             {{ content_for_additional_checkout_buttons }}
           </div>
+        {%- endif -%}
+
+        {%- if section.settings.enable_empty_cart or section.settings.enable_empty_cart_mobile -%}
+          <a class="js-empty-cart cart-drawer__empty-link{% if section.settings.enable_empty_cart == false %} md:hidden{% elsif section.settings.enable_empty_cart_mobile == false %} hidden md:block{% endif %}" href="{{ routes.cart_clear_url }}" style="display:block;margin-top:14px;text-align:center;font-size:12px;color:var(--color-text2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;">{{ 'cart.general.empty_cart' | t }}</a>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -226,8 +233,16 @@
     {% endif %}
 
     <div class="cart-drawer__content{% if cart == empty %} grow flex items-center justify-center w-full{% endif %}">
-      {%- if cart != empty and settings.show_free_shipping_notice -%}
-        {% render 'free-shipping-notice' %}
+      {%- comment -%}
+        CRO batch 2026-05-24: render the free-ship notice whenever the cart
+        is non-empty. Drops the settings.show_free_shipping_notice gate
+        (settings_data cache risk per memory feedback_shopify_settings_cache).
+        Threshold + currency match handled inside free-shipping-notice.liquid;
+        for non-USD currencies that lack a configured minimum it renders nothing.
+        bar_position:'top' puts the progress bar above the deficit text.
+      {%- endcomment -%}
+      {%- if cart != empty -%}
+        {% render 'free-shipping-notice', bar_position: 'top' %}
       {%- endif -%}
 
       <form class="form" id="cart-drawer-form" action="{{ routes.cart_url }}" method="post">

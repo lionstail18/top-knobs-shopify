@@ -29,6 +29,18 @@
     assign show_notice = true
   endif
 
+  comment
+    CRO batch 2026-05-24: hardcoded USD $99 fallback so the bar renders
+    even if settings.free_shipping_minimum hasn't been configured (per memory
+    feedback_shopify_settings_cache.md, settings_data.json edits don't
+    reliably invalidate the resolved-settings cache; hardcoding the gate is
+    the supported pattern).
+  endcomment
+  if show_notice == false and cart.currency.iso_code == 'USD'
+    assign minimum_value = 99
+    assign show_notice = true
+  endif
+
   assign free_shipping_minimum = minimum_value | times: 100
   assign color_scheme = settings.free_shipping_color_scheme
 -%}
