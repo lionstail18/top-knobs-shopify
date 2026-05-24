@@ -588,7 +588,14 @@
       {%- endcomment -%}
       {%- assign phone_link = 'tel:+18005308245' -%}
       {%- assign phone_label_short = '800-530-8245' -%}
-      <a class="header__icon header__icon--phone" href="{{ phone_link }}" aria-label="Call us at 1-{{ phone_label_short }}" data-event="phone_call">
+      {%- comment -%}
+        `data-no-instant` opts this link out of the theme's preload-on-hover
+        behaviour. `onclick` forces the OS protocol handler to fire in the
+        same tab — without it, clicking the `tel:` link in some desktop
+        Chrome configurations opens a blank new tab (parity port from KC
+        2026-05-24 fix).
+      {%- endcomment -%}
+      <a class="header__icon header__icon--phone" href="{{ phone_link }}" aria-label="Call us at 1-{{ phone_label_short }}" data-event="phone_call" data-no-instant onclick="window.location.href=this.href;return false;">
         {%- render 'icon', icon: 'phone', width: 22, height: 22 -%}
         <span class="visually-hidden">{{ phone_label_short }}</span>
       </a>
