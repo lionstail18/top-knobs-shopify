@@ -1,0 +1,372 @@
+.pseo-article {
+  background: var(--pseo-bg);
+  color: var(--pseo-text);
+  padding: 64px 24px 96px;
+  font-family: var(--font-body-family, inherit);
+  font-weight: var(--font-body-weight, 400);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pseo-container { max-width: 1100px; margin: 0 auto; }
+
+.pseo-back {
+  display: inline-flex; align-items: center;
+  font-size: 14px; font-weight: 500;
+  color: var(--pseo-text-muted); text-decoration: none;
+  margin-bottom: 36px;
+  transition: color 0.15s ease;
+}
+.pseo-back::before {
+  content: "←";
+  margin-right: 8px;
+  font-size: 16px;
+  line-height: 1;
+}
+.pseo-back:hover { color: var(--pseo-text); }
+
+.pseo-header, .pseo-sidebar { position: static; }
+.pseo-header { margin-bottom: 40px; max-width: 760px; }
+.pseo-tags { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.pseo-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--pseo-accent); text-transform: uppercase;
+}
+.pseo-title {
+  font-family: var(--font-heading-family, inherit);
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: var(--font-heading-weight, 800);
+  line-height: 1.08;
+  margin: 0 0 18px; letter-spacing: -0.02em;
+  color: var(--pseo-text);
+}
+.pseo-subtitle {
+  font-size: clamp(17px, 2vw, 19px); line-height: 1.55;
+  color: var(--pseo-text-secondary);
+  margin: 0 0 20px;
+}
+.pseo-meta {
+  font-size: 13px; color: var(--pseo-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pseo-hero { margin: 0 0 64px; border-radius: 6px; overflow: hidden; }
+.pseo-hero img { display: block; width: 100%; height: auto; }
+
+.pseo-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 980px) {
+  .pseo-layout {
+    grid-template-columns: 220px 1fr;
+    gap: 72px;
+  }
+}
+
+.pseo-sidebar { display: none; }
+@media (min-width: 980px) { .pseo-sidebar { display: block; } }
+
+.pseo-toc {
+  position: sticky; top: 100px;
+  padding-left: 16px;
+  border-left: 2px solid var(--pseo-border-strong);
+}
+.pseo-toc-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--pseo-text-muted); text-transform: uppercase;
+  margin: 0 0 14px;
+}
+.pseo-toc-list { list-style: none; margin: 0; padding: 0; }
+.pseo-toc-list li { margin: 0; }
+.pseo-toc-link {
+  display: block; padding: 6px 0;
+  font-size: 13px; line-height: 1.45;
+  color: var(--pseo-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.pseo-toc-link:hover { color: var(--pseo-text); }
+.pseo-toc-link.is-active {
+  color: var(--pseo-accent); font-weight: 600;
+}
+
+.pseo-content { max-width: 720px; }
+.pseo-content > *:first-child { margin-top: 0; }
+
+.pseo-content h2 {
+  font-family: var(--font-heading-family, inherit);
+  font-size: clamp(22px, 3vw, 26px);
+  font-weight: var(--font-heading-weight, 700);
+  line-height: 1.25;
+  margin: 56px 0 16px; scroll-margin-top: 100px;
+  color: var(--pseo-text); letter-spacing: -0.01em;
+}
+.pseo-content h3 {
+  font-family: var(--font-heading-family, inherit);
+  font-size: 19px; font-weight: var(--font-heading-weight, 700); line-height: 1.3;
+  margin: 32px 0 12px; color: var(--pseo-text);
+}
+.pseo-content h4 {
+  font-family: var(--font-heading-family, inherit);
+  font-size: 16px; font-weight: var(--font-heading-weight, 700); line-height: 1.35;
+  margin: 24px 0 10px; color: var(--pseo-text);
+}
+.pseo-content p {
+  font-size: 17px; line-height: 1.75;
+  color: var(--pseo-text); margin: 0 0 18px;
+}
+.pseo-content ul, .pseo-content ol {
+  margin: 0 0 24px; padding-left: 24px;
+}
+.pseo-content li {
+  font-size: 17px; line-height: 1.7; margin-bottom: 8px;
+  color: var(--pseo-text);
+}
+.pseo-content a {
+  color: var(--pseo-accent); text-decoration: underline;
+  text-decoration-thickness: 1px; text-underline-offset: 3px;
+}
+.pseo-content a:hover { text-decoration-thickness: 2px; }
+.pseo-content strong { font-weight: 700; color: var(--pseo-text); }
+.pseo-content em { font-style: italic; }
+.pseo-content img { max-width: 100%; height: auto; border-radius: 4px; margin: 24px 0; }
+.pseo-content hr {
+  border: none; border-top: 1px solid var(--pseo-border);
+  margin: 48px 0;
+}
+
+.pseo-content .pseo-tldr {
+  position: relative;
+  background: var(--pseo-callout-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 28px 32px 28px 36px;
+  margin: 0 0 40px;
+  box-shadow: none;
+  overflow: hidden;
+}
+.pseo-content .pseo-tldr::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--pseo-accent);
+}
+.pseo-content .pseo-tldr p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--pseo-text);
+}
+.pseo-content .pseo-tldr-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pseo-accent-darker);
+  margin-bottom: 12px;
+}
+.pseo-content .pseo-tldr a {
+  color: var(--pseo-accent-darker);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.pseo-content .pseo-byline {
+  font-size: 14px;
+  color: var(--pseo-text-muted);
+  margin: 0 0 36px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--pseo-border);
+}
+.pseo-content .pseo-byline strong { color: var(--pseo-text-secondary); }
+
+.pseo-content table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  background: transparent;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+.pseo-content table th,
+.pseo-content table td {
+  text-align: left;
+  padding: 14px 16px 14px 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  vertical-align: top;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  hyphens: auto;
+  white-space: normal !important;
+}
+.pseo-content th {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--pseo-text-muted);
+  background: transparent;
+  border-bottom: 1.5px solid var(--pseo-accent-darker);
+  padding-bottom: 12px;
+}
+.pseo-content td {
+  border-bottom: 1px solid var(--pseo-border);
+  color: var(--pseo-text);
+  line-height: 1.55;
+}
+.pseo-content tbody tr:last-child td { border-bottom: none; }
+.pseo-content td:first-child {
+  font-weight: 600;
+  color: var(--pseo-text);
+}
+
+.pseo-content blockquote,
+.pseo-content .pseo-quote {
+  border-left: 3px solid var(--pseo-accent);
+  padding: 4px 0 4px 22px;
+  margin: 32px 0;
+  font-size: 18px; line-height: 1.55; font-style: italic;
+  color: var(--pseo-text);
+}
+.pseo-content .pseo-quote-author {
+  display: block; margin-top: 10px;
+  font-size: 13px; font-style: normal; font-weight: 600;
+  color: var(--pseo-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.pseo-content .pseo-callout {
+  position: relative;
+  background: var(--pseo-callout-bg);
+  border: none;
+  border-radius: 8px;
+  padding: 22px 26px 22px 30px;
+  margin: 32px 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+.pseo-content .pseo-callout::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--pseo-accent);
+}
+.pseo-content .pseo-callout-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pseo-accent-darker);
+  margin-bottom: 10px;
+}
+.pseo-content .pseo-callout p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--pseo-text);
+}
+.pseo-content .pseo-callout p + p { margin-top: 10px; }
+.pseo-content .pseo-callout a {
+  color: var(--pseo-accent-darker);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.pseo-content .pseo-callout a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.pseo-content .pseo-cta {
+  background: var(--pseo-text);
+  color: var(--pseo-bg);
+  border-radius: 8px;
+  padding: 36px 32px;
+  margin: 48px 0;
+  text-align: center;
+}
+.pseo-content .pseo-cta .pseo-cta-heading {
+  font-family: var(--font-heading-family, inherit);
+  font-size: 24px; font-weight: 700; line-height: 1.2;
+  margin: 0 0 12px; color: var(--pseo-bg);
+}
+.pseo-content .pseo-cta p {
+  color: color-mix(in srgb, var(--pseo-bg) 82%, transparent);
+  font-size: 16px;
+  margin: 0 auto 24px; max-width: 460px;
+}
+.pseo-content .pseo-cta .pseo-cta-button {
+  display: inline-block;
+  background: var(--pseo-accent); color: var(--pseo-bg);
+  font-weight: 600; font-size: 15px;
+  padding: 13px 28px; border-radius: 4px;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+}
+.pseo-content .pseo-cta .pseo-cta-button:hover { filter: brightness(1.1); }
+
+.pseo-content .pseo-steps {
+  counter-reset: pseo-step;
+  margin: 32px 0;
+  padding: 0; list-style: none;
+}
+.pseo-content .pseo-step {
+  position: relative;
+  padding-left: 56px;
+  margin-bottom: 24px;
+  counter-increment: pseo-step;
+}
+.pseo-content .pseo-step::before {
+  content: counter(pseo-step);
+  position: absolute; left: 0; top: -2px;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--pseo-accent); color: var(--pseo-bg);
+  font-weight: 700; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pseo-content .pseo-step-title {
+  font-size: 17px; font-weight: 700; margin: 4px 0 4px;
+  display: block;
+}
+.pseo-content .pseo-step p { font-size: 16px; line-height: 1.7; margin: 0; }
+
+.pseo-sticky-cta {
+  display: none;
+  position: fixed;
+  left: 16px; right: 16px; bottom: 16px;
+  background: var(--pseo-accent);
+  color: var(--pseo-bg);
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  z-index: 50;
+  min-height: 44px;
+  line-height: 1.2;
+}
+.pseo-sticky-cta.is-visible { display: block; }
+@media (min-width: 980px) { .pseo-sticky-cta { display: none !important; } }
+
+@media (max-width: 749px) {
+  .pseo-article { padding: 40px 20px 64px; }
+  .pseo-content h2 { margin-top: 40px; }
+  .pseo-content .pseo-cta { padding: 28px 22px; }
+  .pseo-content .pseo-tldr { padding: 18px 20px; }
+}

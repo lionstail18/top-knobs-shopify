@@ -1,0 +1,98 @@
+{{ 'section-blog-post-pseo.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'article-pseo.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign pseo_accent = settings.colors_accent_1 | default: settings.color_brand | default: settings.color_accent | default: settings.accent_color | default: settings.color_link | default: '#2563eb'
+  assign pseo_text = settings.colors_text | default: settings.color_text | default: settings.text_color | default: settings.color_headings | default: '#121212'
+  assign pseo_bg = settings.colors_background_1 | default: settings.color_bg | default: settings.background_color | default: '#ffffff'
+  assign pseo_muted = settings.color_alt_text | default: settings.color_text_muted | default: settings.colors_text_subdued | default: '#6b6b6b'
+  assign pseo_border = settings.color_border | default: settings.color_header_border | default: settings.colors_border | default: '#e5e5e5'
+-%}
+<article class="pseo-article" style="--pseo-bg: {{ pseo_bg }}; --pseo-text: {{ pseo_text }}; --pseo-text-muted: {{ pseo_muted }}; --pseo-text-secondary: color-mix(in srgb, {{ pseo_text }} 78%, transparent); --pseo-accent: {{ pseo_accent }}; --pseo-accent-darker: {{ pseo_accent }}; --pseo-accent-soft: color-mix(in srgb, {{ pseo_accent }} 8%, transparent); --pseo-border: {{ pseo_border }}; --pseo-border-strong: color-mix(in srgb, {{ pseo_text }} 28%, transparent); --pseo-callout-bg: color-mix(in srgb, {{ pseo_accent }} 6%, {{ pseo_bg }});">
+  <div class="pseo-container">
+    <a href="{{ blog.url }}" class="pseo-back">All articles</a>
+    <div class="pseo-header">
+      {%- if article.tags.size > 0 -%}
+        <div class="pseo-tags">
+          {%- for tag in article.tags -%}
+            <span class="pseo-tag">{{ tag }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <h1 class="pseo-title">{{ article.title | escape }}</h1>
+      {%- if article.excerpt != blank -%}
+        <p class="pseo-subtitle">{{ article.excerpt | strip_html }}</p>
+      {%- endif -%}
+      <div class="pseo-meta">
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: '%B %d, %Y' }}
+        </time>
+      </div>
+    </div>
+    {%- if article.image -%}
+      <div class="pseo-hero">
+        <img
+          src="{{ article.image | image_url: width: 1400 }}"
+          srcset="{{ article.image | image_url: width: 750 }} 750w, {{ article.image | image_url: width: 1100 }} 1100w, {{ article.image | image_url: width: 1400 }} 1400w"
+          sizes="(min-width: 980px) 1100px, 100vw"
+          alt="{{ article.image.alt | escape }}"
+          loading="eager"
+          width="{{ article.image.width }}"
+          height="{{ article.image.height }}"
+        >
+      </div>
+    {%- endif -%}
+    <div class="pseo-layout">
+      <div class="pseo-sidebar">
+        <nav class="pseo-toc" data-pseo-toc aria-label="Article contents"></nav>
+      </div>
+      <div class="pseo-content" data-pseo-content>
+        {{ article.content }}
+      </div>
+    </div>
+  </div>
+</article>
+
+{%- assign sticky_cta_url = article.metafields.pseo.sticky_cta_url | default: '/collections/all' -%}
+{%- assign sticky_cta_text = article.metafields.pseo.sticky_cta_text | default: 'Shop the guide →' -%}
+<a href="{{ sticky_cta_url }}?utm_source=pseo&utm_medium={{ article.handle }}&utm_campaign=sticky&utm_content=mobile-sticky" class="pseo-sticky-cta" data-pseo-sticky>{{ sticky_cta_text }}</a>
+
+<script type="application/ld+json">
+{{ article | structured_data }}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ blog.title | json }},
+      "item": "{{ shop.url }}{{ blog.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ article.title | json }},
+      "item": "{{ shop.url }}{{ article.url }}"
+    }
+  ]
+}
+</script>
+
+{% schema %}
+{
+  "name": "PSEO Article",
+  "tag": "section",
+  "class": "section",
+  "blocks": [],
+  "settings": []
+}
+{% endschema %}
