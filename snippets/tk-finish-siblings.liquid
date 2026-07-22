@@ -1,0 +1,43 @@
+{%- comment -%}
+  Top Knobs Hardware (topknobshardware.net) — finish-family picker.
+  Ported from knobs.co for store-feature parity (2026-07-22): the same product
+  in other finishes, driven by the knobs.finish_siblings list.product_reference
+  metafield (populated by the backend finish-siblings sync) with finish names
+  from the sync-owned custom.finish metafield.
+
+  Usage (inside sections/tk-product.liquid, after the price block):
+    {% render 'tk-finish-siblings', product: product %}
+{%- endcomment -%}
+
+{%- assign tkfs_family = product.metafields.knobs.finish_siblings.value -%}
+{%- if tkfs_family and tkfs_family.size > 1 -%}
+  {%- assign tkfs_current = product.metafields.custom.finish.value -%}
+  <div class="tkfs">
+    <p class="tkfs__label">Finish{% if tkfs_current != blank %}: <strong>{{ tkfs_current | escape }}</strong>{% endif %}</p>
+    <div class="tkfs__swatches">
+      {%- for sib in tkfs_family -%}
+        {%- assign sib_finish = sib.metafields.custom.finish.value | default: sib.title -%}
+        {%- if sib.id == product.id -%}
+          <span class="tkfs__swatch tkfs__swatch--current" title="{{ sib_finish | escape }}" aria-current="true">
+            {%- if sib.featured_image -%}<img src="{{ sib.featured_image | image_url: width: 96 }}" alt="{{ sib_finish | escape }}" width="44" height="44" loading="lazy">{%- endif -%}
+          </span>
+        {%- else -%}
+          <a class="tkfs__swatch" href="{{ sib.url }}" title="{{ sib_finish | escape }}" aria-label="{{ sib_finish | escape }}">
+            {%- if sib.featured_image -%}<img src="{{ sib.featured_image | image_url: width: 96 }}" alt="{{ sib_finish | escape }}" width="44" height="44" loading="lazy">{%- endif -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- style -%}
+    .tkfs { margin: 14px 0 18px; }
+    .tkfs__label { font-size: 13px; margin: 0 0 8px; color: #5c6e7c; }
+    .tkfs__label strong { color: #2a3b45; }
+    .tkfs__swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tkfs__swatch { display: inline-flex; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid #d9e0e5; padding: 0; }
+    .tkfs__swatch img { width: 100%; height: 100%; object-fit: cover; }
+    .tkfs__swatch:hover { border-color: #8a9aa6; }
+    .tkfs__swatch--current { border-color: #9d3b2f; box-shadow: 0 0 0 1px #9d3b2f; }
+  {%- endstyle -%}
+{%- endif -%}

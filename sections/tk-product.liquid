@@ -1,17 +1,3 @@
-<!-- ============================================================
-  Top Knobs — Product Section (PATCHED v2)
-  Replaces sections/tk-product.liquid
-
-  CHANGES vs original:
-  • Adds compare_at_price strikethrough + Save % savings badge (MAP pricing)
-  • Fixes swatch dots — now uses tk-finish-swatch snippet with real hex map
-  • Hides spec rows when metafields are blank (no more empty "Ships" / "Warranty" with no value)
-  • Hides Center-to-Center when blank (no more "Center-to-Center: 0")
-  • Adds quantity discount messaging (Buy 4+ Save 10%)
-  • Adds Recently Viewed strip at bottom (localStorage-backed)
-  • Improves "Authorized Dealer" badge styling
-============================================================ -->
-
 <!-- Breadcrumb -->
 <div class="tk-prod__breadcrumb">
   <a href="{{ routes.root_url }}">Home</a>
@@ -56,37 +42,6 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
-
-    {%- comment -%}
-      ============================================================
-      Description (left column, below gallery) — design v4 placement.
-      ============================================================
-      Detection rule: hide when product.description is a BC-import
-      table (contains <table). Rationale: those tables duplicate the
-      spec card data and aren't real product descriptions. They'll
-      be replaced with real prose by the bulk migration job (knobsdb
-      shp_products.ai_description push). When real descriptions land,
-      they automatically render here — no template changes needed.
-
-      Read-more behavior: JS measures the rendered description height
-      after layout and only adds .is-truncatable + the toggle button
-      when the description is taller than the right-column .tk-prod__info.
-      Short descriptions display in full. See script at the bottom.
-    {%- endcomment -%}
-    {%- assign has_desc_table = false -%}
-    {%- if product.description contains '<table' -%}
-      {%- assign has_desc_table = true -%}
-    {%- endif -%}
-    {%- if product.description != blank and has_desc_table == false -%}
-      <div class="tk-prod__description" id="tk-prod-description">
-        <div class="tk-prod__description-head">
-          <h2 class="tk-prod__description-h2">Product Description</h2>
-          <span class="tk-prod__description-eyebrow">About this item</span>
-        </div>
-        <div class="tk-prod__description-body rte" id="tk-prod-description-body">{{ product.description }}</div>
-        <button type="button" class="tk-prod__description-readmore" id="tk-prod-description-readmore" hidden>Read more</button>
-      </div>
-    {%- endif -%}
   </div>
 
   <!-- Info -->
@@ -95,9 +50,8 @@
       <a href="{{ product.vendor | url_for_vendor }}" class="tk-prod__collection-link">{{ product.vendor | escape }} Collection</a>
     {%- endif -%}
     <h1 class="tk-prod__h1">{{ product.title | escape }}</h1>
-
     {%- assign size_meta = product.metafields.tk.size -%}
-    {%- if size_meta != blank and size_meta != 0 and size_meta != '0' -%}
+    {%- if size_meta != blank -%}
       <p class="tk-prod__size">Center-to-Center: {{ size_meta }}</p>
     {%- endif -%}
     {%- if product.selected_or_first_available_variant.sku != blank -%}
@@ -115,67 +69,16 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} ====== PRICE BLOCK with MAP strikethrough + Savings ====== {%- endcomment -%}
-    {%- assign cur_variant = product.selected_or_first_available_variant -%}
-    {%- assign cur_price = cur_variant.price -%}
-    {%- assign cur_compare = cur_variant.compare_at_price -%}
-    {%- assign on_sale = false -%}
-    {%- if cur_compare != blank and cur_compare > cur_price -%}{%- assign on_sale = true -%}{%- endif -%}
+    <p class="tk-prod__price">
+      {{ product.selected_or_first_available_variant.price | money }}
+      <span class="tk-prod__price-tag">Lowest Price Online</span>
+    </p>
 
-    <div class="tk-prod__price-block" id="tk-prod-price-block">
-      <p class="tk-prod__price">
-        <span class="tk-prod__price-now" id="tk-prod-price-now">{{ cur_price | money }}</span>
-        {%- if on_sale -%}
-          <span class="tk-prod__price-was" id="tk-prod-price-was">{{ cur_compare | money }}</span>
-          {%- assign savings = cur_compare | minus: cur_price -%}
-          {%- assign savings_pct = savings | times: 100.0 | divided_by: cur_compare | round -%}
-          <span class="tk-prod__price-save" id="tk-prod-price-save">Save {{ savings_pct }}%</span>
-        {%- else -%}
-          <span class="tk-prod__price-was" id="tk-prod-price-was" hidden></span>
-          <span class="tk-prod__price-save" id="tk-prod-price-save" hidden></span>
-        {%- endif -%}
-      </p>
-      <p class="tk-prod__price-tag">
-        <span aria-hidden="true">✓</span> Lowest Price Online — Price Match Guarantee
-      </p>
-    </div>
+    {%- comment -%} Finish-family picker — feature parity with knobs.co (knobs.finish_siblings). {%- endcomment -%}
+    {% render 'tk-finish-siblings', product: product %}
 
     <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="tk-prod__form" id="tk-prod-form">
-      <!-- Family finish picker — sister products in the same design family -->
-      {%- comment -%}
-        Top Knobs catalog stores each finish as a separate Shopify product
-        (no variant axis). The family_finishes metafield carries the list of
-        sister products so this PDP can render a finish-picker that links to
-        each sibling. Active swatch is highlighted by matching finish_name.
-        Only renders when there's more than one finish in the family.
-      {%- endcomment -%}
-      {%- assign family_finishes = product.metafields.top_knobs.family_finishes.value -%}
-      {%- assign current_finish = product.metafields.top_knobs.finish_name.value -%}
-      {%- if family_finishes != blank and family_finishes.size > 1 -%}
-        <div class="tk-prod__option">
-          <p class="tk-prod__option-label">
-            Finish:
-            {%- if current_finish != blank -%}
-              <strong>{{ current_finish | escape }}</strong>
-            {%- endif -%}
-          </p>
-          <div class="tk-prod__swatches" role="list" aria-label="Available finishes">
-            {%- for finish in family_finishes -%}
-              {%- assign is_active = false -%}
-              {%- if current_finish == finish.name -%}{%- assign is_active = true -%}{%- endif -%}
-              <a class="tk-prod__swatch{% if is_active %} tk-prod__swatch--active{% endif %}"
-                 href="{{ routes.root_url }}products/{{ finish.handle }}"
-                 title="{{ finish.name | escape }}"
-                 {% if is_active %}aria-current="page"{% endif %}>
-                {%- render 'tk-finish-swatch', finish_name: finish.name, size: 36 -%}
-                <span class="tk-prod__swatch-name tk-prod__swatch-name--hidden">{{ finish.name | escape }}</span>
-              </a>
-            {%- endfor -%}
-          </div>
-        </div>
-      {%- endif -%}
-
-      <!-- Variant picker (real variant axes — sizes, materials, etc.) -->
+      <!-- Variant picker (finishes) -->
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
           <div class="tk-prod__option">
@@ -194,14 +97,10 @@
                          data-option-index="{{ forloop.parentloop.index0 }}"
                          {% if is_active %}checked{% endif %}
                          class="tk-prod__swatch-input">
-                  {%- comment -%} If this option looks like a finish, render a colored dot. Otherwise text. {%- endcomment -%}
-                  {%- assign opt_name_lower = option.name | downcase -%}
-                  {%- if opt_name_lower contains 'finish' or opt_name_lower contains 'color' or opt_name_lower contains 'colour' -%}
-                    {%- render 'tk-finish-swatch', finish_name: value, size: 36 -%}
-                    <span class="tk-prod__swatch-name tk-prod__swatch-name--hidden">{{ value | escape }}</span>
-                  {%- else -%}
-                    <span class="tk-prod__swatch-text">{{ value | escape }}</span>
-                  {%- endif -%}
+                  <span class="tk-prod__swatch-dot"
+                        style="background: {{ value | downcase | replace: ' ', '-' | prepend: '--swatch-' | append: ', var(--color-border)' | replace: '--swatch-', 'var(--swatch-' | append: ')' }};">
+                  </span>
+                  <span class="tk-prod__swatch-name">{{ value | escape }}</span>
                 </label>
               {%- endfor -%}
             </div>
@@ -211,10 +110,7 @@
 
       <select name="id" id="tk-prod-variant-id" class="tk-prod__variant-select" hidden>
         {%- for variant in product.variants -%}
-          <option value="{{ variant.id }}"
-                  data-price="{{ variant.price }}"
-                  data-compare="{{ variant.compare_at_price | default: 0 }}"
-                  {% if variant == product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
+          <option value="{{ variant.id }}"{% if variant == product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
             {{ variant.title }} - {{ variant.price | money }}
           </option>
         {%- endfor -%}
@@ -229,139 +125,24 @@
         </div>
         <button type="submit" class="tk-prod__add-btn" id="tk-prod-add-btn">Add to Cart</button>
       </div>
-
-      {%- comment -%}
-        Quantity-discount notice removed: Top Knobs Hardware Outlet does not offer
-        a buy-N+ discount. The schema setting + JS handler are left in place so this
-        block can be restored cheaply if pricing ever changes — just paste the
-        original <p class="tk-prod__qty-discount"> back in.
-
-        "Order a Sample" CTA removed at the merchant's request — customers route
-        through /pages/samples instead.
-      {%- endcomment -%}
+      <a href="{{ routes.all_products_collection_url }}?filter.p.tag=sample" class="tk-btn tk-btn--ghost-dark tk-prod__sample-btn">
+        Order a Sample — From $5
+      </a>
     </form>
 
-    {%- comment -%}
-      ============================================================
-      Spec Card — design v4 style
-      ============================================================
-      Composes spec rows from a mix of native product fields
-      (vendor, product_type, sku), tags ("Collection: X", "Style: X"),
-      and metafields (top_knobs.finish_name, details.*, tk.*).
-      Rows hide when their underlying value is blank.
-
-      Layout: navy header bar + striped two-column rows.
-      Default-visible: first N rows (configurable via section setting,
-      default 5: Brand · Collection · Style · Drill Centers · Finish).
-      "+ Show all N specifications" button reveals the rest.
-
-      As metafields populate from the bulk knobsdb push, more rows
-      automatically appear with no template changes.
-    {%- endcomment -%}
-
-    {%- liquid
-      # Source: Collection from "Collection: X" tag (the design-collection
-      # name like "Lynwood", "Pemberton") rather than product.collections,
-      # which can be auto-generated smart-collections.
-      assign coll_tag_value = ''
-      for tag in product.tags
-        if tag contains 'Collection: '
-          assign coll_tag_value = tag | replace: 'Collection: ', '' | strip
-          break
-        endif
-      endfor
-
-      # Style from "Style: X" tag
-      assign style_tag_value = ''
-      for tag in product.tags
-        if tag contains 'Style: '
-          assign style_tag_value = tag | replace: 'Style: ', '' | strip
-          break
-        endif
-      endfor
-
-      # Metafield specs (with tk.* fallback for legacy data)
-      assign mf_material = product.metafields.details.material | default: product.metafields.tk.material
-      assign mf_drill_centers = product.metafields.details.drill_centers | default: product.metafields.tk.drill_centers
-      assign mf_overall_length = product.metafields.details.overall_length | default: product.metafields.tk.overall_length
-      assign mf_width = product.metafields.details.width | default: product.metafields.tk.width
-      assign mf_projection = product.metafields.details.projection | default: product.metafields.tk.projection
-      assign mf_mounting = product.metafields.tk.mounting
-      assign mf_warranty = product.metafields.tk.warranty
-      assign mf_ships = product.metafields.tk.ships
-      assign mf_finish_name = product.metafields.top_knobs.finish_name.value
-      assign mf_size = product.metafields.tk.size
-
-      # Drill Centers — prefer metafield, fall back to "Center-to-Center" tk.size
-      assign drill_centers_display = mf_drill_centers
-      if drill_centers_display == blank and mf_size != blank and mf_size != 0 and mf_size != '0'
-        assign drill_centers_display = mf_size
-      endif
-
-      # Format Material display — standardize "Zinc Alloy" import value
-      assign material_display = mf_material
-      if mf_material == 'Zinc Alloy'
-        assign material_display = 'Solid zinc alloy with premium plating'
-      endif
-
-      # Product Type — strip "Cabinet Hardware - " or "|" prefixes for cleaner display.
-      # Note: this catalog stores the value on product.type (legacy alias), not
-      # product.product_type. Read the legacy field with a fallback.
-      assign pt_raw = product.product_type | default: product.type
-      assign pt_display = pt_raw
-      if pt_display contains ' - '
-        assign pt_display = pt_display | split: ' - ' | last | strip
-      elsif pt_display contains '|'
-        assign pt_display = pt_display | split: '|' | last | strip
-      endif
-
-      # SKU + UPC from current variant
-      assign cur_sku = product.selected_or_first_available_variant.sku
-      assign cur_upc = product.selected_or_first_available_variant.barcode
-    -%}
-
-    {%- comment -%}
-      Build the spec rows. Order is the priority for default visibility:
-      Brand, Collection, Style, Drill Centers, Finish first (matches design
-      v4's "primary 5"), then everything else. Empty rows skipped silently.
-    {%- endcomment -%}
-    {%- capture spec_rows -%}
-      {%- if product.vendor != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Brand</span><span class="tk-prod__spec-val">{{ product.vendor | escape }}</span></div>{%- endif -%}
-      {%- if coll_tag_value != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Collection</span><span class="tk-prod__spec-val">{{ coll_tag_value | escape }}</span></div>{%- endif -%}
-      {%- if style_tag_value != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Style</span><span class="tk-prod__spec-val">{{ style_tag_value | escape }}</span></div>{%- endif -%}
-      {%- if drill_centers_display != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Drill Centers</span><span class="tk-prod__spec-val">{{ drill_centers_display }}</span></div>{%- endif -%}
-      {%- if mf_finish_name != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Finish</span><span class="tk-prod__spec-val">{{ mf_finish_name | escape }}</span></div>{%- endif -%}
-      {%- if pt_display != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Product Type</span><span class="tk-prod__spec-val">{{ pt_display | escape }}</span></div>{%- endif -%}
-      {%- if material_display != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Material</span><span class="tk-prod__spec-val">{{ material_display }}</span></div>{%- endif -%}
-      {%- if mf_overall_length != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Overall Length</span><span class="tk-prod__spec-val">{{ mf_overall_length }}</span></div>{%- endif -%}
-      {%- if mf_width != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Width</span><span class="tk-prod__spec-val">{{ mf_width }}</span></div>{%- endif -%}
-      {%- if mf_projection != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Projection</span><span class="tk-prod__spec-val">{{ mf_projection }}</span></div>{%- endif -%}
-      {%- if mf_mounting != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Mounting</span><span class="tk-prod__spec-val">{{ mf_mounting }}</span></div>{%- endif -%}
-      {%- if cur_sku != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">SKU</span><span class="tk-prod__spec-val">{{ cur_sku | escape }}</span></div>{%- endif -%}
-      {%- if cur_upc != blank -%}<div class="tk-prod__spec-row"><span class="tk-prod__spec-key">UPC</span><span class="tk-prod__spec-val">{{ cur_upc | escape }}</span></div>{%- endif -%}
-      {%- if mf_warranty != blank -%}
-        <div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Warranty</span><span class="tk-prod__spec-val">{{ mf_warranty }}</span></div>
-      {%- elsif section.settings.show_default_specs -%}
-        <div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Warranty</span><span class="tk-prod__spec-val">Lifetime Limited</span></div>
-      {%- endif -%}
-      {%- if mf_ships != blank -%}
-        <div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Ships</span><span class="tk-prod__spec-val">{{ mf_ships }}</span></div>
-      {%- elsif section.settings.show_default_specs -%}
-        <div class="tk-prod__spec-row"><span class="tk-prod__spec-key">Ships</span><span class="tk-prod__spec-val">1–2 business days</span></div>
-      {%- endif -%}
-    {%- endcapture -%}
-
-    {%- assign primary_count = section.settings.spec_primary_count | default: 5 -%}
-    {%- if spec_rows != blank -%}
-      <div class="tk-prod__spec-card" data-primary="{{ primary_count }}">
-        <div class="tk-prod__spec-card-header">Specifications</div>
-        <div class="tk-prod__spec-rows">{{ spec_rows }}</div>
-        <button type="button" class="tk-prod__spec-expand" data-action="expand" hidden>
-          <span class="tk-prod__spec-expand-icon" aria-hidden="true">+</span>
-          <span class="tk-prod__spec-expand-text">Show All Specifications</span>
-        </button>
-      </div>
-    {%- endif -%}
+    <!-- Specs -->
+    {%- assign material = product.metafields.tk.material -%}
+    {%- assign mounting = product.metafields.tk.mounting -%}
+    {%- assign projection = product.metafields.tk.projection -%}
+    {%- assign warranty = product.metafields.tk.warranty | default: 'Lifetime Limited' -%}
+    {%- assign ships = product.metafields.tk.ships | default: '1–2 business days' -%}
+    <div class="tk-prod__specs">
+      {%- if material != blank -%}<div class="tk-prod__spec-row"><span>Material</span><span>{{ material }}</span></div>{%- endif -%}
+      {%- if mounting != blank -%}<div class="tk-prod__spec-row"><span>Mounting</span><span>{{ mounting }}</span></div>{%- endif -%}
+      {%- if projection != blank -%}<div class="tk-prod__spec-row"><span>Projection</span><span>{{ projection }}</span></div>{%- endif -%}
+      <div class="tk-prod__spec-row"><span>Warranty</span><span>{{ warranty }}</span></div>
+      <div class="tk-prod__spec-row"><span>Ships</span><span>{{ ships }}</span></div>
+    </div>
 
     <!-- Authorized dealer badge -->
     <div class="tk-prod__dealer-badge">
@@ -374,183 +155,28 @@
   </div>
 </div>
 
-<!-- ============================================================
-  Pair With — same collection + same finish + opposite product type.
-  ============================================================
-  When viewing a Pull → suggests Knobs from the same design collection
-  in the same finish (and vice versa). For non-Pull/Knob product types
-  (towel rings, etc.), shows same-collection + same-finish items of any
-  type. The intent is matching cabinet hardware that completes a kitchen
-  (a Polished Chrome pull pairs with a Polished Chrome knob, etc.).
-
-  Up to 12 items rendered server-side; carousel JS pages 4-at-a-time
-  via prev/next arrows. Drops to 3 columns at 1024px, 2 at 768px,
-  1 at 600px.
-============================================================ -->
+<!-- Reviews / SEO copy / Complete the Look -->
 {%- if section.settings.show_complete_look -%}
-  {%- liquid
-    # Resolve design collection from "Collection: X" tag
-    assign collection_tag_value = ''
-    for tag in product.tags
-      if tag contains 'Collection: '
-        assign collection_tag_value = tag | replace: 'Collection: ', '' | strip
-        break
-      endif
-    endfor
-
-    # Find the design collection in the product's collections.
-    # Match strategy (in order): exact title, title contains tag value,
-    # handle contains tag value as slug. The looser fallbacks catch the
-    # common case where a tag like "Lynwood" maps to a collection titled
-    # "Top Knobs Lynwood" with handle "top-knobs-lynwood".
-    assign design_collection = blank
-    if collection_tag_value != blank
-      assign tag_slug = collection_tag_value | downcase | replace: ' ', '-' | replace: '&', 'and'
-      for c in product.collections
-        if c.title == collection_tag_value
-          assign design_collection = c
-          break
-        endif
-      endfor
-      if design_collection == blank
-        for c in product.collections
-          if c.title contains collection_tag_value
-            assign design_collection = c
-            break
-          endif
-        endfor
-      endif
-      if design_collection == blank
-        for c in product.collections
-          if c.handle contains tag_slug
-            assign design_collection = c
-            break
-          endif
-        endfor
-      endif
-    endif
-
-    assign current_finish = product.metafields.top_knobs.finish_name.value
-
-    # product.type is the value-bearing field on this catalog;
-    # product.product_type is empty for legacy-imported products.
-    assign current_pt_raw = product.product_type | default: product.type
-    assign current_pt_lower = current_pt_raw | downcase
-    assign want_type_pull = false
-    assign want_type_knob = false
-  -%}
-  {%- comment -%}
-    Opposite-product-type filter for Pull↔Knob cross-matching, done outside
-    the {% liquid %} block as plain tags. Earlier attempts placing this inside
-    {% liquid %} ... {% endliquid %} produced unset want_* flags despite the
-    assign filter chain (downcase) being applied — possibly a Liquid scoping
-    quirk in how `contains` evaluates against vars assigned in the same block.
-  {%- endcomment -%}
-  {%- if current_pt_lower contains 'pull' -%}
-    {%- assign want_type_knob = true -%}
-  {%- elsif current_pt_lower contains 'knob' -%}
-    {%- assign want_type_pull = true -%}
-  {%- endif -%}
-
-  {%- if design_collection != blank and current_finish != blank -%}
-    {%- assign max_cards = 12 -%}
-    {%- capture pair_cards -%}
-      {%- comment -%}
-        Two-pass render to put the "lead" card first:
-        - Pass 1 finds the first opposite-type sibling (a Knob if current
-          is a Pull/Appliance Pull, a Pull if current is a Knob) at the
-          same finish + same collection, and renders it as the first card.
-          Appliance Pulls match Pull-detection because their product type
-          contains the word "pull".
-        - Pass 2 fills in the rest of the carousel with same-collection,
-          same-finish products of ANY type, in collection order, skipping
-          the current product and the lead already rendered.
-        If the current product is neither a pull nor a knob (e.g. towel
-        rings), pass 1 is skipped — the user just gets all same-collection
-        same-finish siblings in collection order.
-      {%- endcomment -%}
-
-      {%- assign lead_handle = '' -%}
-      {%- if want_type_pull or want_type_knob -%}
-        {%- for related in design_collection.products -%}
-          {%- if related.id == product.id -%}{%- continue -%}{%- endif -%}
-          {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
-          {%- if related_finish != current_finish -%}{%- continue -%}{%- endif -%}
-          {%- assign rel_pt_raw = related.product_type | default: related.type -%}
-          {%- assign rel_pt_lower = rel_pt_raw | downcase -%}
-          {%- if want_type_pull and rel_pt_lower contains 'pull' -%}
-            <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
-            {%- assign lead_handle = related.handle -%}
-            {%- break -%}
-          {%- elsif want_type_knob and rel_pt_lower contains 'knob' -%}
-            <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
-            {%- assign lead_handle = related.handle -%}
-            {%- break -%}
+  {%- assign related_collection = product.collections.first -%}
+  {%- if related_collection != blank and related_collection.products.size > 1 -%}
+    <section class="tk-prod__related">
+      <div class="tk-prod__related-head">
+        <p class="tk-eyebrow">From the {{ related_collection.title | escape }}</p>
+        <h2 class="tk-prod__related-h2">Complete the Look</h2>
+      </div>
+      <div class="tk-prod__related-grid">
+        {%- assign shown = 0 -%}
+        {%- for related in related_collection.products -%}
+          {%- if related.id != product.id and shown < 3 -%}
+            {%- render 'tk-product-card', product: related -%}
+            {%- assign shown = shown | plus: 1 -%}
           {%- endif -%}
         {%- endfor -%}
-      {%- endif -%}
-
-      {%- assign shown = 0 -%}
-      {%- if lead_handle != '' -%}{%- assign shown = 1 -%}{%- endif -%}
-      {%- for related in design_collection.products -%}
-        {%- if shown >= max_cards -%}{%- break -%}{%- endif -%}
-        {%- if related.id == product.id -%}{%- continue -%}{%- endif -%}
-        {%- if related.handle == lead_handle -%}{%- continue -%}{%- endif -%}
-        {%- assign related_finish = related.metafields.top_knobs.finish_name.value -%}
-        {%- if related_finish != current_finish -%}{%- continue -%}{%- endif -%}
-        <div class="tk-prod__pair-slide">{%- render 'tk-product-card', product: related -%}</div>
-        {%- assign shown = shown | plus: 1 -%}
-      {%- endfor -%}
-    {%- endcapture -%}
-
-    {%- if shown > 0 -%}
-      {%- comment -%}
-        Eyebrow text. The collection.title in this catalog typically already
-        contains "Collection" (eg. "Top Knobs Lynwood Collection"), so we
-        don't append it again. If it doesn't, append " Collection" so the
-        eyebrow always reads naturally.
-      {%- endcomment -%}
-      {%- assign coll_title_lower = design_collection.title | downcase -%}
-      {%- if coll_title_lower contains 'collection' -%}
-        {%- assign pair_eyebrow = 'From the ' | append: design_collection.title -%}
-      {%- else -%}
-        {%- assign pair_eyebrow = 'From the ' | append: design_collection.title | append: ' Collection' -%}
-      {%- endif -%}
-      <section class="tk-prod__pair" data-total="{{ shown }}">
-        <div class="tk-prod__pair-head">
-          <div class="tk-prod__pair-head-left">
-            <p class="tk-eyebrow">{{ pair_eyebrow | escape }}</p>
-            <h2 class="tk-prod__pair-h2">Pair with&hellip;</h2>
-          </div>
-          <div class="tk-prod__pair-head-right">
-            <a href="{{ design_collection.url }}" class="tk-prod__pair-shop-link">Shop the {{ design_collection.title | escape }} Collection &rarr;</a>
-            <button type="button" class="tk-prod__pair-arrow" data-action="prev" aria-label="Previous" disabled>&lsaquo;</button>
-            <button type="button" class="tk-prod__pair-arrow" data-action="next" aria-label="Next">&rsaquo;</button>
-          </div>
-        </div>
-        <div class="tk-prod__pair-viewport">
-          <div class="tk-prod__pair-track" id="tk-prod-pair-track">{{ pair_cards }}</div>
-        </div>
-        {%- if shown > 4 -%}
-          <p class="tk-prod__pair-counter" id="tk-prod-pair-counter">Showing 1&ndash;4 of {{ shown }}</p>
-        {%- endif -%}
-      </section>
-    {%- endif -%}
+      </div>
+    </section>
   {%- endif -%}
 {%- endif -%}
 
-<!-- Recently Viewed (populated client-side from localStorage) -->
-{%- if section.settings.show_recently_viewed -%}
-  <section class="tk-prod__recent" id="tk-recent-section" hidden>
-    <div class="tk-prod__recent-head">
-      <p class="tk-eyebrow">Recently Viewed</p>
-      <h2 class="tk-prod__recent-h2">Pick Up Where You Left Off</h2>
-    </div>
-    <div class="tk-prod__recent-grid" id="tk-recent-grid"></div>
-  </section>
-{%- endif -%}
-
-<!-- SEO copy -->
 {%- if section.settings.show_seo -%}
   <section class="tk-prod__seo">
     <div class="tk-prod__seo-grid">
@@ -569,408 +195,326 @@
 {%- endif -%}
 
 {%- style -%}
-  /* keeping all original styles, plus additions for new blocks */
   .tk-prod__breadcrumb {
     padding: 14px var(--tk-page-x);
     border-bottom: 1px solid var(--color-border);
-    display: flex; gap: 8px; align-items: center;
+    display: flex;
+    gap: 8px;
+    align-items: center;
     font-family: var(--tk-font-body);
-    font-size: 12px; color: var(--color-text2);
+    font-size: 12px;
+    color: var(--color-text2);
   }
   .tk-prod__breadcrumb a { color: var(--color-text2); text-decoration: none; }
   .tk-prod__breadcrumb-current { color: var(--color-text); }
 
-  .tk-prod__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 600px; }
-  .tk-prod__gallery { padding: 40px 48px 40px var(--tk-page-x); }
-  /* Main product image: square wrap with breathing room, contained image (not cropped).
-     max-width keeps the image from sprawling on wide viewports; aspect-ratio:1/1
-     gives a consistent square frame; object-fit:contain shows the whole product. */
-  .tk-prod__main-img-wrap {
-    background: #fff;
-    max-width: 560px;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto 12px;
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .tk-prod__layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 600px;
   }
-  .tk-prod__main-img { display: block; width: 100%; height: 100%; object-fit: contain; }
-  .tk-prod__main-img--placeholder { width: 100%; height: 100%; background: var(--color-border); }
-  .tk-prod__thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .tk-prod__thumb { border: 2px solid transparent; background: none; padding: 0; cursor: pointer; }
+  .tk-prod__gallery {
+    padding: 40px 48px 40px var(--tk-page-x);
+  }
+  .tk-prod__main-img {
+    display: block;
+    width: 100%;
+    height: 440px;
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+  .tk-prod__main-img--placeholder { background: var(--color-border); }
+  .tk-prod__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .tk-prod__thumb {
+    border: 2px solid transparent;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+  }
   .tk-prod__thumb--active { border-color: var(--color-accent); }
-  .tk-prod__thumb-img { display: block; width: 100%; height: 80px; object-fit: cover; }
-  .tk-prod__info { padding: 40px var(--tk-page-x) 40px 32px; border-left: 1px solid var(--color-border); }
-
+  .tk-prod__thumb-img {
+    display: block;
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+  }
+  .tk-prod__info {
+    padding: 40px var(--tk-page-x) 40px 32px;
+    border-left: 1px solid var(--color-border);
+  }
   .tk-prod__collection-link {
-    display: inline-block; font-family: var(--tk-font-body);
-    font-size: 10px; letter-spacing: 0.2em; color: var(--color-accent);
-    text-transform: uppercase; margin: 0 0 8px; text-decoration: none;
+    display: inline-block;
+    font-family: var(--tk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    text-decoration: none;
   }
   .tk-prod__h1 {
-    font-family: var(--tk-font-heading); font-size: 38px; font-weight: 400;
-    color: var(--color-text); margin: 0 0 6px; line-height: 1.1;
-  }
-  .tk-prod__size, .tk-prod__sku {
-    font-family: var(--tk-font-body); color: var(--color-text2);
-  }
-  .tk-prod__size { font-size: 14px; margin: 0 0 6px; }
-  .tk-prod__sku { font-size: 12px; margin: 0 0 12px; }
-
-  .tk-prod__stock {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: oklch(94% 0.05 145); border: 1px solid oklch(80% 0.07 145);
-    padding: 4px 10px; margin-bottom: 20px;
-    font-family: var(--tk-font-body); font-size: 11px;
-    color: oklch(32% 0.1 145); font-weight: 500;
-  }
-  .tk-prod__stock-dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(55% 0.16 145); }
-  .tk-prod__stock--oos { background: var(--color-bg2); border-color: var(--color-border); color: var(--color-text2); }
-
-  /* PRICE BLOCK with MAP strikethrough */
-  .tk-prod__price-block { margin-bottom: 24px; }
-  .tk-prod__price {
-    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
     font-family: var(--tk-font-heading);
-    margin: 0 0 6px; line-height: 1;
+    font-size: 38px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 6px;
+    line-height: 1.1;
   }
-  .tk-prod__price-now { font-size: 32px; color: var(--color-text); }
-  .tk-prod__price-was {
-    font-family: var(--tk-font-body); font-size: 18px; color: var(--color-text2);
-    text-decoration: line-through; font-weight: 400;
+  .tk-prod__size {
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text2);
+    margin: 0 0 6px;
   }
-  .tk-prod__price-save {
-    font-family: var(--tk-font-body); font-size: 11px; font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    background: oklch(94% 0.05 145); color: oklch(32% 0.1 145);
-    padding: 4px 8px; border-radius: 2px;
+  .tk-prod__sku {
+    font-family: var(--tk-font-body);
+    font-size: 12px;
+    color: var(--color-text2);
+    margin: 0 0 12px;
+  }
+  .tk-prod__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: oklch(94% 0.05 145);
+    border: 1px solid oklch(80% 0.07 145);
+    padding: 4px 10px;
+    margin-bottom: 20px;
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: oklch(32% 0.1 145);
+    font-weight: 500;
+  }
+  .tk-prod__stock-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: oklch(55% 0.16 145);
+  }
+  .tk-prod__stock--oos {
+    background: var(--color-bg2);
+    border-color: var(--color-border);
+    color: var(--color-text2);
+  }
+  .tk-prod__price {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    color: var(--color-text);
+    margin: 0 0 24px;
+    line-height: 1;
   }
   .tk-prod__price-tag {
-    font-family: var(--tk-font-body); font-size: 12px;
-    color: var(--color-accent); margin: 0;
-    display: flex; align-items: center; gap: 6px;
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-accent);
+    margin-left: 6px;
   }
-
   .tk-prod__option { margin-bottom: 20px; }
   .tk-prod__option-label {
-    font-family: var(--tk-font-body); font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--color-text2); margin: 0 0 12px;
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text2);
+    margin: 0 0 12px;
   }
   .tk-prod__option-label strong { color: var(--color-text); font-weight: 600; }
-  .tk-prod__swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tk-prod__swatches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   .tk-prod__swatch {
-    cursor: pointer; display: inline-flex; align-items: center;
-    gap: 6px; padding: 2px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
-  .tk-prod__swatch-input { position: absolute; opacity: 0; pointer-events: none; }
-  .tk-prod__swatch-name--hidden { display: none; }
-  .tk-prod__swatch-text {
-    display: inline-block; padding: 8px 14px;
-    border: 1px solid var(--color-border); font-family: var(--tk-font-body);
-    font-size: 12px; color: var(--color-text); background: var(--color-bg);
+  .tk-prod__swatch-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
-  .tk-prod__swatch--active .tk-prod__swatch-text {
-    border-color: var(--color-accent); color: var(--color-accent);
+  .tk-prod__swatch-dot {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: 2px solid var(--color-border);
+    transition: outline-offset 0.15s ease;
   }
-
-  .tk-prod__qty-row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .tk-prod__swatch--active .tk-prod__swatch-dot {
+    border-color: var(--color-accent);
+    outline: 1px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .tk-prod__swatch-name {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    color: var(--color-text);
+    display: none;
+  }
+  .tk-prod__qty-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
   .tk-prod__qty {
-    display: flex; align-items: center;
-    border: 1px solid var(--color-border); height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    height: 48px;
   }
   .tk-prod__qty-btn {
-    width: 36px; height: 100%; background: none; border: none;
-    cursor: pointer; font-family: var(--tk-font-body); font-size: 18px; color: var(--color-text);
+    width: 36px;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--tk-font-body);
+    font-size: 18px;
+    color: var(--color-text);
   }
   .tk-prod__qty-input {
-    width: 40px; text-align: center; border: none; background: none;
-    font-family: var(--tk-font-body); font-size: 14px; color: var(--color-text);
-    outline: none; -moz-appearance: textfield;
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: none;
+    font-family: var(--tk-font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    outline: none;
+    -moz-appearance: textfield;
   }
   .tk-prod__qty-input::-webkit-outer-spin-button,
   .tk-prod__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .tk-prod__add-btn {
-    flex: 1; height: 48px; background: var(--color-accent); border: none;
-    color: #fff; font-family: var(--tk-font-body); font-size: 13px;
-    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+    flex: 1;
+    height: 48px;
+    background: var(--color-accent);
+    border: none;
+    color: #fff;
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
     transition: background 0.3s ease, opacity 0.2s ease;
   }
   .tk-prod__add-btn:hover { opacity: 0.9; }
   .tk-prod__add-btn.is-added { background: oklch(50% 0.13 145); }
-
-  /* Quantity discount messaging */
-  .tk-prod__qty-discount {
-    display: flex; align-items: center; gap: 8px;
-    margin: 12px 0 16px; padding: 10px 12px;
-    background: linear-gradient(0deg, var(--color-bg2), var(--color-bg2));
-    border: 1px solid var(--color-border);
-    font-family: var(--tk-font-body); font-size: 12px; color: var(--color-text);
-  }
-  .tk-prod__qty-discount span[aria-hidden] { color: var(--color-accent); font-size: 14px; }
-  .tk-prod__qty-discount.is-active {
-    background: oklch(96% 0.05 95); border-color: var(--color-accent);
-    color: var(--color-text);
-  }
-  .tk-prod__qty-discount.is-active .tk-prod__qty-discount-text::before {
-    content: '✓ '; color: oklch(50% 0.13 145); font-weight: 700;
-  }
-
   .tk-prod__sample-btn {
-    display: block; text-align: center; width: 100%; height: 48px;
-    line-height: 48px; padding: 0; box-sizing: border-box; margin-bottom: 24px;
-  }
-
-  /* ─── Description (left column, below gallery) ─── */
-  .tk-prod__description {
-    margin-top: 28px;
-    padding-top: 22px;
-    border-top: 1px solid var(--color-border);
-  }
-  .tk-prod__description-head {
-    display: flex; justify-content: space-between; align-items: baseline;
-    flex-wrap: wrap; gap: 12px; margin-bottom: 14px;
-  }
-  .tk-prod__description-h2 {
-    font-family: var(--tk-font-heading);
-    font-size: 22px; font-weight: 500;
-    color: var(--color-text); margin: 0;
-  }
-  .tk-prod__description-eyebrow {
-    font-family: var(--tk-font-body);
-    font-size: 10px; font-weight: 600;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .tk-prod__description-body {
-    font-family: var(--tk-font-body);
-    font-size: 13px; line-height: 1.8;
-    color: var(--color-text);
-    overflow: hidden;
-  }
-  .tk-prod__description-body p { margin: 0 0 14px; }
-  .tk-prod__description-body p:last-child { margin-bottom: 0; }
-  .tk-prod__description-body strong { color: var(--color-text); }
-  .tk-prod__description-body a { color: var(--color-accent); text-decoration: underline; }
-  /* When taller than the right column, JS adds .is-truncatable; collapsed state masks the bottom */
-  .tk-prod__description.is-truncatable .tk-prod__description-body {
-    max-height: var(--tk-desc-max-h, 600px);
-    position: relative;
-    mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-  }
-  .tk-prod__description.is-truncatable.is-expanded .tk-prod__description-body {
-    max-height: none;
-    mask-image: none;
-    -webkit-mask-image: none;
-  }
-  .tk-prod__description-readmore {
-    display: inline-block;
-    margin-top: 14px;
-    background: none; border: none;
-    padding: 0; cursor: pointer;
-    font-family: var(--tk-font-body);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--color-accent);
-    border-bottom: 1px solid var(--color-accent);
-    padding-bottom: 1px;
-  }
-  .tk-prod__description-readmore:hover { opacity: 0.75; }
-
-  /* ─── Spec Card (design v4) ─── */
-  .tk-prod__spec-card {
-    margin: 24px 0;
-    border: 1px solid var(--color-border);
-  }
-  .tk-prod__spec-card-header {
-    background: var(--color-text);
-    color: var(--color-bg);
-    padding: 14px 18px;
-    font-family: var(--tk-font-body);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.18em; text-transform: uppercase;
-  }
-  .tk-prod__spec-rows { display: block; }
-  .tk-prod__spec-row {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 14px;
-    padding: 11px 18px;
-    border-bottom: 1px solid var(--color-border);
-    font-family: var(--tk-font-body);
-    font-size: 12.5px;
-    line-height: 1.4;
-  }
-  .tk-prod__spec-row:nth-of-type(odd) { background: var(--color-bg); }
-  .tk-prod__spec-row:nth-of-type(even) { background: var(--color-bg2); }
-  .tk-prod__spec-row:last-of-type { border-bottom: none; }
-  .tk-prod__spec-key {
-    color: var(--color-text);
-    font-weight: 600;
-  }
-  .tk-prod__spec-val {
-    color: var(--color-text);
-    font-weight: 400;
-  }
-  /* Collapsed state — hides rows past data-primary index */
-  .tk-prod__spec-card:not(.is-expanded) .tk-prod__spec-row.is-overflow {
-    display: none;
-  }
-  .tk-prod__spec-expand {
-    display: block; width: 100%;
-    padding: 12px 18px;
-    background: var(--color-bg2);
-    border: none;
-    border-top: 1px solid var(--color-border);
-    cursor: pointer;
-    font-family: var(--tk-font-body);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--color-text);
+    display: block;
     text-align: center;
-    transition: background 0.15s ease;
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 24px;
   }
-  .tk-prod__spec-expand:hover { background: var(--color-border); }
-  .tk-prod__spec-expand-icon {
-    display: inline-block; margin-right: 6px;
-    font-weight: 400; color: var(--color-accent);
-    transition: transform 0.2s ease;
-  }
-  .tk-prod__spec-card.is-expanded .tk-prod__spec-expand-icon {
-    transform: rotate(45deg);
-  }
-
-  .tk-prod__dealer-badge {
-    background: var(--color-bg2); border: 1px solid var(--color-border);
-    padding: 12px 16px; display: flex; gap: 12px; align-items: center;
-  }
-  .tk-prod__dealer-icon { font-size: 22px; color: var(--color-accent); line-height: 1; }
-  .tk-prod__dealer-title {
-    font-family: var(--tk-font-body); font-size: 11px; font-weight: 600;
-    color: var(--color-text); letter-spacing: 0.06em; margin: 0;
-  }
-  .tk-prod__dealer-sub { font-family: var(--tk-font-body); font-size: 11px; color: var(--color-text2); margin: 0; }
-
-  /* ─── Pair With (carousel) ─── */
-  .tk-prod__pair {
-    padding: 48px var(--tk-page-x) 56px;
+  .tk-prod__specs {
     border-top: 1px solid var(--color-border);
-    background: var(--color-bg);
+    padding-top: 20px;
+    margin-bottom: 20px;
   }
-  .tk-prod__pair-head {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    flex-wrap: wrap; gap: 16px;
-    padding-bottom: 28px;
-  }
-  .tk-prod__pair-head-left .tk-eyebrow { margin: 0 0 6px; }
-  .tk-prod__pair-h2 {
-    font-family: var(--tk-font-heading);
-    font-size: 28px; font-weight: 400;
-    color: var(--color-text); margin: 0;
-    line-height: 1.1;
-  }
-  .tk-prod__pair-head-right {
-    display: flex; align-items: center; gap: 20px;
-  }
-  .tk-prod__pair-shop-link {
-    font-family: var(--tk-font-body);
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--color-text);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-text);
-    padding-bottom: 1px;
-  }
-  .tk-prod__pair-shop-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
-  .tk-prod__pair-arrow {
-    width: 40px; height: 40px;
-    border: 1px solid var(--color-text);
-    background: transparent;
-    color: var(--color-text);
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px; line-height: 1;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-  }
-  .tk-prod__pair-arrow:hover:not(:disabled) {
-    background: var(--color-text); color: var(--color-bg);
-  }
-  .tk-prod__pair-arrow:disabled {
-    border-color: var(--color-border);
-    color: var(--color-text2);
-    cursor: default;
-    opacity: 0.5;
-  }
-  .tk-prod__pair-viewport {
-    overflow: hidden;
-  }
-  .tk-prod__pair-track {
+  .tk-prod__spec-row {
     display: flex;
-    gap: 20px;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: var(--tk-font-body);
+    font-size: 12px;
   }
-  /* Each slide is 25% of viewport width minus gaps; gives 4 visible at desktop */
-  .tk-prod__pair-slide {
-    flex: 0 0 calc((100% - 60px) / 4);
-    min-width: 0;
+  .tk-prod__spec-row span:first-child { color: var(--color-text2); font-weight: 500; }
+  .tk-prod__spec-row span:last-child { color: var(--color-text); }
+  .tk-prod__dealer-badge {
+    background: var(--color-bg2);
+    border: 1px solid var(--color-border);
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
   }
-  .tk-prod__pair-counter {
-    margin-top: 18px;
-    text-align: right;
+  .tk-prod__dealer-icon {
+    font-size: 22px;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+  .tk-prod__dealer-title {
+    font-family: var(--tk-font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+  .tk-prod__dealer-sub {
     font-family: var(--tk-font-body);
     font-size: 11px;
     color: var(--color-text2);
+    margin: 0;
   }
-
-  /* Recently Viewed */
-  .tk-prod__recent { padding: 48px var(--tk-page-x); border-top: 1px solid var(--color-border); }
-  .tk-prod__recent-head { margin-bottom: 24px; }
-  .tk-prod__recent-h2 {
-    font-family: var(--tk-font-heading); font-size: 24px; font-weight: 400;
-    color: var(--color-text); margin: 0;
+  .tk-prod__related {
+    padding: 0 var(--tk-page-x) 56px;
+    background: var(--color-bg2);
   }
-  .tk-prod__recent-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;
+  .tk-prod__related-head {
+    padding: 48px 0 32px;
   }
-  .tk-recent-card {
-    display: block; text-decoration: none; color: inherit;
-    border: 1px solid var(--color-border); padding: 12px;
-    transition: border-color 0.2s ease;
+  .tk-prod__related-head .tk-eyebrow { margin: 0 0 8px; }
+  .tk-prod__related-h2 {
+    font-family: var(--tk-font-heading);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0;
   }
-  .tk-recent-card:hover { border-color: var(--color-accent); }
-  .tk-recent-card__img { width: 100%; aspect-ratio: 1; object-fit: cover; margin-bottom: 8px; background: var(--color-bg2); }
-  .tk-recent-card__title { font-family: var(--tk-font-body); font-size: 12px; color: var(--color-text); margin: 0 0 2px; line-height: 1.3; }
-  .tk-recent-card__price { font-family: var(--tk-font-heading); font-size: 14px; color: var(--color-text); margin: 0; }
-
-  /* SEO */
-  .tk-prod__seo { padding: 56px var(--tk-page-x); border-top: 1px solid var(--color-border); }
-  .tk-prod__seo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+  .tk-prod__related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .tk-prod__seo {
+    padding: 56px var(--tk-page-x);
+    border-top: 1px solid var(--color-border);
+  }
+  .tk-prod__seo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
   .tk-prod__seo-h2 {
-    font-family: var(--tk-font-heading); font-size: 26px; font-weight: 400;
-    color: var(--color-text); margin: 0 0 14px;
+    font-family: var(--tk-font-heading);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 14px;
   }
-  .tk-prod__seo p { font-family: var(--tk-font-body); font-size: 13px; line-height: 1.85; color: var(--color-text2); margin: 0 0 14px; }
+  .tk-prod__seo p {
+    font-family: var(--tk-font-body);
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--color-text2);
+    margin: 0 0 14px;
+  }
   .tk-prod__seo a { color: var(--color-accent); text-decoration: underline; }
-
   @media (max-width: 1024px) {
     .tk-prod__layout { grid-template-columns: 1fr; }
     .tk-prod__info { border-left: none; border-top: 1px solid var(--color-border); padding: 40px var(--tk-page-x); }
     .tk-prod__gallery { padding: 40px var(--tk-page-x); }
+    .tk-prod__related-grid { grid-template-columns: repeat(2, 1fr); }
     .tk-prod__seo-grid { grid-template-columns: 1fr; gap: 32px; }
-    /* On tablets the pair carousel drops to 3 visible at a time */
-    .tk-prod__pair-slide { flex: 0 0 calc((100% - 40px) / 3); }
-  }
-  @media (max-width: 768px) {
-    .tk-prod__pair-slide { flex: 0 0 calc((100% - 20px) / 2); }
-    .tk-prod__pair-head { gap: 12px; }
-    .tk-prod__pair-shop-link { display: none; }
   }
   @media (max-width: 600px) {
+    .tk-prod__related-grid { grid-template-columns: 1fr; }
     .tk-prod__h1 { font-size: 30px; }
-    .tk-prod__price-now { font-size: 26px; }
-    .tk-prod__pair-slide { flex: 0 0 100%; }
+    .tk-prod__price { font-size: 26px; }
   }
 {%- endstyle -%}
 
@@ -979,34 +523,11 @@
     var form = document.getElementById('tk-prod-form');
     if (!form) return;
 
+    // Variant selection
     var variantSelect = document.getElementById('tk-prod-variant-id');
     var addBtn = document.getElementById('tk-prod-add-btn');
     var optionInputs = form.querySelectorAll('.tk-prod__swatch-input');
     var variants = {{ product.variants | json }};
-
-    var priceNow = document.getElementById('tk-prod-price-now');
-    var priceWas = document.getElementById('tk-prod-price-was');
-    var priceSave = document.getElementById('tk-prod-price-save');
-
-    function formatMoney(cents) {
-      return '$' + (cents / 100).toFixed(2);
-    }
-
-    function updatePriceDisplay(variant) {
-      if (!variant) return;
-      priceNow.textContent = formatMoney(variant.price);
-      var compare = variant.compare_at_price;
-      if (compare && compare > variant.price) {
-        priceWas.textContent = formatMoney(compare);
-        priceWas.hidden = false;
-        var pct = Math.round((compare - variant.price) * 100 / compare);
-        priceSave.textContent = 'Save ' + pct + '%';
-        priceSave.hidden = false;
-      } else {
-        priceWas.hidden = true;
-        priceSave.hidden = true;
-      }
-    }
 
     function getSelectedOptions() {
       var opts = [];
@@ -1023,7 +544,11 @@
       });
       if (match) {
         variantSelect.value = match.id;
-        updatePriceDisplay(match);
+        var priceEl = document.querySelector('.tk-prod__price');
+        if (priceEl) {
+          var priceText = (match.price / 100).toFixed(2);
+          priceEl.firstChild.textContent = '$' + priceText + ' ';
+        }
         addBtn.disabled = !match.available;
         addBtn.textContent = match.available ? 'Add to Cart' : 'Sold Out';
       }
@@ -1031,38 +556,28 @@
 
     optionInputs.forEach(function (input) {
       input.addEventListener('change', function () {
+        // Update active state
         var optIndex = input.dataset.optionIndex;
         form.querySelectorAll('.tk-prod__swatch-input[data-option-index="' + optIndex + '"]').forEach(function (i) {
           i.closest('.tk-prod__swatch').classList.toggle('tk-prod__swatch--active', i.checked);
         });
+        // Update label strong text
         var label = document.getElementById('tk-prod-option-' + (parseInt(optIndex, 10) + 1));
         if (label) label.textContent = input.value;
         updateVariant();
       });
     });
 
-    // Qty controls + qty discount messaging
+    // Qty controls
     var qtyInput = document.getElementById('tk-prod-qty');
-    var qtyDiscount = document.getElementById('tk-prod-qty-discount');
-    var qtyThreshold = {{ section.settings.qty_discount_threshold | default: 4 }};
-
-    function updateQtyDiscount() {
-      if (!qtyDiscount) return;
-      var v = parseInt(qtyInput.value, 10) || 1;
-      qtyDiscount.classList.toggle('is-active', v >= qtyThreshold);
-    }
-
     form.querySelectorAll('.tk-prod__qty-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var current = parseInt(qtyInput.value, 10) || 1;
         qtyInput.value = btn.dataset.action === 'inc' ? current + 1 : Math.max(1, current - 1);
-        updateQtyDiscount();
       });
     });
-    if (qtyInput) qtyInput.addEventListener('input', updateQtyDiscount);
-    updateQtyDiscount();
 
-    // Submit
+    // Submit via fetch + open cart drawer
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var data = new FormData(form);
@@ -1083,266 +598,18 @@
         });
     });
 
-    // Thumbs
+    // Thumbnail switching
     var mainImg = document.getElementById('tk-prod-main-img');
     document.querySelectorAll('.tk-prod__thumb').forEach(function (thumb) {
       thumb.addEventListener('click', function () {
         var src = thumb.dataset.img;
-        if (src && mainImg) {
-          // Clear srcset so the new src actually wins. Without this the
-          // browser keeps showing the responsive-image pick from srcset
-          // even though src has changed.
-          if (mainImg.hasAttribute('srcset')) mainImg.removeAttribute('srcset');
-          mainImg.src = src;
-        }
+        if (src && mainImg) mainImg.src = src;
         document.querySelectorAll('.tk-prod__thumb').forEach(function (t) { t.classList.remove('tk-prod__thumb--active'); });
         thumb.classList.add('tk-prod__thumb--active');
       });
     });
-
-    /* ─── Spec Card expand/collapse ─── */
-    (function () {
-      var card = document.querySelector('.tk-prod__spec-card');
-      if (!card) return;
-      var rows = card.querySelectorAll('.tk-prod__spec-row');
-      var primary = parseInt(card.dataset.primary, 10) || 5;
-      var btn = card.querySelector('.tk-prod__spec-expand');
-      if (!btn) return;
-      var btnText = btn.querySelector('.tk-prod__spec-expand-text');
-      var total = rows.length;
-
-      // Mark overflow rows for CSS to hide while collapsed
-      rows.forEach(function (row, i) {
-        if (i >= primary) row.classList.add('is-overflow');
-      });
-
-      if (total <= primary) {
-        // Nothing to expand — leave button hidden
-        return;
-      }
-
-      btn.hidden = false;
-      btnText.textContent = 'Show All ' + total + ' Specifications';
-
-      btn.addEventListener('click', function () {
-        var expanded = card.classList.toggle('is-expanded');
-        btnText.textContent = expanded ? 'Show Less' : 'Show All ' + total + ' Specifications';
-      });
-    })();
-
-    /* ─── Description read-more (only when description is taller than info column) ─── */
-    (function () {
-      var desc = document.getElementById('tk-prod-description');
-      if (!desc) return;
-      var body = document.getElementById('tk-prod-description-body');
-      var btn = document.getElementById('tk-prod-description-readmore');
-      var info = document.querySelector('.tk-prod__info');
-      if (!body || !btn || !info) return;
-
-      function evaluate() {
-        // Cap = the right column's height. If desc body is taller, truncate.
-        var infoH = info.offsetHeight;
-        var bodyH = body.scrollHeight;
-        // Don't truncate at all when the body is shorter than infoH (matches user spec).
-        if (bodyH > infoH + 60) {
-          desc.classList.add('is-truncatable');
-          desc.style.setProperty('--tk-desc-max-h', infoH + 'px');
-          btn.hidden = false;
-        } else {
-          desc.classList.remove('is-truncatable');
-          btn.hidden = true;
-        }
-      }
-
-      // Re-evaluate after layout settles + on resize
-      if (document.readyState === 'complete') {
-        evaluate();
-      } else {
-        window.addEventListener('load', evaluate);
-      }
-      var resizeTimer;
-      window.addEventListener('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(evaluate, 150);
-      });
-
-      btn.addEventListener('click', function () {
-        var expanded = desc.classList.toggle('is-expanded');
-        btn.textContent = expanded ? 'Read less' : 'Read more';
-      });
-    })();
-
-    /* ─── Pair-with carousel (prev/next, scrolls 1 card at a time) ─── */
-    (function () {
-      var section = document.querySelector('.tk-prod__pair');
-      if (!section) return;
-      var track = section.querySelector('#tk-prod-pair-track');
-      var slides = section.querySelectorAll('.tk-prod__pair-slide');
-      var prevBtn = section.querySelector('[data-action="prev"]');
-      var nextBtn = section.querySelector('[data-action="next"]');
-      var counter = section.querySelector('#tk-prod-pair-counter');
-      if (!track || slides.length === 0) return;
-
-      var total = slides.length;
-      var start = 0;
-
-      function visibleCount() {
-        var w = window.innerWidth;
-        if (w <= 600) return 1;
-        if (w <= 768) return 2;
-        if (w <= 1024) return 3;
-        return 4;
-      }
-
-      function update() {
-        var visible = visibleCount();
-        var maxStart = Math.max(0, total - visible);
-        if (start > maxStart) start = maxStart;
-        if (start < 0) start = 0;
-
-        // Each slide is calc((100% - gap*(visible-1)) / visible) wide.
-        // Translate by start * (slideWidth + gap).
-        var trackWidth = track.parentElement.offsetWidth;
-        var gap = 20;
-        var slideW = (trackWidth - gap * (visible - 1)) / visible;
-        track.style.transform = 'translateX(-' + (start * (slideW + gap)) + 'px)';
-
-        if (prevBtn) prevBtn.disabled = (start === 0);
-        if (nextBtn) nextBtn.disabled = (start + visible >= total);
-
-        if (counter) {
-          var endIdx = Math.min(start + visible, total);
-          counter.textContent = 'Showing ' + (start + 1) + '–' + endIdx + ' of ' + total;
-        }
-      }
-
-      if (prevBtn) prevBtn.addEventListener('click', function () { start -= 1; update(); });
-      if (nextBtn) nextBtn.addEventListener('click', function () { start += 1; update(); });
-
-      var resizeT;
-      window.addEventListener('resize', function () {
-        clearTimeout(resizeT);
-        resizeT = setTimeout(update, 100);
-      });
-      update();
-    })();
-
-    /* Recently Viewed (localStorage) */
-    {%- if section.settings.show_recently_viewed -%}
-    try {
-      var KEY = 'tk_recently_viewed';
-      var current = {
-        handle: {{ product.handle | json }},
-        title: {{ product.title | json }},
-        url: {{ product.url | json }},
-        img: {{ product.featured_image | image_url: width: 400 | json }},
-        price: {{ product.price | money | json }}
-      };
-      var stored = JSON.parse(localStorage.getItem(KEY) || '[]');
-      stored = stored.filter(function (p) { return p.handle !== current.handle; });
-      // Render OTHER recently viewed before unshifting current
-      var section = document.getElementById('tk-recent-section');
-      var grid = document.getElementById('tk-recent-grid');
-      if (stored.length > 0 && grid) {
-        section.hidden = false;
-        grid.innerHTML = stored.slice(0, 6).map(function (p) {
-          return '<a class="tk-recent-card" href="' + p.url + '">' +
-                 '<img class="tk-recent-card__img" src="' + (p.img || '') + '" alt="' + (p.title || '').replace(/"/g, '&quot;') + '" loading="lazy">' +
-                 '<p class="tk-recent-card__title">' + (p.title || '') + '</p>' +
-                 '<p class="tk-recent-card__price">' + (p.price || '') + '</p>' +
-                 '</a>';
-        }).join('');
-      }
-      stored.unshift(current);
-      localStorage.setItem(KEY, JSON.stringify(stored.slice(0, 12)));
-    } catch (e) { /* localStorage may be blocked */ }
-    {%- endif -%}
   });
 </script>
-
-<div class="tk-sticky-atc" id="tk-sticky-atc" aria-hidden="true">
-  <div class="tk-sticky-atc__info">
-    <span class="tk-sticky-atc__title">{{ product.title | escape }}</span>
-    <span class="tk-sticky-atc__price" id="tk-sticky-atc-price">{{ product.selected_or_first_available_variant.price | default: product.price | money }}</span>
-  </div>
-  <button type="button" class="tk-sticky-atc__btn" id="tk-sticky-atc-btn">Add to Cart</button>
-</div>
-
-{%- style -%}
-  .tk-sticky-atc {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
-    display: none; align-items: center; gap: 14px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-    background: var(--color-bg, #fff);
-    border-top: 1px solid var(--color-border, #eae0d0);
-    box-shadow: 0 -3px 14px rgba(42, 89, 115, 0.12);
-    transform: translateY(110%); transition: transform 220ms ease;
-    font-family: var(--tk-font-body, 'Montserrat', sans-serif);
-  }
-  .tk-sticky-atc.is-visible { transform: translateY(0); }
-  .tk-sticky-atc__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-  .tk-sticky-atc__title {
-    font-size: 13px; color: var(--color-text2, #5c6e7c);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .tk-sticky-atc__price {
-    font-family: var(--tk-font-heading, 'Noto Serif', serif);
-    font-size: 16px; font-weight: 600; color: var(--color-text, #2a5973);
-  }
-  .tk-sticky-atc__btn {
-    flex: 0 0 auto; min-height: 44px; padding: 10px 22px;
-    background: var(--color-accent, #8f3627); color: #fff;
-    font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-    border: 0; border-radius: 2px; cursor: pointer; transition: background 150ms ease;
-  }
-  .tk-sticky-atc__btn:hover { background: var(--color-accent2, #b85333); }
-  .tk-sticky-atc__btn:disabled { background: var(--color-border, #c9bfaf); opacity: .65; cursor: not-allowed; }
-  @media (max-width: 768px) { .tk-sticky-atc { display: flex; } }
-{%- endstyle -%}
-
-<script>
-  (function () {
-    function init() {
-      var bar = document.getElementById('tk-sticky-atc');
-      var realBtn = document.getElementById('tk-prod-add-btn');
-      if (!bar || !realBtn) return;
-      var sBtn = document.getElementById('tk-sticky-atc-btn');
-      var sPrice = document.getElementById('tk-sticky-atc-price');
-      var realPrice = document.getElementById('tk-prod-price-now');
-      var mq = window.matchMedia('(max-width: 768px)');
-      sBtn.addEventListener('click', function () { if (!realBtn.disabled) realBtn.click(); });
-      function sync() {
-        if (realPrice) sPrice.textContent = realPrice.textContent;
-        sBtn.disabled = realBtn.disabled;
-        if (!sBtn.classList.contains('is-echo')) {
-          sBtn.textContent = realBtn.disabled ? 'Sold Out' : 'Add to Cart';
-        }
-      }
-      sync();
-      new MutationObserver(sync).observe(realBtn, { attributes: true, childList: true, characterData: true, subtree: true });
-      if (realPrice) new MutationObserver(sync).observe(realPrice, { childList: true, characterData: true, subtree: true });
-      document.addEventListener('tk:cart:added', function () {
-        sBtn.classList.add('is-echo'); sBtn.textContent = '✓ Added';
-        setTimeout(function () { sBtn.classList.remove('is-echo'); sync(); }, 2000);
-      });
-      function setVis(show) {
-        var on = show && mq.matches;
-        bar.classList.toggle('is-visible', on);
-        bar.setAttribute('aria-hidden', on ? 'false' : 'true');
-        if ('inert' in bar) bar.inert = !on;
-      }
-      setVis(false);
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (e) { setVis(!e[0].isIntersecting); }, { threshold: 0 });
-        io.observe(realBtn);
-      }
-      mq.addEventListener('change', function () { if (!mq.matches) setVis(false); });
-    }
-    if (document.readyState !== 'loading') init();
-    else document.addEventListener('DOMContentLoaded', init);
-  })();
-</script>
-
 
 {% schema %}
 {
@@ -1350,16 +617,8 @@
   "tag": "div",
   "class": "tk-product-section",
   "settings": [
-    { "type": "header", "content": "Page sections" },
     { "type": "checkbox", "id": "show_complete_look", "label": "Show 'Complete the Look' related products", "default": true },
-    { "type": "checkbox", "id": "show_recently_viewed", "label": "Show Recently Viewed strip", "default": true },
-    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true },
-    { "type": "header", "content": "Specs" },
-    { "type": "checkbox", "id": "show_default_specs", "label": "Show default Warranty & Ships values when metafield missing", "default": true },
-    { "type": "header", "content": "Quantity discount" },
-    { "type": "checkbox", "id": "show_qty_discount", "label": "Show quantity discount notice", "default": true },
-    { "type": "number", "id": "qty_discount_threshold", "label": "Threshold (qty)", "default": 4 },
-    { "type": "number", "id": "qty_discount_pct", "label": "Discount %", "default": 10 }
+    { "type": "checkbox", "id": "show_seo", "label": "Show SEO copy block at bottom", "default": true }
   ]
 }
 {% endschema %}
